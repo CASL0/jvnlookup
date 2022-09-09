@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">JVNlookup</string>
+    <string name="vuln_overview_label">ホーム</string>
+    <string name="favorite_label">お気に入り</string>
+</resources>
