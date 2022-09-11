@@ -16,6 +16,9 @@
 
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -30,6 +33,11 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
 
     val vulnOverviews = jvnRepository.vulnOverviews
 
+    /**
+     * リフレッシュ中
+     */
+    var isRefreshing by mutableStateOf(false)
+
     init {
         refreshVulnOverviews()
     }
@@ -39,7 +47,9 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
      */
     fun refreshVulnOverviews() {
         viewModelScope.launch {
+            isRefreshing = true
             jvnRepository.refreshVulnOverviews()
+            isRefreshing = false
         }
     }
 

@@ -19,9 +19,15 @@ package io.github.casl0.jvnlookup.ui.vulnoverview
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Modifier) {
     val vulnOverviews = viewModel.vulnOverviews.observeAsState(listOf())
-    VulnOverviewList(vulnOverviews = vulnOverviews.value)
+    SwipeRefresh(
+        state = rememberSwipeRefreshState(isRefreshing = viewModel.isRefreshing),
+        onRefresh = { viewModel.refreshVulnOverviews() }) {
+        VulnOverviewList(vulnOverviews = vulnOverviews.value)
+    }
 }
