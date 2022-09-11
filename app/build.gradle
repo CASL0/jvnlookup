@@ -67,4 +67,11 @@ dependencies {
     implementation "com.tickaroo.tikxml:core:$tikxml_version"
     implementation "com.tickaroo.tikxml:retrofit-converter:$tikxml_version"
     kapt "com.tickaroo.tikxml:processor:$tikxml_version"
+    implementation "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-livedata:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:$lifecycle_version"
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 }

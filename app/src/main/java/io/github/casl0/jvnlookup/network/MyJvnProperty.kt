@@ -17,6 +17,9 @@
 package io.github.casl0.jvnlookup.network
 
 import com.tickaroo.tikxml.annotation.*
+import io.github.casl0.jvnlookup.database.DatabaseCVSS
+import io.github.casl0.jvnlookup.database.DatabaseReference
+import io.github.casl0.jvnlookup.database.DatabaseVulnOverview
 
 @Xml(name = "rdf:RDF")
 data class VulnOverviewResponse(
@@ -48,7 +51,7 @@ data class VulnOverview(
      * ベンダ固有のセキュリティ情報ID
      */
     @PropertyElement(name = "sec:identifier")
-    var id: String?,
+    var id: String,
 
     /**
      * 参考情報
@@ -87,7 +90,7 @@ data class Reference(
      * 識別番号
      */
     @Attribute(name = "id")
-    val id: String?,
+    val id: String,
 
     /**
      * タイトル
@@ -135,3 +138,63 @@ data class CVSS(
     @Attribute(name = "vector")
     var vector: String?,
 )
+
+/**
+ * VulnOverviewをデータベースエンティティに変換します
+ */
+fun VulnOverviewResponse.asDatabaseVulnOverviews(): List<DatabaseVulnOverview> {
+    return vulnOverviews.map {
+        DatabaseVulnOverview(
+            title = it.title,
+            link = it.link,
+            description = it.description,
+            id = it.id,
+            issued = it.issued,
+            modified = it.modified,
+        )
+    }
+}
+
+/**
+ * List<Reference>をデータベースエンティティに変換します
+ */
+fun VulnOverviewResponse.asDatabaseReferences(): List<DatabaseReference> {
+    val databaseReferences = mutableListOf<DatabaseReference>()
+    vulnOverviews.forEach { vulnOverview ->
+        vulnOverview.references.map {
+            DatabaseReference(
+                ownerId = vulnOverview.id,
+                source = it.source,
+                id = it.id,
+                title = it.title,
+                url = it.url,
+            )
+        }.also {
+            databaseReferences.addAll(it)
+        }
+    }
+    return databaseReferences
+}
+
+/**
+ * List<CVSS>をデータベースエンティティに変換します
+ */
+fun VulnOverviewResponse.asDatabaseCVSS(): List<DatabaseCVSS> {
+    val databaseCVSS = mutableListOf<DatabaseCVSS>()
+    vulnOverviews.forEach { vulnOverview ->
+        vulnOverview.cvssList.map {
+            DatabaseCVSS(
+                ownerId = vulnOverview.id,
+                version = it.version,
+                type = it.type,
+                severity = it.severity,
+                score = it.score,
+                vector = it.vector,
+                id = 0,
+            )
+        }.also {
+            databaseCVSS.addAll(it)
+        }
+    }
+    return databaseCVSS
+}
