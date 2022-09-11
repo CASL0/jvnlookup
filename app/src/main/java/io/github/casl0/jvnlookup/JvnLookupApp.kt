@@ -28,7 +28,7 @@ import io.github.casl0.jvnlookup.ui.theme.JVNlookupTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JvnLookupApp() {
+fun JvnLookupApp(application: JvnLookupApplication) {
     JVNlookupTheme {
         val navController = rememberNavController()
         val currentBackStack by navController.currentBackStackEntryAsState()
@@ -53,6 +53,7 @@ fun JvnLookupApp() {
             }
         }) { innerPadding ->
             JvnLookupNavHost(
+                application = application,
                 navController = navController,
                 modifier = Modifier.padding(innerPadding)
             )

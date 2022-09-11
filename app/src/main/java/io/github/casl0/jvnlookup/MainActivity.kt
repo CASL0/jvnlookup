@@ -23,8 +23,9 @@ import androidx.activity.compose.setContent
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val jvnLookupApplication = application as JvnLookupApplication
         setContent {
-            JvnLookupApp()
+            JvnLookupApp(jvnLookupApplication)
         }
     }
 }

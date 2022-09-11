@@ -18,22 +18,35 @@ package io.github.casl0.jvnlookup
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import io.github.casl0.jvnlookup.ui.favorite.FavoriteScreen
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewScreen
+import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewViewModel
 
 @Composable
-fun JvnLookupNavHost(navController: NavHostController, modifier: Modifier = Modifier) {
+fun JvnLookupNavHost(
+    application: JvnLookupApplication,
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
     NavHost(
         navController = navController,
         startDestination = VulnOverview.route,
         modifier = modifier
     ) {
         composable(route = VulnOverview.route) {
-            VulnOverviewScreen()
+            val vulnOverviewViewModel: VulnOverviewViewModel =
+                viewModel(
+                    viewModelStoreOwner = LocalViewModelStoreOwner.current!!,
+                    key = "VulnOverviewViewModel",
+                    VulnOverviewViewModel.provideFactory(application.jvnRepository)
+                )
+            VulnOverviewScreen(vulnOverviewViewModel)
         }
         composable(route = Favorite.route) {
             FavoriteScreen()
