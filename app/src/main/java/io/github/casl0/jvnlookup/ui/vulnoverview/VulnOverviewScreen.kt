@@ -16,18 +16,47 @@
 
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
-import androidx.compose.runtime.Composable
+import android.annotation.SuppressLint
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import io.github.casl0.jvnlookup.R
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Modifier) {
     val vulnOverviews = viewModel.vulnOverviews.observeAsState(listOf())
-    SwipeRefresh(
-        state = rememberSwipeRefreshState(isRefreshing = viewModel.isRefreshing),
-        onRefresh = { viewModel.refreshVulnOverviews() }) {
-        VulnOverviewList(vulnOverviews = vulnOverviews.value)
+    val snackbarHostState = remember { SnackbarHostState() }
+    val errorMessage = stringResource(id = R.string.error_refresh_overview)
+    val actionLabel = stringResource(R.string.refresh_overview_action_label)
+    LaunchedEffect(snackbarHostState) {
+        viewModel.hasError.collect { hasError ->
+            if (hasError) {
+                val result = snackbarHostState.showSnackbar(
+                    message = errorMessage,
+                    actionLabel = actionLabel,
+                    duration = SnackbarDuration.Short
+                )
+                when (result) {
+                    SnackbarResult.ActionPerformed -> {
+                        viewModel.refreshVulnOverviews()
+                    }
+                    SnackbarResult.Dismissed -> {
+                    }
+                }
+            }
+        }
+    }
+    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {
+        SwipeRefresh(
+            state = rememberSwipeRefreshState(isRefreshing = viewModel.isRefreshing),
+            onRefresh = { viewModel.refreshVulnOverviews() }) {
+            VulnOverviewList(vulnOverviews = vulnOverviews.value)
+        }
     }
 }

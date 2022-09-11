@@ -16,6 +16,7 @@
 
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -23,7 +24,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import io.github.casl0.jvnlookup.repository.JvnRepository
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 /**
  * ホーム画面のビジネスロジックを扱うViewModel
@@ -38,6 +43,16 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
      */
     var isRefreshing by mutableStateOf(false)
 
+    /**
+     * リフレッシュ失敗時のチャネル
+     */
+    private val errorChannel = Channel<Boolean>()
+
+    /**
+     * リフレッシュ失敗時のエラーイベント
+     */
+    val hasError: Flow<Boolean> = errorChannel.receiveAsFlow()
+
     init {
         refreshVulnOverviews()
     }
@@ -48,7 +63,13 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
     fun refreshVulnOverviews() {
         viewModelScope.launch {
             isRefreshing = true
-            jvnRepository.refreshVulnOverviews()
+            try {
+                jvnRepository.refreshVulnOverviews()
+            } catch (e: Exception) {
+                // ネットワークエラー
+                e.localizedMessage?.let { Log.d(TAG, it) }
+                errorChannel.send(true)
+            }
             isRefreshing = false
         }
     }
@@ -65,5 +86,7 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
                 return VulnOverviewViewModel(jvnRepository) as T
             }
         }
+
+        private const val TAG = "VulnOverviewViewModel"
     }
 }
