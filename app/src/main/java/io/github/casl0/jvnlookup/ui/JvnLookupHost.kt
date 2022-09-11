@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.casl0.jvnlookup
+package io.github.casl0.jvnlookup.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -24,6 +24,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import io.github.casl0.jvnlookup.JvnLookupApplication
 import io.github.casl0.jvnlookup.ui.favorite.FavoriteScreen
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewScreen
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewViewModel

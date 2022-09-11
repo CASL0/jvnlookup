@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package io.github.casl0.jvnlookup
+package io.github.casl0.jvnlookup.ui
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.ui.graphics.vector.ImageVector
+import io.github.casl0.jvnlookup.R
 
 interface JvnLookupDestination {
     val icon: ImageVector

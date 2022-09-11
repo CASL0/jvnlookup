@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-package io.github.casl0.jvnlookup
+package io.github.casl0.jvnlookup.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import io.github.casl0.jvnlookup.JvnLookupApplication
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

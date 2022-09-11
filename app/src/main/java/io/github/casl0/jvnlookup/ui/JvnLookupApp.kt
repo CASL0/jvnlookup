@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.casl0.jvnlookup
+package io.github.casl0.jvnlookup.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import io.github.casl0.jvnlookup.JvnLookupApplication
 import io.github.casl0.jvnlookup.ui.theme.JVNlookupTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
