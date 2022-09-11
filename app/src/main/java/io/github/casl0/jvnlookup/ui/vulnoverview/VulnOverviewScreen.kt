@@ -56,7 +56,10 @@ fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Mo
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing = viewModel.isRefreshing),
             onRefresh = { viewModel.refreshVulnOverviews() }) {
-            VulnOverviewList(vulnOverviews = vulnOverviews.value)
+            VulnOverviewList(
+                vulnOverviews = vulnOverviews.value,
+                onItemClicked = viewModel.onItemClicked
+            )
         }
     }
 }

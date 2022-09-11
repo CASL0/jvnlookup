@@ -16,6 +16,7 @@
 
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,7 +28,11 @@ import androidx.compose.ui.unit.dp
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 
 @Composable
-fun VulnOverviewList(vulnOverviews: List<DomainVulnOverview>, modifier: Modifier = Modifier) {
+fun VulnOverviewList(
+    vulnOverviews: List<DomainVulnOverview>,
+    onItemClicked: (Context, CharSequence) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val scrollState = rememberLazyListState()
     LazyColumn(
         state = scrollState,
@@ -37,7 +42,7 @@ fun VulnOverviewList(vulnOverviews: List<DomainVulnOverview>, modifier: Modifier
         items(items = vulnOverviews,
             key = { vulnOverview -> vulnOverview.id }
         ) { vulnOverview ->
-            VulnOverviewItem(vulnOverview, modifier)
+            VulnOverviewItem(vulnOverview, onItemClicked, modifier)
         }
     }
 }
