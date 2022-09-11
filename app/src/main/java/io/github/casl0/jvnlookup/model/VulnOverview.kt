@@ -35,7 +35,7 @@ data class DomainVulnOverview(
     /**
      * ベンダ固有のセキュリティ情報ID
      */
-    var id: String?,
+    var id: String,
 
     /**
      * 参考情報

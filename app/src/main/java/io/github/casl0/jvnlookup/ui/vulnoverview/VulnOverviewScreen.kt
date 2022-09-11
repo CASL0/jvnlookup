@@ -16,11 +16,12 @@
 
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 
 @Composable
-fun VulnOverviewScreen(modifier: Modifier = Modifier) {
-    Text("ホーム")
+fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Modifier) {
+    val vulnOverviews = viewModel.vulnOverviews.observeAsState(listOf())
+    VulnOverviewList(vulnOverviews = vulnOverviews.value)
 }

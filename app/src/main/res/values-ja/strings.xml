@@ -3,4 +3,6 @@
     <string name="app_name">JVNlookup</string>
     <string name="vuln_overview_label">ホーム</string>
     <string name="favorite_label">お気に入り</string>
+    <string name="overview_issued_label">発行日: %s</string>
+    <string name="overview_cvss_label">CVSS(%s): %s</string>
 </resources>
