@@ -28,16 +28,25 @@ interface VulnOverviewDao {
     @Transaction
     @Query("SELECT * FROM vuln_overview ORDER BY issued DESC")
     fun getVulnOverviewWithReferencesAndCVSS(): LiveData<List<VulnOverviewWithReferencesAndCVSS>>
+
+    @Query("DELETE FROM vuln_overview")
+    fun deleteAll()
 }
 
 @Dao
 interface ReferenceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(references: List<DatabaseReference>)
+
+    @Query("DELETE FROM sec_references")
+    fun deleteAll()
 }
 
 @Dao
 interface CVSSDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(cvssList: List<DatabaseCVSS>)
+
+    @Query("DELETE FROM sec_cvss")
+    fun deleteAll()
 }

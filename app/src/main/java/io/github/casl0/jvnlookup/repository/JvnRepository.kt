@@ -50,6 +50,9 @@ class JvnRepository(private val database: JvnDatabase) {
     suspend fun refreshVulnOverviews() = withContext(Dispatchers.IO) {
         Log.d(TAG, "refresh vuln overviews")
         val vulnOverviews = MyJvnApi.retrofitService.getVulnOverviewList()
+        database.cvssDao.deleteAll()
+        database.referenceDao.deleteAll()
+        database.vulnOverviewDao.deleteAll()
         database.vulnOverviewDao.insertAll(vulnOverviews.asDatabaseVulnOverviews())
         database.referenceDao.insertAll(vulnOverviews.asDatabaseReferences())
         database.cvssDao.insertAll(vulnOverviews.asDatabaseCVSS())
