@@ -21,7 +21,7 @@ import androidx.room.*
 
 @Dao
 interface VulnOverviewDao {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(vulnOverviews: List<DatabaseVulnOverview>)
 
     @Transaction
@@ -30,6 +30,9 @@ interface VulnOverviewDao {
 
     @Query("DELETE FROM vuln_overview")
     fun deleteAll()
+
+    @Query("DELETE FROM vuln_overview WHERE favorited = false")
+    fun deleteAllNonFavorited()
 
     @Query("UPDATE vuln_overview SET favorited = :favorited WHERE sec_identifier = :id")
     fun updateFavoritedById(id: String, favorited: Boolean)

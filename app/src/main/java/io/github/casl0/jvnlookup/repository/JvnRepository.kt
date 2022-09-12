@@ -52,7 +52,7 @@ class JvnRepository(private val database: JvnDatabase) {
         val vulnOverviews = MyJvnApi.retrofitService.getVulnOverviewList()
         database.cvssDao.deleteAll()
         database.referenceDao.deleteAll()
-        database.vulnOverviewDao.deleteAll()
+        database.vulnOverviewDao.deleteAllNonFavorited()
         database.vulnOverviewDao.insertAll(vulnOverviews.asDatabaseVulnOverviews())
         database.referenceDao.insertAll(vulnOverviews.asDatabaseReferences())
         database.cvssDao.insertAll(vulnOverviews.asDatabaseCVSS())
