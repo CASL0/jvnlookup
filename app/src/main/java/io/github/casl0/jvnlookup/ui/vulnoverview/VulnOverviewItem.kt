@@ -19,7 +19,7 @@ package io.github.casl0.jvnlookup.ui.vulnoverview
 import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -32,6 +32,7 @@ import io.github.casl0.jvnlookup.model.DomainVulnOverview
 fun VulnOverviewItem(
     vulnOverview: DomainVulnOverview,
     onItemClicked: (Context, CharSequence) -> Unit,
+    onFavoriteButtonClicked: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val typography = MaterialTheme.typography
@@ -41,12 +42,16 @@ fun VulnOverviewItem(
             modifier = modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Max)
-                .padding(8.dp)
+                .padding(top = 8.dp, start = 8.dp, end = 8.dp)
         ) {
             val (title, description) = listOf(vulnOverview.title, vulnOverview.description)
             if (title != null && description != null) {
                 // タイトル
-                Text(text = title, style = typography.titleMedium)
+                Text(
+                    text = title,
+                    style = typography.titleMedium,
+                )
+
                 Spacer(modifier.height(8.dp))
 
                 // JVN ID
@@ -81,6 +86,18 @@ fun VulnOverviewItem(
 
                 // 概要
                 Text(text = description, style = typography.bodyMedium)
+
+                Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+                    val isFavorited = vulnOverview.isFavorited
+                    FavoriteButton(
+                        isFavorited = isFavorited,
+                        onClick = {
+                            onFavoriteButtonClicked(
+                                vulnOverview.id,
+                                !vulnOverview.isFavorited
+                            )
+                        })
+                }
             }
         }
     }

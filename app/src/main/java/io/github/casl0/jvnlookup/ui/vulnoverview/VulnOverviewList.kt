@@ -31,6 +31,7 @@ import io.github.casl0.jvnlookup.model.DomainVulnOverview
 fun VulnOverviewList(
     vulnOverviews: List<DomainVulnOverview>,
     onItemClicked: (Context, CharSequence) -> Unit,
+    onFavoriteButtonClicked: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val scrollState = rememberLazyListState()
@@ -42,7 +43,7 @@ fun VulnOverviewList(
         items(items = vulnOverviews,
             key = { vulnOverview -> vulnOverview.id }
         ) { vulnOverview ->
-            VulnOverviewItem(vulnOverview, onItemClicked, modifier)
+            VulnOverviewItem(vulnOverview, onItemClicked, onFavoriteButtonClicked, modifier)
         }
     }
 }

@@ -57,4 +57,12 @@ class JvnRepository(private val database: JvnDatabase) {
         database.referenceDao.insertAll(vulnOverviews.asDatabaseReferences())
         database.cvssDao.insertAll(vulnOverviews.asDatabaseCVSS())
     }
+
+    /**
+     * お気に入り登録を更新します
+     */
+    suspend fun updateFavorite(id: String, favorited: Boolean) = withContext(Dispatchers.IO) {
+        Log.d(TAG, "update favorite")
+        database.vulnOverviewDao.updateFavoritedById(id, favorited)
+    }
 }

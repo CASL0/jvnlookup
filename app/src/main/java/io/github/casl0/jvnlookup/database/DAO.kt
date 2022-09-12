@@ -18,7 +18,6 @@ package io.github.casl0.jvnlookup.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.*
-import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface VulnOverviewDao {
@@ -31,6 +30,9 @@ interface VulnOverviewDao {
 
     @Query("DELETE FROM vuln_overview")
     fun deleteAll()
+
+    @Query("UPDATE vuln_overview SET favorited = :favorited WHERE sec_identifier = :id")
+    fun updateFavoritedById(id: String, favorited: Boolean)
 }
 
 @Dao

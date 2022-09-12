@@ -58,7 +58,8 @@ fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Mo
             onRefresh = { viewModel.refreshVulnOverviews() }) {
             VulnOverviewList(
                 vulnOverviews = vulnOverviews.value,
-                onItemClicked = viewModel.onItemClicked
+                onItemClicked = viewModel.onItemClicked,
+                onFavoriteButtonClicked = viewModel.onFavoriteButtonClicked,
             )
         }
     }

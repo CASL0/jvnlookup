@@ -56,6 +56,11 @@ data class DomainVulnOverview(
      * 更新日
      */
     var modified: String?,
+
+    /**
+     * お気に入り登録済み
+     */
+    var isFavorited: Boolean = false,
 )
 
 data class DomainReference(

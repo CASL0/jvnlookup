@@ -66,6 +66,15 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
             }
         }
 
+    /**
+     * お気に入り登録を更新します
+     */
+    val onFavoriteButtonClicked: (String, Boolean) -> Unit = { id, favorited ->
+        viewModelScope.launch {
+            jvnRepository.updateFavorite(id, favorited)
+        }
+    }
+
     init {
         refreshVulnOverviews()
     }
