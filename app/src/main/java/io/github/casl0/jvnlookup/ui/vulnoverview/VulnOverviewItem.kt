@@ -36,46 +36,52 @@ fun VulnOverviewItem(
 ) {
     val typography = MaterialTheme.typography
     val context = LocalContext.current
-    Card(onClick = { onItemClicked(context, vulnOverview.link!!) }) {
+    Card(onClick = { onItemClicked(context, vulnOverview.link ?: "") }) {
         Column(
             modifier = modifier
                 .fillMaxWidth()
                 .height(IntrinsicSize.Max)
                 .padding(8.dp)
         ) {
-            // タイトル
-            Text(text = vulnOverview.title!!, style = typography.titleMedium)
-            Spacer(modifier.height(8.dp))
+            val (title, description) = listOf(vulnOverview.title, vulnOverview.description)
+            if (title != null && description != null) {
+                // タイトル
+                Text(text = title, style = typography.titleMedium)
+                Spacer(modifier.height(8.dp))
 
-            // JVN ID
-            Text(text = vulnOverview.id, style = typography.bodyMedium)
+                // JVN ID
+                Text(text = vulnOverview.id, style = typography.bodyMedium)
 
-            // 発行日
-            vulnOverview.issued?.let {
-                Text(
-                    text =
-                    stringResource(
-                        R.string.overview_issued_label,
-                        it
-                    ), style = typography.bodyMedium
+                // 発行日
+                vulnOverview.issued?.let {
+                    Text(
+                        text =
+                        stringResource(
+                            R.string.overview_issued_label,
+                            it
+                        ), style = typography.bodyMedium
+                    )
+                }
+
+                // CVSS
+                vulnOverview.cvssList.forEach { cvss ->
+                    val (cvssVersion, cvssScore) = listOf(cvss.version, cvss.score)
+                    if (cvssVersion != null && cvssScore != null) {
+                        val evaluation =
+                            stringResource(R.string.overview_cvss_label, cvssVersion, cvssScore)
+                        Text(text = evaluation, style = typography.bodyMedium)
+                    }
+                }
+                val dividerColor = LocalContentColor.current
+                Divider(
+                    modifier = modifier.padding(top = 8.dp, bottom = 8.dp),
+                    thickness = 1.dp,
+                    color = dividerColor
                 )
-            }
 
-            // CVSS
-            vulnOverview.cvssList.forEach { cvss ->
-                val evaluation =
-                    stringResource(R.string.overview_cvss_label, cvss.version!!, cvss.score!!)
-                Text(text = evaluation, style = typography.bodyMedium)
+                // 概要
+                Text(text = description, style = typography.bodyMedium)
             }
-            val dividerColor = LocalContentColor.current
-            Divider(
-                modifier = modifier.padding(top = 8.dp, bottom = 8.dp),
-                thickness = 1.dp,
-                color = dividerColor
-            )
-
-            // 概要
-            Text(text = vulnOverview.description!!, style = typography.bodyMedium)
         }
     }
 }

@@ -57,13 +57,13 @@ data class VulnOverview(
      * 参考情報
      */
     @Element(name = "sec:references")
-    val references: List<Reference> = emptyList(),
+    var references: List<Reference>?,
 
     /**
      * CVSS評価情報
      */
     @Element(name = "sec:cvss")
-    var cvssList: List<CVSS> = emptyList(),
+    var cvssList: List<CVSS>?,
 
     /**
      * 発行日
@@ -102,7 +102,7 @@ data class Reference(
      * 関連情報
      */
     @TextContent
-    val url: String = "",
+    val url: String?,
 )
 
 @Xml(name = "sec:cvss")
@@ -161,15 +161,15 @@ fun VulnOverviewResponse.asDatabaseVulnOverviews(): List<DatabaseVulnOverview> {
 fun VulnOverviewResponse.asDatabaseReferences(): List<DatabaseReference> {
     val databaseReferences = mutableListOf<DatabaseReference>()
     vulnOverviews.forEach { vulnOverview ->
-        vulnOverview.references.map {
+        vulnOverview.references?.map {
             DatabaseReference(
                 ownerId = vulnOverview.id,
                 source = it.source,
                 id = it.id,
                 title = it.title,
-                url = it.url,
+                url = it.url ?: "",
             )
-        }.also {
+        }?.also {
             databaseReferences.addAll(it)
         }
     }
@@ -182,7 +182,7 @@ fun VulnOverviewResponse.asDatabaseReferences(): List<DatabaseReference> {
 fun VulnOverviewResponse.asDatabaseCVSS(): List<DatabaseCVSS> {
     val databaseCVSS = mutableListOf<DatabaseCVSS>()
     vulnOverviews.forEach { vulnOverview ->
-        vulnOverview.cvssList.map {
+        vulnOverview.cvssList?.map {
             DatabaseCVSS(
                 ownerId = vulnOverview.id,
                 version = it.version,
@@ -192,7 +192,7 @@ fun VulnOverviewResponse.asDatabaseCVSS(): List<DatabaseCVSS> {
                 vector = it.vector,
                 id = 0,
             )
-        }.also {
+        }?.also {
             databaseCVSS.addAll(it)
         }
     }

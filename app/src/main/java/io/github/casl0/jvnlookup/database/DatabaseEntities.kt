@@ -67,13 +67,13 @@ data class DatabaseVulnOverview(
      * 発行日
      */
     @ColumnInfo(name = "issued")
-    var issued: String?,
+    val issued: String?,
 
     /**
      * 更新日
      */
     @ColumnInfo(name = "modified")
-    var modified: String?,
+    val modified: String?,
 )
 
 @Entity(tableName = "sec_references")
