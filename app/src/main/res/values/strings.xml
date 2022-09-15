@@ -6,4 +6,6 @@
     <string name="overview_cvss_label">CVSS(%s): %s</string>
     <string name="error_refresh_overview">No network connection</string>
     <string name="refresh_overview_action_label">RETRY</string>
+    <string name="category_all">All</string>
+    <string name="category_favorite">Favorite</string>
 </resources>
