@@ -26,6 +26,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import io.github.casl0.jvnlookup.model.Category
+import io.github.casl0.jvnlookup.model.categoryAll
 import io.github.casl0.jvnlookup.repository.JvnRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -45,6 +47,12 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
      * リフレッシュ中
      */
     var isRefreshing by mutableStateOf(false)
+
+    /**
+     * 選択されているフィルターカテゴリ
+     */
+    private var _selectedCategory by mutableStateOf(categoryAll)
+    val selectedCategory get() = _selectedCategory
 
     /**
      * リフレッシュ失敗時のチャネル
@@ -94,6 +102,13 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
             }
             isRefreshing = false
         }
+    }
+
+    /**
+     * フィルターカテゴリを変更します
+     */
+    fun onCategorySelected(category: Category) {
+        _selectedCategory = category
     }
 
     /**

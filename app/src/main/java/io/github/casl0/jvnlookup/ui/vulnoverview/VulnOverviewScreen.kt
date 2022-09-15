@@ -17,20 +17,36 @@
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
 import android.annotation.SuppressLint
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import io.github.casl0.jvnlookup.R
+import io.github.casl0.jvnlookup.model.categoryAll
+import io.github.casl0.jvnlookup.model.categoryFavorite
+import io.github.casl0.jvnlookup.model.filterCategories
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Modifier) {
     val vulnOverviews = viewModel.vulnOverviews.observeAsState(listOf())
+    val filteredVulnOverviews = when (viewModel.selectedCategory) {
+        categoryAll -> vulnOverviews.value
+        categoryFavorite -> vulnOverviews.value.filter { it.isFavorited }
+        else -> vulnOverviews.value
+    }
     val snackbarHostState = remember { SnackbarHostState() }
     val errorMessage = stringResource(id = R.string.error_refresh_overview)
     val actionLabel = stringResource(R.string.refresh_overview_action_label)
@@ -56,11 +72,33 @@ fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Mo
         SwipeRefresh(
             state = rememberSwipeRefreshState(isRefreshing = viewModel.isRefreshing),
             onRefresh = { viewModel.refreshVulnOverviews() }) {
-            VulnOverviewList(
-                vulnOverviews = vulnOverviews.value,
-                onItemClicked = viewModel.onItemClicked,
-                onFavoriteButtonClicked = viewModel.onFavoriteButtonClicked,
-            )
+            Column {
+                val scrollState = rememberLazyListState()
+                LazyColumn(
+                    state = scrollState,
+                    contentPadding = PaddingValues(horizontal = 4.dp, vertical = 12.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp)
+                ) {
+                    item {
+                        CategoryChips(
+                            filterCategories,
+                            viewModel.selectedCategory,
+                            viewModel::onCategorySelected,
+                            Modifier.fillMaxWidth()
+                        )
+                    }
+                    items(items = filteredVulnOverviews,
+                        key = { vulnOverview -> vulnOverview.id }
+                    ) { vulnOverview ->
+                        VulnOverviewItem(
+                            vulnOverview,
+                            viewModel.onItemClicked,
+                            viewModel.onFavoriteButtonClicked,
+                            modifier
+                        )
+                    }
+                }
+            }
         }
     }
 }
