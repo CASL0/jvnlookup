@@ -4,7 +4,7 @@
     <string name="vuln_overview_label">ホーム</string>
     <string name="favorite_label">お気に入り</string>
     <string name="overview_issued_label">発行日: %s</string>
-    <string name="overview_cvss_label">CVSS(%s): %s</string>
+    <string name="overview_cvss_label">CVSS(ver%s): %s</string>
     <string name="error_refresh_overview">ネットワーク接続がありません</string>
     <string name="refresh_overview_action_label">再試行</string>
     <string name="category_all">すべて</string>

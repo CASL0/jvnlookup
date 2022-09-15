@@ -3,7 +3,7 @@
     <string name="vuln_overview_label">Home</string>
     <string name="favorite_label">Favorites</string>
     <string name="overview_issued_label">issued: %s</string>
-    <string name="overview_cvss_label">CVSS(%s): %s</string>
+    <string name="overview_cvss_label">CVSS(ver%s): %s</string>
     <string name="error_refresh_overview">No network connection</string>
     <string name="refresh_overview_action_label">RETRY</string>
     <string name="category_all">All</string>
