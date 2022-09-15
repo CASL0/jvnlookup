@@ -92,8 +92,8 @@ fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Mo
                     ) { vulnOverview ->
                         VulnOverviewItem(
                             vulnOverview,
-                            viewModel.onItemClicked,
-                            viewModel.onFavoriteButtonClicked,
+                            viewModel::onItemClicked,
+                            viewModel::onFavoriteButtonClicked,
                             modifier
                         )
                     }

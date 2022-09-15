@@ -46,7 +46,8 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
     /**
      * リフレッシュ中
      */
-    var isRefreshing by mutableStateOf(false)
+    private var _isRefreshing by mutableStateOf(false)
+    val isRefreshing get() = _isRefreshing
 
     /**
      * 選択されているフィルターカテゴリ
@@ -64,25 +65,6 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
      */
     val hasError: Flow<Boolean> = errorChannel.receiveAsFlow()
 
-    /**
-     * リストアイテムのクリックハンドラ。脆弱性対策情報のWebページへ遷移します
-     */
-    val onItemClicked: (Context, CharSequence) -> Unit =
-        { context: Context, url: CharSequence ->
-            CustomTabsIntent.Builder().build().run {
-                launchUrl(context, Uri.parse(url as String?))
-            }
-        }
-
-    /**
-     * お気に入り登録を更新します
-     */
-    val onFavoriteButtonClicked: (String, Boolean) -> Unit = { id, favorited ->
-        viewModelScope.launch {
-            jvnRepository.updateFavorite(id, favorited)
-        }
-    }
-
     init {
         refreshVulnOverviews()
     }
@@ -92,7 +74,7 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
      */
     fun refreshVulnOverviews() {
         viewModelScope.launch {
-            isRefreshing = true
+            _isRefreshing = true
             try {
                 jvnRepository.refreshVulnOverviews()
             } catch (e: Exception) {
@@ -100,7 +82,25 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
                 e.localizedMessage?.let { Log.d(TAG, it) }
                 errorChannel.send(true)
             }
-            isRefreshing = false
+            _isRefreshing = false
+        }
+    }
+
+    /**
+     * リストアイテムのクリックハンドラ。脆弱性対策情報のWebページへ遷移します
+     */
+    fun onItemClicked(context: Context, url: CharSequence) {
+        CustomTabsIntent.Builder().build().run {
+            launchUrl(context, Uri.parse(url as String?))
+        }
+    }
+
+    /**
+     * お気に入り登録を更新します
+     */
+    fun onFavoriteButtonClicked(id: String, favorited: Boolean) {
+        viewModelScope.launch {
+            jvnRepository.updateFavorite(id, favorited)
         }
     }
 
