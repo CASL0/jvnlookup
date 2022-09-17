@@ -98,9 +98,9 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
     /**
      * お気に入り登録を更新します
      */
-    fun onFavoriteButtonClicked(id: String, favorited: Boolean) {
+    fun onFavoriteButtonClicked(id: String, favorite: Boolean) {
         viewModelScope.launch {
-            jvnRepository.updateFavorite(id, favorited)
+            jvnRepository.updateFavorite(id, favorite)
         }
     }
 

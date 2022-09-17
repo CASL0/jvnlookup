@@ -88,13 +88,13 @@ fun VulnOverviewItem(
                 Text(text = description, style = typography.bodyMedium)
 
                 Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    val isFavorited = vulnOverview.isFavorited
+                    val isFavorite = vulnOverview.isFavorite
                     FavoriteButton(
-                        isFavorited = isFavorited,
+                        isFavorite = isFavorite,
                         onClick = {
                             onFavoriteButtonClicked(
                                 vulnOverview.id,
-                                !vulnOverview.isFavorited
+                                !vulnOverview.isFavorite
                             )
                         })
                 }

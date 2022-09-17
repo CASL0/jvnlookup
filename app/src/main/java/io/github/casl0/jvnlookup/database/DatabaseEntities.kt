@@ -78,8 +78,8 @@ data class DatabaseVulnOverview(
     /**
      * お気に入り登録済み
      */
-    @ColumnInfo(name = "favorited")
-    val isFavorited: Boolean,
+    @ColumnInfo(name = "favorite")
+    val isFavorite: Boolean,
 )
 
 @Entity(tableName = "sec_references")
@@ -169,7 +169,7 @@ fun List<VulnOverviewWithReferencesAndCVSS>.asDomainModel(): List<DomainVulnOver
             cvssList = it.cvssList.asDomainModel(),
             issued = it.vulnOverview.issued,
             modified = it.vulnOverview.modified,
-            isFavorited = it.vulnOverview.isFavorited,
+            isFavorite = it.vulnOverview.isFavorite,
         )
     }
 }

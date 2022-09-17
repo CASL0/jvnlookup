@@ -52,7 +52,7 @@ class JvnRepository(private val database: JvnDatabase) {
         val vulnOverviews = MyJvnApi.retrofitService.getVulnOverviewList()
         database.cvssDao.deleteAll()
         database.referenceDao.deleteAll()
-        database.vulnOverviewDao.deleteAllNonFavorited()
+        database.vulnOverviewDao.deleteAllNonFavorite()
         database.vulnOverviewDao.insertAll(vulnOverviews.asDatabaseVulnOverviews())
         database.referenceDao.insertAll(vulnOverviews.asDatabaseReferences())
         database.cvssDao.insertAll(vulnOverviews.asDatabaseCVSS())
@@ -61,8 +61,8 @@ class JvnRepository(private val database: JvnDatabase) {
     /**
      * お気に入り登録を更新します
      */
-    suspend fun updateFavorite(id: String, favorited: Boolean) = withContext(Dispatchers.IO) {
+    suspend fun updateFavorite(id: String, favorite: Boolean) = withContext(Dispatchers.IO) {
         Log.d(TAG, "update favorite")
-        database.vulnOverviewDao.updateFavoritedById(id, favorited)
+        database.vulnOverviewDao.updateFavoriteById(id, favorite)
     }
 }

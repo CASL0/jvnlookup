@@ -151,7 +151,7 @@ fun VulnOverviewResponse.asDatabaseVulnOverviews(): List<DatabaseVulnOverview> {
             id = it.id,
             issued = it.issued,
             modified = it.modified,
-            isFavorited = false,
+            isFavorite = false,
         )
     }
 }

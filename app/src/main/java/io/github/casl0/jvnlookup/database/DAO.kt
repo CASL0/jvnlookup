@@ -31,11 +31,11 @@ interface VulnOverviewDao {
     @Query("DELETE FROM vuln_overview")
     fun deleteAll()
 
-    @Query("DELETE FROM vuln_overview WHERE favorited = false")
-    fun deleteAllNonFavorited()
+    @Query("DELETE FROM vuln_overview WHERE favorite = false")
+    fun deleteAllNonFavorite()
 
-    @Query("UPDATE vuln_overview SET favorited = :favorited WHERE sec_identifier = :id")
-    fun updateFavoritedById(id: String, favorited: Boolean)
+    @Query("UPDATE vuln_overview SET favorite = :favorite WHERE sec_identifier = :id")
+    fun updateFavoriteById(id: String, favorite: Boolean)
 }
 
 @Dao

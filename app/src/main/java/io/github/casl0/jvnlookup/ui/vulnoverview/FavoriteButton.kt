@@ -27,15 +27,15 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 fun FavoriteButton(
-    isFavorited: Boolean,
+    isFavorite: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     IconToggleButton(
-        checked = isFavorited,
+        checked = isFavorite,
         onCheckedChange = { onClick() }
     ) {
-        if (isFavorited) {
+        if (isFavorite) {
             Icon(
                 imageVector = Icons.Filled.Favorite,
                 contentDescription = "favorite",

@@ -44,7 +44,7 @@ fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Mo
     val vulnOverviews = viewModel.vulnOverviews.observeAsState(listOf())
     val filteredVulnOverviews = when (viewModel.selectedCategory) {
         categoryAll -> vulnOverviews.value
-        categoryFavorite -> vulnOverviews.value.filter { it.isFavorited }
+        categoryFavorite -> vulnOverviews.value.filter { it.isFavorite }
         else -> vulnOverviews.value
     }
     val snackbarHostState = remember { SnackbarHostState() }

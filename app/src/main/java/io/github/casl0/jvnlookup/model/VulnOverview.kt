@@ -60,7 +60,7 @@ data class DomainVulnOverview(
     /**
      * お気に入り登録済み
      */
-    var isFavorited: Boolean = false,
+    var isFavorite: Boolean = false,
 )
 
 data class DomainReference(
