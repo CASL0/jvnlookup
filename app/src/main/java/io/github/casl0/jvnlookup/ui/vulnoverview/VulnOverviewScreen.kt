@@ -33,8 +33,6 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import io.github.casl0.jvnlookup.R
-import io.github.casl0.jvnlookup.model.categoryAll
-import io.github.casl0.jvnlookup.model.categoryFavorite
 import io.github.casl0.jvnlookup.model.filterCategories
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -42,11 +40,8 @@ import io.github.casl0.jvnlookup.model.filterCategories
 @Composable
 fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Modifier) {
     val vulnOverviews = viewModel.vulnOverviews.observeAsState(listOf())
-    val filteredVulnOverviews = when (viewModel.selectedCategory) {
-        categoryAll -> vulnOverviews.value
-        categoryFavorite -> vulnOverviews.value.filter { it.isFavorite }
-        else -> vulnOverviews.value
-    }
+    val filteredVulnOverviews =
+        viewModel.filterCategory(vulnOverviews.value, viewModel.selectedCategory)
     val snackbarHostState = remember { SnackbarHostState() }
     val errorMessage = stringResource(id = R.string.error_refresh_overview)
     val actionLabel = stringResource(R.string.refresh_overview_action_label)

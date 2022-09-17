@@ -27,7 +27,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import io.github.casl0.jvnlookup.model.Category
+import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import io.github.casl0.jvnlookup.model.categoryAll
+import io.github.casl0.jvnlookup.model.categoryFavorite
 import io.github.casl0.jvnlookup.repository.JvnRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -110,6 +112,16 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
     fun onCategorySelected(category: Category) {
         _selectedCategory = category
     }
+
+    /**
+     * カテゴリでフィルタリングします
+     */
+    fun filterCategory(originalList: List<DomainVulnOverview>, category: Category) =
+        when (category) {
+            categoryAll -> originalList
+            categoryFavorite -> originalList.filter { it.isFavorite }
+            else -> originalList
+        }
 
     /**
      * VulnOverviewViewModelのファクトリ
