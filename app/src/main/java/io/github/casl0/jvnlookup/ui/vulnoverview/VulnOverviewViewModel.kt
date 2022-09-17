@@ -26,10 +26,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import io.github.casl0.jvnlookup.model.Category
-import io.github.casl0.jvnlookup.model.DomainVulnOverview
-import io.github.casl0.jvnlookup.model.categoryAll
-import io.github.casl0.jvnlookup.model.categoryFavorite
+import io.github.casl0.jvnlookup.model.*
 import io.github.casl0.jvnlookup.repository.JvnRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -120,8 +117,33 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
         when (category) {
             categoryAll -> originalList
             categoryFavorite -> originalList.filter { it.isFavorite }
+            categorySeverityCritical -> {
+                originalList.filter {
+                    checkSeverity(it.cvssList, "critical")
+                }
+            }
+            categorySeverityHigh -> {
+                originalList.filter {
+                    checkSeverity(it.cvssList, "high")
+                }
+            }
+            categorySeverityMiddle -> {
+                originalList.filter {
+                    checkSeverity(it.cvssList, "middle")
+                }
+            }
             else -> originalList
         }
+
+    /**
+     * 指定の深刻度であるかをチェックします
+     */
+    private fun checkSeverity(cvssList: List<DomainCVSS>, severity: CharSequence): Boolean {
+        cvssList.forEach {
+            if (it.severity.equals(severity.toString(), ignoreCase = true)) return true
+        }
+        return false
+    }
 
     /**
      * VulnOverviewViewModelのファクトリ

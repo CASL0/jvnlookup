@@ -9,4 +9,7 @@
     <string name="refresh_overview_action_label">再試行</string>
     <string name="category_all">すべて</string>
     <string name="category_favorite">お気に入り</string>
+    <string name="category_severity_critical">深刻度: 緊急</string>
+    <string name="category_severity_high">深刻度: 重要</string>
+    <string name="category_severity_middle">深刻度: 警告</string>
 </resources>

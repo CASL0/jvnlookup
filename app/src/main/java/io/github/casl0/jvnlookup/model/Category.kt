@@ -26,5 +26,17 @@ data class Category(
 
 val categoryAll = Category(id = "All", name = R.string.category_all)
 val categoryFavorite = Category(id = "Favorite", name = R.string.category_favorite)
+val categorySeverityCritical =
+    Category(id = "SeverityCritical", name = R.string.category_severity_critical)
+val categorySeverityHigh = Category(id = "SeverityHigh", name = R.string.category_severity_high)
+val categorySeverityMiddle =
+    Category(id = "SeverityMiddle", name = R.string.category_severity_middle)
 
-val filterCategories = listOf(categoryAll, categoryFavorite)
+val filterCategories =
+    listOf(
+        categoryAll,
+        categoryFavorite,
+        categorySeverityCritical,
+        categorySeverityHigh,
+        categorySeverityMiddle
+    )
