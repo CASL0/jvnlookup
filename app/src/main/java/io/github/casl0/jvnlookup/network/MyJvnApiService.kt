@@ -20,6 +20,7 @@ import com.tickaroo.tikxml.TikXml
 import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
 import retrofit2.Retrofit
 import retrofit2.http.GET
+import retrofit2.http.Query
 
 private const val BASE_URL = "https://jvndb.jvn.jp/"
 private val retrofit = Retrofit.Builder()
@@ -37,7 +38,7 @@ interface MyJvnApiService {
      * @see https://jvndb.jvn.jp/apis/getVulnOverviewList_api_hnd.html
      */
     @GET("myjvn?method=getVulnOverviewList&feed=hnd&rangeDatePublic=n")
-    suspend fun getVulnOverviewList(): VulnOverviewResponse
+    suspend fun getVulnOverviewList(@Query("keyword") keyword: String? = null): VulnOverviewResponse
 }
 
 object MyJvnApi {
