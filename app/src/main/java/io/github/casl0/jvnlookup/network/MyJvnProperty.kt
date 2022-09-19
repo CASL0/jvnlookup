@@ -20,6 +20,9 @@ import com.tickaroo.tikxml.annotation.*
 import io.github.casl0.jvnlookup.database.DatabaseCVSS
 import io.github.casl0.jvnlookup.database.DatabaseReference
 import io.github.casl0.jvnlookup.database.DatabaseVulnOverview
+import io.github.casl0.jvnlookup.model.DomainCVSS
+import io.github.casl0.jvnlookup.model.DomainReference
+import io.github.casl0.jvnlookup.model.DomainVulnOverview
 
 @Xml(name = "rdf:RDF")
 data class VulnOverviewResponse(
@@ -51,7 +54,7 @@ data class VulnOverview(
      * ベンダ固有のセキュリティ情報ID
      */
     @PropertyElement(name = "sec:identifier")
-    var id: String,
+    var id: String?,
 
     /**
      * 参考情報
@@ -148,7 +151,7 @@ fun VulnOverviewResponse.asDatabaseVulnOverviews(): List<DatabaseVulnOverview> {
             title = it.title,
             link = it.link,
             description = it.description,
-            id = it.id,
+            id = it.id ?: "",
             issued = it.issued,
             modified = it.modified,
             isFavorite = false,
@@ -198,4 +201,53 @@ fun VulnOverviewResponse.asDatabaseCVSS(): List<DatabaseCVSS> {
         }
     }
     return databaseCVSS
+}
+
+/**
+ * JVN APIのレスポンスをドメインモデルに変換します
+ */
+fun VulnOverviewResponse.asDomainModel(): List<DomainVulnOverview> {
+    return vulnOverviews.filter { it.id != null }.map {
+        DomainVulnOverview(
+            title = it.title,
+            link = it.link,
+            description = it.description,
+            id = it.id!!, // 上でnon nullフィルタをかけている
+            references = it.references?.asDomainModel() ?: listOf(),
+            cvssList = it.cvssList?.asDomainModel() ?: listOf(),
+            issued = it.issued,
+            modified = it.modified,
+        )
+    }
+}
+
+/**
+ * JVN参照情報のネットワークモデルをドメインモデルに変換します
+ */
+@JvmName("asDomainModelReference")
+fun List<Reference>.asDomainModel(): List<DomainReference> {
+    return map {
+        DomainReference(
+            source = it.source,
+            id = it.id,
+            title = it.title,
+            url = it.url ?: ""
+        )
+    }
+}
+
+/**
+ * CVSSのネットワークモデルをドメインモデルに変換します
+ */
+@JvmName("asDomainModelCVSS")
+fun List<CVSS>.asDomainModel(): List<DomainCVSS> {
+    return map {
+        DomainCVSS(
+            version = it.version,
+            type = it.type,
+            severity = it.severity,
+            score = it.score,
+            vector = it.vector
+        )
+    }
 }
