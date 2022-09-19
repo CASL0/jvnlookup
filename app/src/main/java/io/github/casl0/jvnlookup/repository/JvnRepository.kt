@@ -16,7 +16,6 @@
 
 package io.github.casl0.jvnlookup.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import io.github.casl0.jvnlookup.database.JvnDatabase
@@ -28,15 +27,13 @@ import io.github.casl0.jvnlookup.network.asDatabaseReferences
 import io.github.casl0.jvnlookup.network.asDatabaseVulnOverviews
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 /**
  * JVN APIからデータを取得し、Roomに保存するリポジトリ
  * @param database 保存先のデータベース
  */
 class JvnRepository(private val database: JvnDatabase) {
-    companion object {
-        private const val TAG = "JvnRepository"
-    }
 
     val vulnOverviews: LiveData<List<DomainVulnOverview>> = Transformations.map(
         database.vulnOverviewDao.getVulnOverviewWithReferencesAndCVSS()
@@ -48,7 +45,7 @@ class JvnRepository(private val database: JvnDatabase) {
      * ローカルに保存しているJVNデータを更新します
      */
     suspend fun refreshVulnOverviews() = withContext(Dispatchers.IO) {
-        Log.d(TAG, "refresh vuln overviews")
+        Timber.d("refresh vuln overviews")
         val vulnOverviews = MyJvnApi.retrofitService.getVulnOverviewList()
         database.cvssDao.deleteAll()
         database.referenceDao.deleteAll()
@@ -62,7 +59,7 @@ class JvnRepository(private val database: JvnDatabase) {
      * お気に入り登録を更新します
      */
     suspend fun updateFavorite(id: String, favorite: Boolean) = withContext(Dispatchers.IO) {
-        Log.d(TAG, "update favorite")
+        Timber.d("update favorite")
         database.vulnOverviewDao.updateFavoriteById(id, favorite)
     }
 }

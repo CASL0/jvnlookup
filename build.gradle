@@ -8,6 +8,7 @@ buildscript {
         lifecycle_version = "2.6.0-alpha02"
         accompanist_version = "0.26.3-beta"
         dokka_version = "1.7.10"
+        timber_version = "5.0.1"
     }
     dependencies {
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"

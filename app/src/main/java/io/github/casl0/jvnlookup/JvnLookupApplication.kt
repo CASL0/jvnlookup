@@ -19,6 +19,7 @@ package io.github.casl0.jvnlookup
 import android.app.Application
 import io.github.casl0.jvnlookup.database.getDatabase
 import io.github.casl0.jvnlookup.repository.JvnRepository
+import timber.log.Timber
 
 class JvnLookupApplication : Application() {
 
@@ -26,4 +27,11 @@ class JvnLookupApplication : Application() {
      * JVN APIから取得した情報のリポジトリ
      */
     val jvnRepository by lazy { JvnRepository(getDatabase(this)) }
+
+    override fun onCreate() {
+        super.onCreate()
+        if (BuildConfig.DEBUG) {
+            Timber.plant(Timber.DebugTree())
+        }
+    }
 }

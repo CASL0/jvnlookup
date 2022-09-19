@@ -18,7 +18,6 @@ package io.github.casl0.jvnlookup.ui.vulnoverview
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +31,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import java.lang.Exception
 
 /**
@@ -78,7 +78,7 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
                 jvnRepository.refreshVulnOverviews()
             } catch (e: Exception) {
                 // ネットワークエラー
-                e.localizedMessage?.let { Log.d(TAG, it) }
+                e.localizedMessage?.let { Timber.d(it) }
                 errorChannel.send(true)
             }
             _isRefreshing = false
@@ -157,7 +157,5 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
                 return VulnOverviewViewModel(jvnRepository) as T
             }
         }
-
-        private const val TAG = "VulnOverviewViewModel"
     }
 }
