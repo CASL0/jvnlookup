@@ -21,12 +21,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +35,17 @@ import androidx.compose.ui.unit.dp
 fun SearchScreen(viewModel: SearchViewModel) {
     val searchResults = viewModel.searchResult.observeAsState(listOf())
     val searchValue = viewModel.searchValue
-    Scaffold {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+    LaunchedEffect(snackbarHostState) {
+        viewModel.hasError.collect { errorMessage ->
+            snackbarHostState.showSnackbar(
+                message = context.getString(errorMessage),
+                duration = SnackbarDuration.Short
+            )
+        }
+    }
+    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {
         val scrollState = rememberLazyListState()
         LazyColumn(
             state = scrollState,

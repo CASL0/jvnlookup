@@ -40,7 +40,7 @@ fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Mo
     val filteredVulnOverviews =
         viewModel.filterCategory(vulnOverviews.value, viewModel.selectedCategory)
     val snackbarHostState = remember { SnackbarHostState() }
-    val errorMessage = stringResource(id = R.string.error_refresh_overview)
+    val errorMessage = stringResource(id = R.string.error_network_connection)
     val actionLabel = stringResource(R.string.refresh_overview_action_label)
     LaunchedEffect(snackbarHostState) {
         viewModel.hasError.collect { hasError ->

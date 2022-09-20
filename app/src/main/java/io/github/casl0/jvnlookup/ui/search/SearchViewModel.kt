@@ -25,7 +25,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.repository.SearchRepository
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import java.lang.Exception
@@ -44,17 +48,30 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
     val searchValue get() = _searchValue
 
     /**
+     * 検索失敗時のチャネル
+     */
+    private val errorChannel = Channel<Int>()
+
+    /**
+     * 検索失敗時のエラーイベント
+     */
+    val hasError: Flow<Int> = errorChannel.receiveAsFlow()
+
+    /**
      * キーワードで JVN を検索します
      */
     fun searchOnJvn(keyword: CharSequence) {
         if (keyword.isEmpty() || keyword.isBlank()) return
         viewModelScope.launch {
             try {
-                searchRepository.searchOnJvn(keyword)
+                val hitCount = searchRepository.searchOnJvn(keyword)
+                if (hitCount == 0) {
+                    errorChannel.send(R.string.error_no_results_found)
+                }
             } catch (e: Exception) {
                 // ネットワークエラー
                 e.localizedMessage?.let { Timber.d(it) }
-                // TODO: エラーハンドリング
+                errorChannel.send(R.string.error_network_connection)
             }
         }
     }
