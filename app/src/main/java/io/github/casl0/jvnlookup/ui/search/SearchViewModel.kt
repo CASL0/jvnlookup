@@ -16,6 +16,9 @@
 
 package io.github.casl0.jvnlookup.ui.search
 
+import android.content.Context
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
@@ -61,6 +64,15 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
      */
     fun onSearchValueChanged(newValue: String) {
         _searchValue = newValue
+    }
+
+    /**
+     * リストアイテムのクリックハンドラ。脆弱性対策情報のWebページへ遷移します
+     */
+    fun onItemClicked(context: Context, url: CharSequence) {
+        CustomTabsIntent.Builder().build().run {
+            launchUrl(context, Uri.parse(url as String?))
+        }
     }
 
     companion object {

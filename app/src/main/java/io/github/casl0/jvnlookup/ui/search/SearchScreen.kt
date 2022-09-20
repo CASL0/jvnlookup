@@ -16,12 +16,18 @@
 
 package io.github.casl0.jvnlookup.ui.search
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,13 +36,26 @@ fun SearchScreen(viewModel: SearchViewModel) {
     val searchValue = viewModel.searchValue
     Scaffold {
         val scrollState = rememberLazyListState()
-        LazyColumn(state = scrollState, contentPadding = it) {
+        LazyColumn(
+            state = scrollState,
+            contentPadding = it,
+            verticalArrangement = Arrangement.spacedBy(4.dp)
+        ) {
             item {
                 SearchTextField(
                     searchValue = searchValue,
                     onValueChange = viewModel::onSearchValueChanged,
-                    onSearch = viewModel::searchOnJvn
+                    onSearch = viewModel::searchOnJvn,
+                    modifier = Modifier.padding(bottom = 4.dp)
                 )
+            }
+            items(items = searchResults.value, key = { item -> item.id }) { vulnOverview ->
+                Surface(modifier = Modifier.padding(horizontal = 4.dp)) {
+                    SearchItem(
+                        vulnOverview = vulnOverview,
+                        onItemClicked = viewModel::onItemClicked
+                    )
+                }
             }
         }
     }
