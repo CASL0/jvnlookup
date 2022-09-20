@@ -47,25 +47,29 @@ fun SearchScreen(viewModel: SearchViewModel) {
     }
     Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {
         val scrollState = rememberLazyListState()
-        LazyColumn(
-            state = scrollState,
-            contentPadding = it,
-            verticalArrangement = Arrangement.spacedBy(4.dp)
-        ) {
-            item {
-                SearchTextField(
-                    searchValue = searchValue,
-                    onValueChange = viewModel::onSearchValueChanged,
-                    onSearch = viewModel::searchOnJvn,
-                    modifier = Modifier.padding(bottom = 4.dp)
-                )
-            }
-            items(items = searchResults.value, key = { item -> item.id }) { vulnOverview ->
-                Surface(modifier = Modifier.padding(horizontal = 4.dp)) {
-                    SearchItem(
-                        vulnOverview = vulnOverview,
-                        onItemClicked = viewModel::onItemClicked
+        if (viewModel.searchInProgress) {
+            ProgressIndicator()
+        } else {
+            LazyColumn(
+                state = scrollState,
+                contentPadding = it,
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                item {
+                    SearchTextField(
+                        searchValue = searchValue,
+                        onValueChange = viewModel::onSearchValueChanged,
+                        onSearch = viewModel::searchOnJvn,
+                        modifier = Modifier.padding(bottom = 4.dp)
                     )
+                }
+                items(items = searchResults.value, key = { item -> item.id }) { vulnOverview ->
+                    Surface(modifier = Modifier.padding(horizontal = 4.dp)) {
+                        SearchItem(
+                            vulnOverview = vulnOverview,
+                            onItemClicked = viewModel::onItemClicked
+                        )
+                    }
                 }
             }
         }

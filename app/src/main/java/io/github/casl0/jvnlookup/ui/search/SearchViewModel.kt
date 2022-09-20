@@ -48,6 +48,12 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
     val searchValue get() = _searchValue
 
     /**
+     * 検索中の状態
+     */
+    private var _searchInProgress by mutableStateOf(false)
+    val searchInProgress get() = _searchInProgress
+
+    /**
      * 検索失敗時のチャネル
      */
     private val errorChannel = Channel<Int>()
@@ -63,6 +69,7 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
     fun searchOnJvn(keyword: CharSequence) {
         if (keyword.isEmpty() || keyword.isBlank()) return
         viewModelScope.launch {
+            _searchInProgress = true
             try {
                 val hitCount = searchRepository.searchOnJvn(keyword)
                 if (hitCount == 0) {
@@ -73,6 +80,7 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
                 e.localizedMessage?.let { Timber.d(it) }
                 errorChannel.send(R.string.error_network_connection)
             }
+            _searchInProgress = false
         }
     }
 
