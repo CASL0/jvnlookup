@@ -11,4 +11,5 @@
     <string name="category_severity_critical">Severity: Critical</string>
     <string name="category_severity_high">Severity: High</string>
     <string name="category_severity_middle">Severity: Middle</string>
+    <string name="search_label">Search</string>
 </resources>

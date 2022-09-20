@@ -12,4 +12,5 @@
     <string name="category_severity_critical">深刻度: 緊急</string>
     <string name="category_severity_high">深刻度: 重要</string>
     <string name="category_severity_middle">深刻度: 警告</string>
+    <string name="search_label">さがす</string>
 </resources>

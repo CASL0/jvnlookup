@@ -26,6 +26,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import io.github.casl0.jvnlookup.JvnLookupApplication
 import io.github.casl0.jvnlookup.ui.favorite.FavoriteScreen
+import io.github.casl0.jvnlookup.ui.search.SearchScreen
+import io.github.casl0.jvnlookup.ui.search.SearchViewModel
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewScreen
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewViewModel
 
@@ -48,6 +50,14 @@ fun JvnLookupNavHost(
                     VulnOverviewViewModel.provideFactory(application.jvnRepository)
                 )
             VulnOverviewScreen(vulnOverviewViewModel)
+        }
+        composable(route = Search.route) {
+            val searchViewModel: SearchViewModel = viewModel(
+                viewModelStoreOwner = LocalViewModelStoreOwner.current!!,
+                key = "SearchViewModel",
+                SearchViewModel.provideFactory(application.searchRepository)
+            )
+            SearchScreen(searchViewModel)
         }
         composable(route = Favorite.route) {
             FavoriteScreen()

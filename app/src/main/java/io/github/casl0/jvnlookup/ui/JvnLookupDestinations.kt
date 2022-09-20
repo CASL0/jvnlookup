@@ -19,6 +19,7 @@ package io.github.casl0.jvnlookup.ui
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.ui.graphics.vector.ImageVector
 import io.github.casl0.jvnlookup.R
 
@@ -34,10 +35,16 @@ object VulnOverview : JvnLookupDestination {
     override val route = "vuln_overview"
 }
 
+object Search : JvnLookupDestination {
+    override val icon = Icons.Filled.Search
+    override val label = R.string.search_label
+    override val route = "search"
+}
+
 object Favorite : JvnLookupDestination {
     override val icon = Icons.Filled.Favorite
     override val label = R.string.favorite_label
     override val route = "favorite"
 }
 
-val jvnLookupBottomNavBarScreens = listOf(VulnOverview, Favorite)
+val jvnLookupBottomNavBarScreens = listOf(VulnOverview, Search, Favorite)
