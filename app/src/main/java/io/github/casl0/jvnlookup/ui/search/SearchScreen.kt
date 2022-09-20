@@ -16,9 +16,28 @@
 
 package io.github.casl0.jvnlookup.ui.search
 
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(viewModel: SearchViewModel) {
-
+    val searchResults = viewModel.searchResult.observeAsState(listOf())
+    val searchValue = viewModel.searchValue
+    Scaffold {
+        val scrollState = rememberLazyListState()
+        LazyColumn(state = scrollState, contentPadding = it) {
+            item {
+                SearchTextField(
+                    searchValue = searchValue,
+                    onValueChange = viewModel::onSearchValueChanged,
+                    onSearch = viewModel::searchOnJvn
+                )
+            }
+        }
+    }
 }

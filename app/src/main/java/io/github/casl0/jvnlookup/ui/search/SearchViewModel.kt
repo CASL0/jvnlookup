@@ -16,6 +16,9 @@
 
 package io.github.casl0.jvnlookup.ui.search
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -32,9 +35,16 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
     val searchResult = searchRepository.searchResults
 
     /**
+     * 検索ボックスの入力値
+     */
+    private var _searchValue by mutableStateOf("")
+    val searchValue get() = _searchValue
+
+    /**
      * キーワードで JVN を検索します
      */
     fun searchOnJvn(keyword: CharSequence) {
+        if (keyword.isEmpty() || keyword.isBlank()) return
         viewModelScope.launch {
             try {
                 searchRepository.searchOnJvn(keyword)
@@ -44,6 +54,13 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
                 // TODO: エラーハンドリング
             }
         }
+    }
+
+    /**
+     * 検索ボックスの入力値変更時のイベントハンドラ
+     */
+    fun onSearchValueChanged(newValue: String) {
+        _searchValue = newValue
     }
 
     companion object {
