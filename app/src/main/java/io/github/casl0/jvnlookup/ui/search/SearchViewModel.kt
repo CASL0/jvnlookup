@@ -23,7 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import io.github.casl0.jvnlookup.R
-import io.github.casl0.jvnlookup.repository.SearchRepository
+import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -33,10 +33,11 @@ import java.lang.Exception
 
 /**
  * 検索画面のビジネスロジックを扱うViewModel
- * @param searchRepository 検索結果のリポジトリ
+ * @param searchVulnOverviewUseCase 検索用のUseCase
  */
-class SearchViewModel(private val searchRepository: SearchRepository) : ViewModel() {
-    val searchResult = searchRepository.searchResults
+class SearchViewModel(private val searchVulnOverviewUseCase: SearchVulnOverviewUseCase) :
+    ViewModel() {
+    val searchResult = searchVulnOverviewUseCase.searchResults
 
     /**
      * 検索ボックスの入力値
@@ -68,7 +69,7 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
         viewModelScope.launch {
             _searchInProgress = true
             try {
-                val hitCount = searchRepository.searchOnJvn(keyword)
+                val hitCount = searchVulnOverviewUseCase(keyword)
                 if (hitCount == 0) {
                     errorChannel.send(R.string.error_no_results_found)
                 }
@@ -93,11 +94,11 @@ class SearchViewModel(private val searchRepository: SearchRepository) : ViewMode
          * SearchViewModelのファクトリ
          */
         fun provideFactory(
-            searchRepository: SearchRepository,
+            searchVulnOverviewUseCase: SearchVulnOverviewUseCase,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SearchViewModel(searchRepository) as T
+                return SearchViewModel(searchVulnOverviewUseCase) as T
             }
         }
     }

@@ -21,8 +21,6 @@ import androidx.lifecycle.MutableLiveData
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import io.github.casl0.jvnlookup.network.MyJvnApi
 import io.github.casl0.jvnlookup.network.asDomainModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 /**
@@ -39,11 +37,11 @@ class SearchRepository {
      * JVN APIを使用し、脆弱性対策情報をキーワード検索します
      * @return 検索のHIT件数
      */
-    suspend fun searchOnJvn(keyword: CharSequence) = withContext(Dispatchers.IO) {
+    suspend fun searchOnJvn(keyword: CharSequence): Int {
         Timber.d("search on jvn")
         MyJvnApi.retrofitService.getVulnOverviewList(keyword as String).run {
             _searchResults.postValue(this.asDomainModel())
-            return@withContext this.asDomainModel().size
+            return this.asDomainModel().size
         }
     }
 }

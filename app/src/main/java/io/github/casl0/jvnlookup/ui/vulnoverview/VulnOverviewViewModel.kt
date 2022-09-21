@@ -23,8 +23,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import io.github.casl0.jvnlookup.R
+import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
+import io.github.casl0.jvnlookup.domain.FetchVulnOverviewUseCase
 import io.github.casl0.jvnlookup.model.*
-import io.github.casl0.jvnlookup.repository.JvnRepository
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -34,11 +35,15 @@ import java.lang.Exception
 
 /**
  * ホーム画面のビジネスロジックを扱うViewModel
- * @param jvnRepository JVN API操作用のリポジトリ
+ * @param fetchVulnOverviewUseCase 脆弱性対策情報を取得するUseCase
+ * @param favoriteVulnOverviewUseCase 脆弱性対策情報をお気に入り登録するUseCase
  */
-class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewModel() {
+class VulnOverviewViewModel(
+    private val fetchVulnOverviewUseCase: FetchVulnOverviewUseCase,
+    private val favoriteVulnOverviewUseCase: FavoriteVulnOverviewUseCase,
+) : ViewModel() {
 
-    val vulnOverviews = jvnRepository.vulnOverviews
+    val vulnOverviews = fetchVulnOverviewUseCase.vulnOverviews
 
     /**
      * リフレッシュ中
@@ -73,7 +78,7 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
         viewModelScope.launch {
             _isRefreshing = true
             try {
-                jvnRepository.refreshVulnOverviews()
+                fetchVulnOverviewUseCase()
             } catch (e: Exception) {
                 // ネットワークエラー
                 e.localizedMessage?.let { Timber.d(it) }
@@ -88,7 +93,7 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
      */
     fun onFavoriteButtonClicked(id: String, favorite: Boolean) {
         viewModelScope.launch {
-            jvnRepository.updateFavorite(id, favorite)
+            favoriteVulnOverviewUseCase(id, favorite)
         }
     }
 
@@ -139,11 +144,15 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
      */
     companion object {
         fun provideFactory(
-            jvnRepository: JvnRepository,
+            fetchVulnOverviewUseCase: FetchVulnOverviewUseCase,
+            favoriteVulnOverviewUseCase: FavoriteVulnOverviewUseCase,
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return VulnOverviewViewModel(jvnRepository) as T
+                return VulnOverviewViewModel(
+                    fetchVulnOverviewUseCase,
+                    favoriteVulnOverviewUseCase
+                ) as T
             }
         }
     }

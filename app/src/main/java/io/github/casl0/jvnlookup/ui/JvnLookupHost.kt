@@ -27,11 +27,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import io.github.casl0.jvnlookup.JvnLookupApplication
+import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
+import io.github.casl0.jvnlookup.domain.FetchVulnOverviewUseCase
+import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
 import io.github.casl0.jvnlookup.ui.favorite.FavoriteScreen
 import io.github.casl0.jvnlookup.ui.search.SearchScreen
 import io.github.casl0.jvnlookup.ui.search.SearchViewModel
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewScreen
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewViewModel
+import kotlinx.coroutines.Dispatchers
 
 @Composable
 fun JvnLookupNavHost(
@@ -49,7 +53,10 @@ fun JvnLookupNavHost(
                 viewModel(
                     viewModelStoreOwner = LocalViewModelStoreOwner.current!!,
                     key = "VulnOverviewViewModel",
-                    VulnOverviewViewModel.provideFactory(application.jvnRepository)
+                    VulnOverviewViewModel.provideFactory(
+                        FetchVulnOverviewUseCase(application.jvnRepository, Dispatchers.IO),
+                        FavoriteVulnOverviewUseCase(application.jvnRepository, Dispatchers.IO)
+                    )
                 )
             VulnOverviewScreen(vulnOverviewViewModel, navController::navigationUrlInCustomTabs)
         }
@@ -57,7 +64,12 @@ fun JvnLookupNavHost(
             val searchViewModel: SearchViewModel = viewModel(
                 viewModelStoreOwner = LocalViewModelStoreOwner.current!!,
                 key = "SearchViewModel",
-                SearchViewModel.provideFactory(application.searchRepository)
+                SearchViewModel.provideFactory(
+                    SearchVulnOverviewUseCase(
+                        application.searchRepository,
+                        Dispatchers.IO
+                    )
+                )
             )
             SearchScreen(searchViewModel, navController::navigationUrlInCustomTabs)
         }

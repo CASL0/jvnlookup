@@ -25,8 +25,6 @@ import io.github.casl0.jvnlookup.network.MyJvnApi
 import io.github.casl0.jvnlookup.network.asDatabaseCVSS
 import io.github.casl0.jvnlookup.network.asDatabaseReferences
 import io.github.casl0.jvnlookup.network.asDatabaseVulnOverviews
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 /**
@@ -44,7 +42,7 @@ class JvnRepository(private val database: JvnDatabase) {
     /**
      * ローカルに保存しているJVNデータを更新します
      */
-    suspend fun refreshVulnOverviews() = withContext(Dispatchers.IO) {
+    suspend fun refreshVulnOverviews() {
         Timber.d("refresh vuln overviews")
         val vulnOverviews = MyJvnApi.retrofitService.getVulnOverviewList()
         database.cvssDao.deleteAll()
@@ -58,7 +56,7 @@ class JvnRepository(private val database: JvnDatabase) {
     /**
      * お気に入り登録を更新します
      */
-    suspend fun updateFavorite(id: String, favorite: Boolean) = withContext(Dispatchers.IO) {
+    suspend fun updateFavorite(id: String, favorite: Boolean) {
         Timber.d("update favorite")
         database.vulnOverviewDao.updateFavoriteById(id, favorite)
     }
