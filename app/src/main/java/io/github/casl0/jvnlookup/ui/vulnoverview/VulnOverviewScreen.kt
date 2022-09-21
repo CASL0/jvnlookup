@@ -25,12 +25,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.model.filterCategories
+import io.github.casl0.jvnlookup.ui.components.SnackbarLaunchedEffect
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -40,23 +40,15 @@ fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Mo
     val filteredVulnOverviews =
         viewModel.filterCategory(vulnOverviews.value, viewModel.selectedCategory)
     val snackbarHostState = remember { SnackbarHostState() }
-    val errorMessage = stringResource(id = R.string.error_network_connection)
-    val actionLabel = stringResource(R.string.refresh_overview_action_label)
-    LaunchedEffect(snackbarHostState) {
-        viewModel.hasError.collect { hasError ->
-            if (hasError) {
-                val result = snackbarHostState.showSnackbar(
-                    message = errorMessage,
-                    actionLabel = actionLabel,
-                    duration = SnackbarDuration.Short
-                )
-                when (result) {
-                    SnackbarResult.ActionPerformed -> {
-                        viewModel.refreshVulnOverviews()
-                    }
-                    SnackbarResult.Dismissed -> {
-                    }
-                }
+    viewModel.hasError.SnackbarLaunchedEffect(
+        snackbarHostState = snackbarHostState,
+        R.string.refresh_overview_action_label
+    ) {
+        when (it) {
+            SnackbarResult.ActionPerformed -> {
+                viewModel.refreshVulnOverviews()
+            }
+            SnackbarResult.Dismissed -> {
             }
         }
     }

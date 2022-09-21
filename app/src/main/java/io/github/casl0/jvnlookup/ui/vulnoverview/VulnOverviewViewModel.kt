@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.model.*
 import io.github.casl0.jvnlookup.repository.JvnRepository
 import kotlinx.coroutines.channels.Channel
@@ -57,12 +58,12 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
     /**
      * リフレッシュ失敗時のチャネル
      */
-    private val errorChannel = Channel<Boolean>()
+    private val errorChannel = Channel<Int>()
 
     /**
      * リフレッシュ失敗時のエラーイベント
      */
-    val hasError: Flow<Boolean> = errorChannel.receiveAsFlow()
+    val hasError: Flow<Int> = errorChannel.receiveAsFlow()
 
     init {
         refreshVulnOverviews()
@@ -79,7 +80,7 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
             } catch (e: Exception) {
                 // ネットワークエラー
                 e.localizedMessage?.let { Timber.d(it) }
-                errorChannel.send(true)
+                errorChannel.send(R.string.error_network_connection)
             }
             _isRefreshing = false
         }
