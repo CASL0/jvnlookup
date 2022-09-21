@@ -31,7 +31,7 @@ import io.github.casl0.jvnlookup.ui.components.SnackbarLaunchedEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(viewModel: SearchViewModel) {
+fun SearchScreen(viewModel: SearchViewModel, onClickVulnOverviewItem: (CharSequence) -> Unit) {
     val searchResults = viewModel.searchResult.observeAsState(listOf())
     val searchValue = viewModel.searchValue
     val snackbarHostState = remember { SnackbarHostState() }
@@ -58,7 +58,7 @@ fun SearchScreen(viewModel: SearchViewModel) {
                     Surface(modifier = Modifier.padding(horizontal = 4.dp)) {
                         SearchItem(
                             vulnOverview = vulnOverview,
-                            onItemClicked = viewModel::onItemClicked
+                            onItemClicked = onClickVulnOverviewItem
                         )
                     }
                 }

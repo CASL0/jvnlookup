@@ -16,9 +16,6 @@
 
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
-import android.content.Context
-import android.net.Uri
-import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -83,15 +80,6 @@ class VulnOverviewViewModel(private val jvnRepository: JvnRepository) : ViewMode
                 errorChannel.send(R.string.error_network_connection)
             }
             _isRefreshing = false
-        }
-    }
-
-    /**
-     * リストアイテムのクリックハンドラ。脆弱性対策情報のWebページへ遷移します
-     */
-    fun onItemClicked(context: Context, url: CharSequence) {
-        CustomTabsIntent.Builder().build().run {
-            launchUrl(context, Uri.parse(url as String?))
         }
     }
 

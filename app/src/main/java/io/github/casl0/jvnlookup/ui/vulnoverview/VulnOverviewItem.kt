@@ -16,12 +16,10 @@
 
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
-import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import io.github.casl0.jvnlookup.R
@@ -31,13 +29,12 @@ import io.github.casl0.jvnlookup.model.DomainVulnOverview
 @Composable
 fun VulnOverviewItem(
     vulnOverview: DomainVulnOverview,
-    onItemClicked: (Context, CharSequence) -> Unit,
+    onItemClicked: (CharSequence) -> Unit,
     onFavoriteButtonClicked: (String, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val typography = MaterialTheme.typography
-    val context = LocalContext.current
-    Card(onClick = { onItemClicked(context, vulnOverview.link ?: "") }) {
+    Card(onClick = { onItemClicked(vulnOverview.link ?: "") }) {
         Column(
             modifier = modifier
                 .fillMaxWidth()

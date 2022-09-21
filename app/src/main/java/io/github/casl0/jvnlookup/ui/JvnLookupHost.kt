@@ -16,6 +16,8 @@
 
 package io.github.casl0.jvnlookup.ui
 
+import android.net.Uri
+import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
@@ -49,7 +51,7 @@ fun JvnLookupNavHost(
                     key = "VulnOverviewViewModel",
                     VulnOverviewViewModel.provideFactory(application.jvnRepository)
                 )
-            VulnOverviewScreen(vulnOverviewViewModel)
+            VulnOverviewScreen(vulnOverviewViewModel, navController::navigationUrlInCustomTabs)
         }
         composable(route = Search.route) {
             val searchViewModel: SearchViewModel = viewModel(
@@ -57,7 +59,7 @@ fun JvnLookupNavHost(
                 key = "SearchViewModel",
                 SearchViewModel.provideFactory(application.searchRepository)
             )
-            SearchScreen(searchViewModel)
+            SearchScreen(searchViewModel, navController::navigationUrlInCustomTabs)
         }
         composable(route = Favorite.route) {
             FavoriteScreen()
@@ -75,3 +77,13 @@ fun NavHostController.navigateSingleTopTo(route: String) =
         launchSingleTop = true
         restoreState = true
     }
+
+/**
+ * Chrome Custom Tabs によるナビゲーションをします
+ * @param url URL文字列
+ */
+fun NavHostController.navigationUrlInCustomTabs(url: CharSequence) {
+    CustomTabsIntent.Builder().build().run {
+        launchUrl(context, Uri.parse(url as String?))
+    }
+}

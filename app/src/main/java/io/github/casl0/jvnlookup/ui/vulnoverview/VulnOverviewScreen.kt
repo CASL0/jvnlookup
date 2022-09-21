@@ -35,7 +35,11 @@ import io.github.casl0.jvnlookup.ui.components.SnackbarLaunchedEffect
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Modifier) {
+fun VulnOverviewScreen(
+    viewModel: VulnOverviewViewModel,
+    onClickVulnOverviewItem: (CharSequence) -> Unit,
+    modifier: Modifier = Modifier
+) {
     val vulnOverviews = viewModel.vulnOverviews.observeAsState(listOf())
     val filteredVulnOverviews =
         viewModel.filterCategory(vulnOverviews.value, viewModel.selectedCategory)
@@ -77,7 +81,7 @@ fun VulnOverviewScreen(viewModel: VulnOverviewViewModel, modifier: Modifier = Mo
                         Surface(modifier.padding(horizontal = 4.dp)) {
                             VulnOverviewItem(
                                 vulnOverview,
-                                viewModel::onItemClicked,
+                                onClickVulnOverviewItem,
                                 viewModel::onFavoriteButtonClicked,
                                 modifier
                             )
