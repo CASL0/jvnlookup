@@ -31,6 +31,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.model.filterCategories
 import io.github.casl0.jvnlookup.ui.components.SnackbarLaunchedEffect
+import io.github.casl0.jvnlookup.ui.components.VulnCard
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -79,7 +80,7 @@ fun VulnOverviewScreen(
                         key = { vulnOverview -> vulnOverview.id }
                     ) { vulnOverview ->
                         Surface(modifier.padding(horizontal = 4.dp)) {
-                            VulnOverviewItem(
+                            VulnCard(
                                 vulnOverview,
                                 onClickVulnOverviewItem,
                                 viewModel::onFavoriteButtonClicked,

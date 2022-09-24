@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.github.casl0.jvnlookup.ui.vulnoverview
+package io.github.casl0.jvnlookup.ui.components
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
