@@ -44,7 +44,11 @@ class JvnRepository(private val database: JvnDatabase) {
      */
     suspend fun refreshVulnOverviews() {
         Timber.d("refresh vuln overviews")
-        val vulnOverviews = MyJvnApi.retrofitService.getVulnOverviewList()
+        val vulnOverviews = MyJvnApi.retrofitService.getVulnOverviewList(
+            rangeDatePublic = "n",
+            rangeDatePublished = "m",
+            rangeDateFirstPublished = "m"
+        )
         database.cvssDao.deleteAll()
         database.referenceDao.deleteAll()
         database.vulnOverviewDao.deleteAllNonFavorite()

@@ -35,10 +35,19 @@ private val retrofit = Retrofit.Builder()
 interface MyJvnApiService {
     /**
      * フィルタリング条件に当てはまる脆弱性対策の概要情報リストを取得します。
+     * @param keyword 検索キーワード
+     * @param rangeDatePublic 発見日(脆弱性対策情報が一般に公表された日付)の範囲指定 n:範囲指定なし、w:過去1週間、m:過去1ヶ月
+     * @param rangeDatePublished 更新日(脆弱性対策情報が更新された最後の日付)の範囲指定 n:範囲指定なし、w:過去1週間、m:過去1ヶ月
+     * @param rangeDateFirstPublished 発行日(脆弱性対策情報に初めて登録された日付)の範囲指定 n:範囲指定なし、w:過去1週間、m:過去1ヶ月
      * @see https://jvndb.jvn.jp/apis/getVulnOverviewList_api_hnd.html
      */
-    @GET("myjvn?method=getVulnOverviewList&feed=hnd&rangeDatePublic=n")
-    suspend fun getVulnOverviewList(@Query("keyword") keyword: String? = null): VulnOverviewResponse
+    @GET("myjvn?method=getVulnOverviewList&feed=hnd")
+    suspend fun getVulnOverviewList(
+        @Query("keyword") keyword: String? = null,
+        @Query("rangeDatePublic") rangeDatePublic: String = "n",
+        @Query("rangeDatePublished") rangeDatePublished: String = "n",
+        @Query("rangeDateFirstPublished") rangeDateFirstPublished: String = "n",
+        ): VulnOverviewResponse
 }
 
 object MyJvnApi {
