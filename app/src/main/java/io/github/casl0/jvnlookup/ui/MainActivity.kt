@@ -19,14 +19,89 @@ package io.github.casl0.jvnlookup.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.IntentSenderRequest
+import androidx.activity.result.contract.ActivityResultContracts
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
+import com.google.android.play.core.common.IntentSenderForResultStarter
+import com.google.android.play.core.install.model.ActivityResult
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
 import io.github.casl0.jvnlookup.JvnLookupApplication
+import timber.log.Timber
 
 class MainActivity : ComponentActivity() {
+    /**
+     * アプリ内アップデート制御
+     */
+    private lateinit var appUpdateManager: AppUpdateManager
+
+    /**
+     * アプリ内アップデートコールバック
+     */
+    private val updateFlowResultLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.StartIntentSenderForResult(),
+        ) { result ->
+            when (result.resultCode) {
+                RESULT_OK -> Timber.d("update ok")
+                RESULT_CANCELED -> Timber.d("update canceled")
+                ActivityResult.RESULT_IN_APP_UPDATE_FAILED -> Timber.d("update failed")
+            }
+        }
+
+    /**
+     * アプリ内アップデートの実行
+     */
+    private fun requestAppUpdate() {
+        val appUpdateInfoTask = appUpdateManager.appUpdateInfo
+        appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
+            val starter =
+                IntentSenderForResultStarter { intent, _, fillInIntent, flagsMask, flagsValues, _, _ ->
+                    val request = IntentSenderRequest.Builder(intent)
+                        .setFillInIntent(fillInIntent)
+                        .setFlags(flagsValues, flagsMask)
+                        .build()
+
+                    updateFlowResultLauncher.launch(request)
+                }
+            when {
+                appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+                        && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) -> {
+                    Timber.d("start app update")
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        AppUpdateType.IMMEDIATE,
+                        starter,
+                        1,
+                    )
+                }
+                appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS -> {
+                    // アップデートが停止している場合は、更新を再開します
+                    Timber.d("resume app update")
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        AppUpdateType.IMMEDIATE,
+                        starter,
+                        1,
+                    )
+                }
+            }
+        }
+    }
+
+    // ライフサイクルメソッド
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        appUpdateManager = AppUpdateManagerFactory.create(this)
         val jvnLookupApplication = application as JvnLookupApplication
         setContent {
             JvnLookupApp(jvnLookupApplication)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requestAppUpdate()
     }
 }

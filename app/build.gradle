@@ -80,4 +80,6 @@ dependencies {
     implementation "androidx.browser:browser:1.4.0"
     implementation "com.jakewharton.timber:timber:$timber_version"
     implementation "com.google.android.gms:play-services-oss-licenses:$play_services_oss_licenses_version"
+    implementation "com.google.android.play:app-update:$in_app_update_version"
+    implementation "com.google.android.play:app-update-ktx:$in_app_update_version"
 }
