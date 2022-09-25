@@ -31,10 +31,7 @@ import io.github.casl0.jvnlookup.R
 fun SettingScreen(onClickOssLicenses: () -> Unit) {
     Scaffold {
         Column(modifier = Modifier.padding(it)) {
-            AppVersion()
-            Spacer(
-                modifier = Modifier.height(16.dp)
-            )
+            AppVersion(modifier = Modifier.padding(vertical = 32.dp))
             SettingItem(
                 Icons.Filled.List,
                 R.string.open_source_licenses,
