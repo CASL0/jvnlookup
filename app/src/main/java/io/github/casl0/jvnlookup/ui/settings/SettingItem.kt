@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
@@ -33,20 +34,25 @@ fun SettingItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    TextButton(
-        onClick = onClick,
-        modifier = modifier.fillMaxWidth(),
-        contentPadding = PaddingValues(8.dp)
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = stringResource(label),
-            modifier = modifier.padding(end = 16.dp).size(32.dp),
-        )
-        Text(
-            text = stringResource(label),
-            modifier = modifier.weight(1f),
-            style = typography.bodyLarge
-        )
+    Surface(modifier = modifier.padding(8.dp)) {
+        TextButton(
+            onClick = onClick,
+            modifier = modifier.fillMaxWidth(),
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = stringResource(label),
+                    modifier = modifier
+                        .padding(end = 16.dp)
+                        .size(32.dp),
+                )
+                Text(
+                    text = stringResource(label),
+                    modifier = modifier.weight(1f),
+                    style = typography.bodyLarge
+                )
+            }
+        }
     }
 }
