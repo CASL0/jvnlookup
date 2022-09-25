@@ -12,9 +12,12 @@ buildscript {
         accompanist_version = "0.26.3-beta"
         dokka_version = "1.7.10"
         timber_version = "5.0.1"
+        oss_licenses_plugin_version = '0.10.5'
+        play_services_oss_licenses_version = '17.0.0'
     }
     dependencies {
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$dokka_version"
+        classpath "com.google.android.gms:oss-licenses-plugin:$oss_licenses_plugin_version"
     }
 }// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {

@@ -16,6 +16,7 @@
 
 package io.github.casl0.jvnlookup.ui
 
+import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import io.github.casl0.jvnlookup.JvnLookupApplication
 import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.FetchVulnOverviewUseCase
@@ -74,7 +76,7 @@ fun JvnLookupNavHost(
             SearchScreen(searchViewModel, navController::navigationUrlInCustomTabs)
         }
         composable(route = Settings.route) {
-            SettingScreen()
+            SettingScreen(navController::navigationOssLicensesActivity)
         }
     }
 }
@@ -98,4 +100,11 @@ fun NavHostController.navigationUrlInCustomTabs(url: CharSequence) {
     CustomTabsIntent.Builder().build().run {
         launchUrl(context, Uri.parse(url as String?))
     }
+}
+
+/**
+ * OSS Licenses Activity に遷移します
+ */
+fun NavHostController.navigationOssLicensesActivity() {
+    context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
 }

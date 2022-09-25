@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'org.jetbrains.dokka'
+    id 'com.google.android.gms.oss-licenses-plugin'
 }
 
 android {
@@ -78,4 +79,5 @@ dependencies {
     implementation "com.google.accompanist:accompanist-swiperefresh:$accompanist_version"
     implementation "androidx.browser:browser:1.4.0"
     implementation "com.jakewharton.timber:timber:$timber_version"
+    implementation "com.google.android.gms:play-services-oss-licenses:$play_services_oss_licenses_version"
 }

@@ -28,10 +28,14 @@ import io.github.casl0.jvnlookup.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingScreen() {
+fun SettingScreen(onClickOssLicenses: () -> Unit) {
     Scaffold {
         Column(modifier = Modifier.padding(it)) {
-            SettingItem(Icons.Filled.List, R.string.open_source_licenses, { /* TODO: オープンソースライセンス表示 */ })
+            SettingItem(
+                Icons.Filled.List,
+                R.string.open_source_licenses,
+                onClickOssLicenses
+            )
         }
     }
 }
