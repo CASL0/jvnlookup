@@ -30,9 +30,9 @@ import io.github.casl0.jvnlookup.JvnLookupApplication
 import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.FetchVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
-import io.github.casl0.jvnlookup.ui.favorite.FavoriteScreen
 import io.github.casl0.jvnlookup.ui.search.SearchScreen
 import io.github.casl0.jvnlookup.ui.search.SearchViewModel
+import io.github.casl0.jvnlookup.ui.settings.SettingScreen
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewScreen
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewViewModel
 import kotlinx.coroutines.Dispatchers
@@ -73,8 +73,8 @@ fun JvnLookupNavHost(
             )
             SearchScreen(searchViewModel, navController::navigationUrlInCustomTabs)
         }
-        composable(route = Favorite.route) {
-            FavoriteScreen()
+        composable(route = Settings.route) {
+            SettingScreen()
         }
     }
 }

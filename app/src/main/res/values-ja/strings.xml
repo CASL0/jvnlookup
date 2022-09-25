@@ -13,7 +13,8 @@
     <string name="category_severity_middle">深刻度: 警告</string>
     <string name="search_label">さがす</string>
     <string name="search_placeholder">キーワードで検索</string>
-
+    <string name="settings_label">設定</string>
+    <string name="open_source_licenses">オープンソースライセンス</string>
     <!-- エラーメッセージ -->
     <string name="error_network_connection">ネットワーク接続がありません</string>
     <string name="error_no_results_found">結果がありません</string>
