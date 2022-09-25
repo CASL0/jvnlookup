@@ -31,7 +31,7 @@ interface VulnOverviewDao {
     @Query("DELETE FROM vuln_overview")
     fun deleteAll()
 
-    @Query("DELETE FROM vuln_overview WHERE favorite = false")
+    @Query("DELETE FROM vuln_overview WHERE favorite = 0")
     fun deleteAllNonFavorite()
 
     @Query("UPDATE vuln_overview SET favorite = :favorite WHERE sec_identifier = :id")
