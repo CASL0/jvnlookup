@@ -18,6 +18,7 @@ package io.github.casl0.jvnlookup.ui.settings
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -25,10 +26,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.casl0.jvnlookup.R
+import io.github.casl0.jvnlookup.utils.SOURCE_CODE_URL
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingScreen(onClickOssLicenses: () -> Unit) {
+fun SettingScreen(onClickOssLicenses: () -> Unit, onClickSourceCode: (CharSequence) -> Unit) {
     Scaffold {
         Column(modifier = Modifier.padding(it)) {
             AppVersion(modifier = Modifier.padding(vertical = 32.dp))
@@ -36,6 +38,11 @@ fun SettingScreen(onClickOssLicenses: () -> Unit) {
                 Icons.Filled.List,
                 R.string.open_source_licenses,
                 onClickOssLicenses
+            )
+            SettingItem(
+                icon = Icons.Filled.Code,
+                label = R.string.source_code,
+                onClick = { onClickSourceCode(SOURCE_CODE_URL) }
             )
         }
     }

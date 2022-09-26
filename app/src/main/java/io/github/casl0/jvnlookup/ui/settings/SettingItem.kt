@@ -34,7 +34,7 @@ fun SettingItem(
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Surface(modifier = modifier.padding(8.dp)) {
+    Surface(modifier = modifier.padding(horizontal = 8.dp)) {
         TextButton(
             onClick = onClick,
             modifier = modifier.fillMaxWidth(),

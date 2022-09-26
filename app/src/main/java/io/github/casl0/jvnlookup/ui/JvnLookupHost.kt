@@ -16,6 +16,7 @@
 
 package io.github.casl0.jvnlookup.ui
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
@@ -38,6 +39,7 @@ import io.github.casl0.jvnlookup.ui.settings.SettingScreen
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewScreen
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewViewModel
 import kotlinx.coroutines.Dispatchers
+import timber.log.Timber
 
 @Composable
 fun JvnLookupNavHost(
@@ -76,7 +78,10 @@ fun JvnLookupNavHost(
             SearchScreen(searchViewModel, navController::navigationUrlInCustomTabs)
         }
         composable(route = Settings.route) {
-            SettingScreen(navController::navigationOssLicensesActivity)
+            SettingScreen(
+                navController::navigationOssLicensesActivity,
+                navController::navigationDeepLink
+            )
         }
     }
 }
@@ -107,4 +112,21 @@ fun NavHostController.navigationUrlInCustomTabs(url: CharSequence) {
  */
 fun NavHostController.navigationOssLicensesActivity() {
     context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
+}
+
+/**
+ * 外部のアプリコンテンツにアクセスします
+ * @param url アクセス先のカスタムURL
+ */
+fun NavHostController.navigationDeepLink(url: CharSequence) {
+    try {
+        Intent().apply {
+            action = Intent.ACTION_VIEW
+            data = Uri.parse(url as String)
+        }.run {
+            context.startActivity(this)
+        }
+    } catch (e: ActivityNotFoundException) {
+        Timber.e(e.localizedMessage)
+    }
 }
