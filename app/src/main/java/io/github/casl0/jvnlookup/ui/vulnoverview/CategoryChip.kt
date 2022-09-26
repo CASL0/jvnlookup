@@ -16,19 +16,17 @@
 
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
-import androidx.annotation.StringRes
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.model.Category
-import io.github.casl0.jvnlookup.ui.theme.JVNlookupTheme
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryChips(
     categories: List<Category>,
@@ -45,61 +43,25 @@ fun CategoryChips(
         modifier = modifier
     ) {
         categories.forEachIndexed { index, category ->
-            Tab(
+            FilterChip(
                 selected = index == selectedIndex,
-                onClick = { onCategorySelected(category) }
-            ) {
-                CategoryChipContent(
-                    text = category.name,
-                    selected = index == selectedIndex,
-                    modifier = Modifier.padding(horizontal = 4.dp)
-                )
-            }
+                onClick = { onCategorySelected(category) },
+                label = { Text(stringResource(category.name)) },
+                leadingIcon = if (index == selectedIndex) {
+                    {
+                        Icon(
+                            imageVector = Icons.Filled.Done,
+                            contentDescription = stringResource(category.name),
+                        )
+                    }
+                } else {
+                    null
+                },
+                modifier = Modifier.padding(horizontal = 4.dp)
+            )
         }
     }
 }
 
 private val emptyTabIndicator: @Composable (List<TabPosition>) -> Unit = {}
 private val categoryChipsEdgePadding = 2.dp
-
-@Composable
-private fun CategoryChipContent(
-    @StringRes text: Int,
-    selected: Boolean,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        color = when {
-            selected -> MaterialTheme.colorScheme.primary
-            else -> MaterialTheme.colorScheme.background
-        },
-        contentColor = when {
-            selected -> MaterialTheme.colorScheme.onPrimary
-            else -> MaterialTheme.colorScheme.onBackground
-        },
-        shape = MaterialTheme.shapes.large,
-        modifier = when {
-            selected -> modifier
-            else -> modifier.border(
-                width = 1.dp,
-                color = MaterialTheme.colorScheme.onBackground,
-                shape = MaterialTheme.shapes.large
-            )
-        }
-
-    ) {
-        Text(
-            text = stringResource(text),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-        )
-    }
-}
-
-@Preview
-@Composable
-private fun ChoiceChipContentPreview() {
-    JVNlookupTheme {
-        CategoryChipContent(text = R.string.favorite_label, selected = true)
-    }
-}
