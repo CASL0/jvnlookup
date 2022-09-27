@@ -57,7 +57,8 @@ fun CategoryChips(
                 } else {
                     null
                 },
-                modifier = Modifier.padding(horizontal = 4.dp)
+                modifier = Modifier.padding(horizontal = 4.dp),
+                shape = MaterialTheme.shapes.large
             )
         }
     }
