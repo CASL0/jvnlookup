@@ -16,6 +16,10 @@
 
 package io.github.casl0.jvnlookup.domain
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import io.github.casl0.jvnlookup.model.DomainVulnOverview
+import io.github.casl0.jvnlookup.network.asDomainModel
 import io.github.casl0.jvnlookup.repository.SearchRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +32,10 @@ class SearchVulnOverviewUseCase(
     private val searchRepository: SearchRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
-    val searchResults = searchRepository.searchResults
+    val searchResults: LiveData<List<DomainVulnOverview>> =
+        Transformations.map(searchRepository.searchResults) {
+            it.asDomainModel()
+        }
 
     suspend operator fun invoke(keyword: CharSequence) =
         withContext(defaultDispatcher) {

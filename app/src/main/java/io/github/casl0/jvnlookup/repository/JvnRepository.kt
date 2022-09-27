@@ -17,10 +17,8 @@
 package io.github.casl0.jvnlookup.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import io.github.casl0.jvnlookup.database.JvnDatabase
-import io.github.casl0.jvnlookup.database.asDomainModel
-import io.github.casl0.jvnlookup.model.DomainVulnOverview
+import io.github.casl0.jvnlookup.database.VulnOverviewWithReferencesAndCVSS
 import io.github.casl0.jvnlookup.network.MyJvnApi
 import io.github.casl0.jvnlookup.network.asDatabaseCVSS
 import io.github.casl0.jvnlookup.network.asDatabaseReferences
@@ -33,11 +31,8 @@ import timber.log.Timber
  */
 class JvnRepository(private val database: JvnDatabase) {
 
-    val vulnOverviews: LiveData<List<DomainVulnOverview>> = Transformations.map(
+    val vulnOverviews: LiveData<List<VulnOverviewWithReferencesAndCVSS>> =
         database.vulnOverviewDao.getVulnOverviewWithReferencesAndCVSS()
-    ) {
-        it.asDomainModel()
-    }
 
     /**
      * ローカルに保存しているJVNデータを更新します

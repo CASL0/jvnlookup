@@ -16,6 +16,10 @@
 
 package io.github.casl0.jvnlookup.domain
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import io.github.casl0.jvnlookup.database.asDomainModel
+import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import io.github.casl0.jvnlookup.repository.JvnRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -28,7 +32,11 @@ class FetchVulnOverviewUseCase(
     private val jvnRepository: JvnRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
-    val vulnOverviews = jvnRepository.vulnOverviews
+    val vulnOverviews: LiveData<List<DomainVulnOverview>> = Transformations.map(
+        jvnRepository.vulnOverviews
+    ) {
+        it.asDomainModel()
+    }
 
     suspend operator fun invoke() =
         withContext(defaultDispatcher) {
