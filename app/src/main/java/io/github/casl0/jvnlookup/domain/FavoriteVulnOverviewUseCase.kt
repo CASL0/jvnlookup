@@ -23,6 +23,8 @@ import kotlinx.coroutines.withContext
 
 /**
  * 脆弱性対策情報をお気に入り登録するためのUseCase層
+ * @param jvnRepository JVNデータ取得用のリポジトリ層
+ * @param defaultDispatcher お気に入り登録実行時のDispatcher
  */
 class FavoriteVulnOverviewUseCase(
     private val jvnRepository: JvnRepository,

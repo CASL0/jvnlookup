@@ -27,6 +27,8 @@ import kotlinx.coroutines.withContext
 
 /**
  * 脆弱性対策情報の検索のためのUseCase層
+ * @param searchRepository JVN検索用のリポジトリ層
+ * @param defaultDispatcher 脆弱性対策情報を検索時のDispatcher
  */
 class SearchVulnOverviewUseCase(
     private val searchRepository: SearchRepository,

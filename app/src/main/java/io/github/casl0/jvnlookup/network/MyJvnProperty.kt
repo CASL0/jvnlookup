@@ -24,12 +24,18 @@ import io.github.casl0.jvnlookup.model.DomainCVSS
 import io.github.casl0.jvnlookup.model.DomainReference
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 
+/**
+ * JVN API レスポンス
+ */
 @Xml(name = "rdf:RDF")
 data class VulnOverviewResponse(
     @Element(name = "item")
     var vulnOverviews: List<VulnOverview> = emptyList()
 )
 
+/**
+ * JVN API レスポンスのitemプロパティ
+ */
 @Xml(name = "item")
 data class VulnOverview(
     /**
@@ -81,6 +87,9 @@ data class VulnOverview(
     var modified: String?,
 )
 
+/**
+ * JVN API レスポンスのsec:referencesプロパティ
+ */
 @Xml(name = "sec:references")
 data class Reference(
     /**
@@ -108,6 +117,9 @@ data class Reference(
     val url: String?,
 )
 
+/**
+ * JVN API レスポンスのsec:cvssプロパティ
+ */
 @Xml(name = "sec:cvss")
 data class CVSS(
     /**

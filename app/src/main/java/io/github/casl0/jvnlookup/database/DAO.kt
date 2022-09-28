@@ -19,6 +19,9 @@ package io.github.casl0.jvnlookup.database
 import androidx.lifecycle.LiveData
 import androidx.room.*
 
+/**
+ * vuln_overviewテーブル操作用クエリ
+ */
 @Dao
 interface VulnOverviewDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
@@ -38,6 +41,9 @@ interface VulnOverviewDao {
     fun updateFavoriteById(id: String, favorite: Boolean)
 }
 
+/**
+ * sec_referencesテーブル操作用クエリ
+ */
 @Dao
 interface ReferenceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -47,6 +53,9 @@ interface ReferenceDao {
     fun deleteAll()
 }
 
+/**
+ * sec_cvssテーブル操作用クエリ
+ */
 @Dao
 interface CVSSDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)

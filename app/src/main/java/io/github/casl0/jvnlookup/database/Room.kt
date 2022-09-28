@@ -41,6 +41,7 @@ private lateinit var INSTANCE: JvnDatabase
 
 /**
  * Roomのインスタンスを取得します
+ * @param context Context
  */
 fun getDatabase(context: Context): JvnDatabase {
     synchronized(JvnDatabase::class.java) {

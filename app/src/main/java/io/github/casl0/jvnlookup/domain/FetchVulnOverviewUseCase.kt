@@ -27,6 +27,8 @@ import kotlinx.coroutines.withContext
 
 /**
  * 脆弱性対策情報を取得するためのUseCase層
+ * @param jvnRepository JVNデータ取得用のリポジトリ層
+ * @param defaultDispatcher 脆弱性対策情報を取得時のDispatcher
  */
 class FetchVulnOverviewUseCase(
     private val jvnRepository: JvnRepository,

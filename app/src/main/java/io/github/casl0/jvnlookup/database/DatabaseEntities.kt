@@ -21,6 +21,9 @@ import io.github.casl0.jvnlookup.model.DomainCVSS
 import io.github.casl0.jvnlookup.model.DomainReference
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 
+/**
+ * 脆弱性情報のエンティティと参考資料、CVSS情報とのリレーション
+ */
 data class VulnOverviewWithReferencesAndCVSS(
     @Embedded val vulnOverview: DatabaseVulnOverview,
 
@@ -37,6 +40,9 @@ data class VulnOverviewWithReferencesAndCVSS(
     val cvssList: List<DatabaseCVSS>,
 )
 
+/**
+ * 脆弱性情報のエンティティ
+ */
 @Entity(tableName = "vuln_overview")
 data class DatabaseVulnOverview(
     /**
@@ -82,6 +88,9 @@ data class DatabaseVulnOverview(
     val isFavorite: Boolean,
 )
 
+/**
+ * 脆弱性情報の参考情報のエンティティ
+ */
 @Entity(tableName = "sec_references")
 data class DatabaseReference(
     /**
@@ -115,6 +124,9 @@ data class DatabaseReference(
     val url: String = "",
 )
 
+/**
+ * CVSS情報のエンティティ
+ */
 @Entity(tableName = "sec_cvss")
 data class DatabaseCVSS(
     /**
@@ -158,6 +170,9 @@ data class DatabaseCVSS(
     val id: Int,
 )
 
+/**
+ * 脆弱性情報とその周辺情報をドメインモデルに変換します
+ */
 fun List<VulnOverviewWithReferencesAndCVSS>.asDomainModel(): List<DomainVulnOverview> {
     return map {
         DomainVulnOverview(

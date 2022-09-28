@@ -16,6 +16,9 @@
 
 package io.github.casl0.jvnlookup.model
 
+/**
+ * 脆弱性対策情報のドメインモデル
+ */
 data class DomainVulnOverview(
     /**
      * セキュリティ情報のタイトル
@@ -63,6 +66,9 @@ data class DomainVulnOverview(
     var isFavorite: Boolean = false,
 )
 
+/**
+ * 脆弱性対策情の参考情報のドメインモデル
+ */
 data class DomainReference(
     /**
      * 発行元省略名
@@ -85,6 +91,9 @@ data class DomainReference(
     val url: String = "",
 )
 
+/**
+ * CVSS情報のドメインモデル
+ */
 data class DomainCVSS(
     /**
      * CVSSバージョン
