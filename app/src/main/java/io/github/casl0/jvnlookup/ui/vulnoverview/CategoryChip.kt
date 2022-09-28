@@ -16,6 +16,7 @@
 
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
@@ -57,7 +58,9 @@ fun CategoryChips(
                 } else {
                     null
                 },
-                modifier = Modifier.padding(horizontal = 4.dp),
+                modifier = Modifier
+                    .padding(horizontal = 4.dp)
+                    .height(36.dp),
                 shape = MaterialTheme.shapes.large
             )
         }
