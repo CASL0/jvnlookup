@@ -16,6 +16,10 @@
 
 package io.github.casl0.jvnlookup.model
 
+import io.github.casl0.jvnlookup.database.DatabaseCVSS
+import io.github.casl0.jvnlookup.database.DatabaseReference
+import io.github.casl0.jvnlookup.database.DatabaseVulnOverview
+
 /**
  * 脆弱性対策情報のドメインモデル
  */
@@ -78,7 +82,7 @@ data class DomainReference(
     /**
      * 識別番号
      */
-    val id: String?,
+    val id: String,
 
     /**
      * タイトル
@@ -121,3 +125,53 @@ data class DomainCVSS(
      */
     var vector: String?,
 )
+
+/**
+ * 脆弱性対策情報のドメインモデルをデータベースエンティティへ変換します
+ */
+fun DomainVulnOverview.asDatabaseEntity(): DatabaseVulnOverview {
+    return DatabaseVulnOverview(
+        title = this.title,
+        link = this.link,
+        description = this.description,
+        id = this.id,
+        issued = this.issued,
+        modified = this.modified,
+        isFavorite = this.isFavorite
+    )
+}
+
+/**
+ * 脆弱性対策情報の参考情報のドメインモデルをデータベースエンティティへ変換します
+ * @param ownerId 参考情報が紐づくベンダ固有のセキュリティID
+ */
+@JvmName("asDatabaseEntityDomainReference")
+fun List<DomainReference>.asDatabaseEntity(ownerId: String): List<DatabaseReference> {
+    return map {
+        DatabaseReference(
+            ownerId = ownerId,
+            source = it.source,
+            id = it.id,
+            title = it.title,
+            url = it.url
+        )
+    }
+}
+
+/**
+ * CVSS情報のドメインモデルをデータベースエンティティへ変換します
+ * @param ownerId CVSS情報が紐づくベンダ固有のセキュリティID
+ */
+@JvmName("asDatabaseEntityDomainCVSS")
+fun List<DomainCVSS>.asDatabaseEntity(ownerId: String): List<DatabaseCVSS> {
+    return map {
+        DatabaseCVSS(
+            ownerId = ownerId,
+            version = it.version,
+            type = it.type,
+            severity = it.severity,
+            score = it.score,
+            vector = it.vector,
+        )
+    }
+}
