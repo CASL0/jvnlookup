@@ -16,6 +16,8 @@
 
 package io.github.casl0.jvnlookup.domain
 
+import io.github.casl0.jvnlookup.model.DomainVulnOverview
+import io.github.casl0.jvnlookup.model.asDatabaseEntity
 import io.github.casl0.jvnlookup.repository.JvnRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -30,8 +32,33 @@ class FavoriteVulnOverviewUseCase(
     private val jvnRepository: JvnRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
+    /**
+     * 既に保存済みのレコードのお気に入り状態を更新します
+     * @param id ベンダ固有のセキュリティID
+     * @param favorite 更新後の状態
+     */
     suspend operator fun invoke(id: CharSequence, favorite: Boolean) =
         withContext(defaultDispatcher) {
             jvnRepository.updateFavorite(id as String, favorite)
+        }
+
+    /**
+     * お気に入り状態を更新したレコードを登録します
+     * @param vulnOverview 更新したいレコード
+     * @param favorite 更新後のお気に入り状態
+     */
+    suspend operator fun invoke(vulnOverview: DomainVulnOverview, favorite: Boolean) =
+        withContext(defaultDispatcher) {
+            vulnOverview.isFavorite = favorite
+            if (jvnRepository.exists(vulnOverview.id)) {
+                // ローカルに保存済みの場合は更新
+                jvnRepository.updateFavorite(vulnOverview.id, vulnOverview.isFavorite)
+            } else {
+                jvnRepository.insertVulnOverview(
+                    vulnOverview.asDatabaseEntity(),
+                    vulnOverview.references.asDatabaseEntity(vulnOverview.id),
+                    vulnOverview.cvssList.asDatabaseEntity(vulnOverview.id)
+                )
+            }
         }
 }

@@ -27,9 +27,15 @@ interface VulnOverviewDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertAll(vulnOverviews: List<DatabaseVulnOverview>)
 
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insert(vulnOverview: DatabaseVulnOverview)
+
     @Transaction
     @Query("SELECT * FROM vuln_overview ORDER BY issued DESC")
     fun getVulnOverviewWithReferencesAndCVSS(): LiveData<List<VulnOverviewWithReferencesAndCVSS>>
+
+    @Query("SELECT EXISTS(SELECT * FROM vuln_overview WHERE sec_identifier = :id)")
+    fun exists(id: String): Boolean
 
     @Query("DELETE FROM vuln_overview")
     fun deleteAll()

@@ -17,8 +17,7 @@
 package io.github.casl0.jvnlookup.repository
 
 import androidx.lifecycle.LiveData
-import io.github.casl0.jvnlookup.database.JvnDatabase
-import io.github.casl0.jvnlookup.database.VulnOverviewWithReferencesAndCVSS
+import io.github.casl0.jvnlookup.database.*
 import io.github.casl0.jvnlookup.network.MyJvnApi
 import io.github.casl0.jvnlookup.network.asDatabaseCVSS
 import io.github.casl0.jvnlookup.network.asDatabaseReferences
@@ -58,5 +57,29 @@ class JvnRepository(private val database: JvnDatabase) {
     suspend fun updateFavorite(id: String, favorite: Boolean) {
         Timber.d("update favorite")
         database.vulnOverviewDao.updateFavoriteById(id, favorite)
+    }
+
+    /**
+     * ローカルに保存済みかをチェックします
+     * @param secIdentifier ベンダ固有のセキュリティID
+     */
+    suspend fun exists(secIdentifier: CharSequence): Boolean {
+        return database.vulnOverviewDao.exists(secIdentifier as String)
+    }
+
+    /**
+     * 脆弱性対策情報をローカルに保存します
+     * @param vulnOverview 脆弱性対策情報
+     * @param references 脆弱性対策情報の参考情報
+     * @param cvssList 脆弱性対策情報のCVSS
+     */
+    suspend fun insertVulnOverview(
+        vulnOverview: DatabaseVulnOverview,
+        references: List<DatabaseReference>,
+        cvssList: List<DatabaseCVSS>
+    ) {
+        database.vulnOverviewDao.insert(vulnOverview)
+        database.referenceDao.insertAll(references)
+        database.cvssDao.insertAll(cvssList)
     }
 }
