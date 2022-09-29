@@ -28,12 +28,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.casl0.jvnlookup.ui.components.SnackbarLaunchedEffect
+import io.github.casl0.jvnlookup.ui.components.VulnCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(viewModel: SearchViewModel, onClickVulnOverviewItem: (CharSequence) -> Unit) {
     val searchResults = viewModel.searchResult.observeAsState(listOf())
     val searchValue = viewModel.searchValue
+    val favorites = viewModel.favorites.observeAsState(listOf())
     val snackbarHostState = remember { SnackbarHostState() }
     viewModel.hasError.SnackbarLaunchedEffect(snackbarHostState = snackbarHostState)
     Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {
@@ -55,10 +57,18 @@ fun SearchScreen(viewModel: SearchViewModel, onClickVulnOverviewItem: (CharSeque
                     )
                 }
                 items(items = searchResults.value, key = { item -> item.id }) { vulnOverview ->
+                    // お気に入り登録状態を反映
+                    vulnOverview.isFavorite =
+                        favorites.value.find { it.id == vulnOverview.id } != null
                     Surface(modifier = Modifier.padding(horizontal = 4.dp)) {
                         SearchItem(
                             vulnOverview = vulnOverview,
                             onItemClicked = onClickVulnOverviewItem
+                        )
+                        VulnCard(
+                            vulnOverview = vulnOverview,
+                            onItemClicked = onClickVulnOverviewItem,
+                            onFavoriteButtonClicked = viewModel::onFavoriteButtonClicked
                         )
                     }
                 }

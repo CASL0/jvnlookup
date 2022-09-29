@@ -34,6 +34,10 @@ interface VulnOverviewDao {
     @Query("SELECT * FROM vuln_overview ORDER BY issued DESC")
     fun getVulnOverviewWithReferencesAndCVSS(): LiveData<List<VulnOverviewWithReferencesAndCVSS>>
 
+    @Transaction
+    @Query("SELECT * FROM vuln_overview WHERE favorite = 1")
+    fun getFavorites(): LiveData<List<VulnOverviewWithReferencesAndCVSS>>
+
     @Query("SELECT EXISTS(SELECT * FROM vuln_overview WHERE sec_identifier = :id)")
     fun exists(id: String): Boolean
 

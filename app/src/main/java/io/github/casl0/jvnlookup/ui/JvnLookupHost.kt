@@ -72,6 +72,10 @@ fun JvnLookupNavHost(
                     SearchVulnOverviewUseCase(
                         application.searchRepository,
                         Dispatchers.IO
+                    ),
+                    FavoriteVulnOverviewUseCase(
+                        application.jvnRepository,
+                        Dispatchers.IO
                     )
                 )
             )

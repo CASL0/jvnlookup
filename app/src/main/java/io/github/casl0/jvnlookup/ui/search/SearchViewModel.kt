@@ -17,27 +17,38 @@
 package io.github.casl0.jvnlookup.ui.search
 
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import io.github.casl0.jvnlookup.R
+import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.Exception
 
 /**
  * 検索画面のビジネスロジックを扱うViewModel
  * @param searchVulnOverviewUseCase 検索用のUseCase
  */
-class SearchViewModel(private val searchVulnOverviewUseCase: SearchVulnOverviewUseCase) :
+class SearchViewModel(
+    private val searchVulnOverviewUseCase: SearchVulnOverviewUseCase,
+    private val favoriteVulnOverviewUseCase: FavoriteVulnOverviewUseCase
+) :
     ViewModel() {
+    /**
+     * 検索結果
+     */
     val searchResult = searchVulnOverviewUseCase.searchResults
+
+    /**
+     * お気に入り登録済みの脆弱性対策情報
+     */
+    val favorites = favoriteVulnOverviewUseCase.favorites
 
     /**
      * 検索ボックスの入力値
@@ -83,6 +94,21 @@ class SearchViewModel(private val searchVulnOverviewUseCase: SearchVulnOverviewU
     }
 
     /**
+     * お気に入り登録を更新します
+     * @param id 更新したいレコードのセキュリティID
+     * @param favorite 更新後のお気に入り状態
+     */
+    fun onFavoriteButtonClicked(id: String, favorite: Boolean) {
+        viewModelScope.launch {
+            val searchResult = searchResult.value ?: return@launch
+
+            searchResult.find { it.id == id }?.let {
+                favoriteVulnOverviewUseCase(it, favorite)
+            }
+        }
+    }
+
+    /**
      * 検索ボックスの入力値変更時のイベントハンドラ
      */
     fun onSearchValueChanged(newValue: String) {
@@ -95,10 +121,11 @@ class SearchViewModel(private val searchVulnOverviewUseCase: SearchVulnOverviewU
          */
         fun provideFactory(
             searchVulnOverviewUseCase: SearchVulnOverviewUseCase,
+            favoriteVulnOverviewUseCase: FavoriteVulnOverviewUseCase
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SearchViewModel(searchVulnOverviewUseCase) as T
+                return SearchViewModel(searchVulnOverviewUseCase, favoriteVulnOverviewUseCase) as T
             }
         }
     }

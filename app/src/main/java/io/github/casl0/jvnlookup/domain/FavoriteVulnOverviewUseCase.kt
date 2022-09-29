@@ -16,6 +16,9 @@
 
 package io.github.casl0.jvnlookup.domain
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import io.github.casl0.jvnlookup.database.asDomainModel
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import io.github.casl0.jvnlookup.model.asDatabaseEntity
 import io.github.casl0.jvnlookup.repository.JvnRepository
@@ -32,6 +35,12 @@ class FavoriteVulnOverviewUseCase(
     private val jvnRepository: JvnRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
+    val favorites: LiveData<List<DomainVulnOverview>> = Transformations.map(
+        jvnRepository.favorites
+    ) {
+        it.asDomainModel()
+    }
+
     /**
      * 既に保存済みのレコードのお気に入り状態を更新します
      * @param id ベンダ固有のセキュリティID

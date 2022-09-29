@@ -30,8 +30,17 @@ import timber.log.Timber
  */
 class JvnRepository(private val database: JvnDatabase) {
 
+    /**
+     * 保存済み脆弱性対策情報
+     */
     val vulnOverviews: LiveData<List<VulnOverviewWithReferencesAndCVSS>> =
         database.vulnOverviewDao.getVulnOverviewWithReferencesAndCVSS()
+
+    /**
+     * お気に入り登録済みの脆弱性対策情報
+     */
+    val favorites: LiveData<List<VulnOverviewWithReferencesAndCVSS>> =
+        database.vulnOverviewDao.getFavorites()
 
     /**
      * ローカルに保存しているJVNデータを更新します
