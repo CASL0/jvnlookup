@@ -17,7 +17,10 @@
 package io.github.casl0.jvnlookup.ui.settings
 
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
@@ -38,6 +41,7 @@ fun SettingItem(
         TextButton(
             onClick = onClick,
             modifier = modifier.fillMaxWidth(),
+            shape = MaterialTheme.shapes.extraSmall
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
