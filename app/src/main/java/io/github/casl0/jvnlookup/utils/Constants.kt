@@ -16,4 +16,4 @@
 
 package io.github.casl0.jvnlookup.utils
 
-internal const val SOURCE_CODE_URL = "https://github.com/CASL0/JVNlookup"
+internal const val SOURCE_CODE_URL = "https://github.com/CASL0/jvnlookup"
