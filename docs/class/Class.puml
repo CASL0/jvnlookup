@@ -1,0 +1,70 @@
+@startuml アプリアーキテクチャ
+hide circle
+package "ui" #00ff7f {
+    ' UI層
+
+    class MainActivity
+
+    package "vulnoverview" {
+        ' ホーム画面
+        class VulnOverviewScreen
+        class VulnOverviewViewModel
+        VulnOverviewScreen .down.> VulnOverviewViewModel
+    }
+
+    package "search" {
+        ' 検索画面
+        class SearchScreen
+        class SearchViewModel
+        SearchScreen .down.> SearchViewModel
+    }
+
+    package "settings" {
+        ' 設定画面
+        annotation SettingScreen
+    }
+
+    MainActivity .down.> VulnOverviewScreen
+    MainActivity .down.> SearchScreen
+    MainActivity .down.> SettingScreen
+}
+
+package "domain" #00ffff {
+    ' ドメイン層
+    class FetchVulnOverviewUseCase
+    class FavoriteVulnOverviewUseCase
+    class SearchVulnOverviewUseCase
+}
+
+package "repository" #4682b4 {
+    class JvnRepository
+    class SearchRepository
+}
+
+package "network" #4682b4 {
+    class MyJvnApi
+    class Retrofit
+}
+
+package "database" #4682b4 {
+    class JvnDatabase
+    class Room
+}
+
+VulnOverviewViewModel -down-> FetchVulnOverviewUseCase: -fetchVulnOverviewUseCase
+VulnOverviewViewModel -down-> FavoriteVulnOverviewUseCase: -favoriteVulnOverviewUseCase
+SearchViewModel -down-> SearchVulnOverviewUseCase: -searchVulnOverviewUseCase
+SearchViewModel -down-> FavoriteVulnOverviewUseCase: -favoriteVulnOverviewUseCase
+
+FetchVulnOverviewUseCase -down-> JvnRepository: -jvnRepository
+FavoriteVulnOverviewUseCase -down-> JvnRepository: -jvnRepository
+SearchVulnOverviewUseCase -down-> SearchRepository: -searchRepository
+
+JvnRepository .down.> MyJvnApi
+JvnRepository -down-> JvnDatabase: -database
+SearchRepository .down.> MyJvnApi
+
+MyJvnApi .down.> Retrofit
+JvnDatabase .down.> Room
+
+@enduml
