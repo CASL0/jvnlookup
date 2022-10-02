@@ -25,6 +25,9 @@ MVVM + Repositoryパターンで実装しています。
 
 ![アプリアーキテクチャ](https://user-images.githubusercontent.com/28913760/193274323-37d92571-bac0-4aa7-8b67-d3baf33d6051.svg)
 
+## ドキュメント
+* [KDoc](https://casl0.github.io/jvnlookup/)
+
 ## ライセンス
 
 ```
