@@ -3,6 +3,8 @@ name: Deploy Kdoc
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'app/src/main/**'
 
 permissions:
   contents: read
