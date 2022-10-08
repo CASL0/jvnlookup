@@ -41,8 +41,23 @@ package "repository" #4682b4 {
     class SearchRepository
 }
 
+package "data" #4682b4 {
+    interface JvnDataSource
+
+    package "local" {
+        class JvnLocalDataSource
+    }
+    
+    package "remote" {
+        class JvnRemoteDataSource
+    }
+    
+    JvnDataSource <|-down- JvnLocalDataSource
+    JvnDataSource <|-down- JvnRemoteDataSource
+}
+
 package "network" #4682b4 {
-    class MyJvnApi
+    class MyJvnApiService
     class Retrofit
 }
 
@@ -60,11 +75,13 @@ FetchVulnOverviewUseCase -down-> JvnRepository: -jvnRepository
 FavoriteVulnOverviewUseCase -down-> JvnRepository: -jvnRepository
 SearchVulnOverviewUseCase -down-> SearchRepository: -searchRepository
 
-JvnRepository .down.> MyJvnApi
-JvnRepository -down-> JvnDatabase: -database
-SearchRepository .down.> MyJvnApi
+JvnRepository -down-> JvnDataSource: -jvnLocalDataSource, jvnRemoteDataSource
+SearchRepository -down-> JvnDataSource: -jvnRemoteDataSource
 
-MyJvnApi .down.> Retrofit
+JvnLocalDataSource -down-> JvnDatabase: -database
+JvnRemoteDataSource -down-> MyJvnApiService: -myJvnApiService
+
+MyJvnApiService .down.> Retrofit
 JvnDatabase .down.> Room
 
 @enduml

@@ -23,9 +23,10 @@ APIを介して提供しています。本アプリは当該APIを使用し脆�
 
 MVVM + Repositoryパターンで実装しています。
 
-![アプリアーキテクチャ](https://user-images.githubusercontent.com/28913760/193274323-37d92571-bac0-4aa7-8b67-d3baf33d6051.svg)
+![アプリアーキテクチャ](https://user-images.githubusercontent.com/28913760/194712660-3664ecef-f183-41cc-8afd-2a4080690f2e.svg)
 
 ## ドキュメント
+
 * [KDoc](https://casl0.github.io/jvnlookup/)
 
 ## ライセンス
