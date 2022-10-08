@@ -25,7 +25,7 @@ import io.github.casl0.jvnlookup.model.DomainVulnOverview
 interface JvnDataSource {
     fun getVulnOverviewsStream(): LiveData<List<DomainVulnOverview>>
 
-    suspend fun getVulnOverviews(): List<DomainVulnOverview>
+    suspend fun getVulnOverviews(keyword: CharSequence? = null): List<DomainVulnOverview>
 
     fun getFavoritesStream(): LiveData<List<DomainVulnOverview>>
 

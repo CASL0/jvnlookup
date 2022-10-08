@@ -19,15 +19,17 @@ package io.github.casl0.jvnlookup.repository
 import androidx.lifecycle.LiveData
 import io.github.casl0.jvnlookup.data.JvnDataSource
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
-import io.github.casl0.jvnlookup.network.MyJvnApi
-import io.github.casl0.jvnlookup.network.asDomainModel
 import timber.log.Timber
 
 /**
  * JVN APIからデータを取得し、Roomに保存するリポジトリ
  * @param jvnLocalDataSource ローカルのデータ層
+ * @param jvnRemoteDataSource リモートのデータ層
  */
-class JvnRepository(private val jvnLocalDataSource: JvnDataSource) {
+class JvnRepository(
+    private val jvnLocalDataSource: JvnDataSource,
+    private val jvnRemoteDataSource: JvnDataSource
+) {
 
     /**
      * 保存済み脆弱性対策情報
@@ -45,13 +47,9 @@ class JvnRepository(private val jvnLocalDataSource: JvnDataSource) {
      */
     suspend fun refreshVulnOverviews() {
         Timber.d("refresh vuln overviews")
-        val vulnOverviews = MyJvnApi.retrofitService.getVulnOverviewList(
-            rangeDatePublic = "n",
-            rangeDatePublished = "m",
-            rangeDateFirstPublished = "m"
-        )
+        val vulnOverviews = jvnRemoteDataSource.getVulnOverviews()
         jvnLocalDataSource.deleteAll()
-        jvnLocalDataSource.saveVulnOverviews(vulnOverviews.asDomainModel())
+        jvnLocalDataSource.saveVulnOverviews(vulnOverviews)
     }
 
     /**
