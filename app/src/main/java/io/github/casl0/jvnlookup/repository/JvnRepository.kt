@@ -17,30 +17,28 @@
 package io.github.casl0.jvnlookup.repository
 
 import androidx.lifecycle.LiveData
-import io.github.casl0.jvnlookup.database.*
+import io.github.casl0.jvnlookup.data.JvnDataSource
+import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import io.github.casl0.jvnlookup.network.MyJvnApi
-import io.github.casl0.jvnlookup.network.asDatabaseCVSS
-import io.github.casl0.jvnlookup.network.asDatabaseReferences
-import io.github.casl0.jvnlookup.network.asDatabaseVulnOverviews
+import io.github.casl0.jvnlookup.network.asDomainModel
 import timber.log.Timber
 
 /**
  * JVN APIからデータを取得し、Roomに保存するリポジトリ
- * @param database 保存先のデータベース
+ * @param jvnLocalDataSource ローカルのデータ層
  */
-class JvnRepository(private val database: JvnDatabase) {
+class JvnRepository(private val jvnLocalDataSource: JvnDataSource) {
 
     /**
      * 保存済み脆弱性対策情報
      */
-    val vulnOverviews: LiveData<List<VulnOverviewWithReferencesAndCVSS>> =
-        database.vulnOverviewDao.getVulnOverviewWithReferencesAndCVSS()
+    val vulnOverviews: LiveData<List<DomainVulnOverview>> =
+        jvnLocalDataSource.getVulnOverviewsStream()
 
     /**
      * お気に入り登録済みの脆弱性対策情報
      */
-    val favorites: LiveData<List<VulnOverviewWithReferencesAndCVSS>> =
-        database.vulnOverviewDao.getFavorites()
+    val favorites: LiveData<List<DomainVulnOverview>> = jvnLocalDataSource.getFavoritesStream()
 
     /**
      * ローカルに保存しているJVNデータを更新します
@@ -52,12 +50,8 @@ class JvnRepository(private val database: JvnDatabase) {
             rangeDatePublished = "m",
             rangeDateFirstPublished = "m"
         )
-        database.cvssDao.deleteAll()
-        database.referenceDao.deleteAll()
-        database.vulnOverviewDao.deleteAllNonFavorite()
-        database.vulnOverviewDao.insertAll(vulnOverviews.asDatabaseVulnOverviews())
-        database.referenceDao.insertAll(vulnOverviews.asDatabaseReferences())
-        database.cvssDao.insertAll(vulnOverviews.asDatabaseCVSS())
+        jvnLocalDataSource.deleteAll()
+        jvnLocalDataSource.saveVulnOverviews(vulnOverviews.asDomainModel())
     }
 
     /**
@@ -65,7 +59,7 @@ class JvnRepository(private val database: JvnDatabase) {
      */
     suspend fun updateFavorite(id: String, favorite: Boolean) {
         Timber.d("update favorite")
-        database.vulnOverviewDao.updateFavoriteById(id, favorite)
+        jvnLocalDataSource.updateFavorite(id, favorite)
     }
 
     /**
@@ -73,22 +67,16 @@ class JvnRepository(private val database: JvnDatabase) {
      * @param secIdentifier ベンダ固有のセキュリティID
      */
     suspend fun exists(secIdentifier: CharSequence): Boolean {
-        return database.vulnOverviewDao.exists(secIdentifier as String)
+        return jvnLocalDataSource.exists(secIdentifier)
     }
 
     /**
      * 脆弱性対策情報をローカルに保存します
      * @param vulnOverview 脆弱性対策情報
-     * @param references 脆弱性対策情報の参考情報
-     * @param cvssList 脆弱性対策情報のCVSS
      */
     suspend fun insertVulnOverview(
-        vulnOverview: DatabaseVulnOverview,
-        references: List<DatabaseReference>,
-        cvssList: List<DatabaseCVSS>
+        vulnOverview: DomainVulnOverview,
     ) {
-        database.vulnOverviewDao.insert(vulnOverview)
-        database.referenceDao.insertAll(references)
-        database.cvssDao.insertAll(cvssList)
+        jvnLocalDataSource.saveVulnOverviews(listOf(vulnOverview))
     }
 }
