@@ -22,23 +22,16 @@ import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import io.github.casl0.jvnlookup.JvnLookupApplication
-import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
-import io.github.casl0.jvnlookup.domain.FetchVulnOverviewUseCase
-import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
 import io.github.casl0.jvnlookup.ui.search.SearchScreen
-import io.github.casl0.jvnlookup.ui.search.SearchViewModel
 import io.github.casl0.jvnlookup.ui.settings.SettingScreen
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewScreen
-import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewViewModel
-import kotlinx.coroutines.Dispatchers
 import timber.log.Timber
 
 @Composable
@@ -53,33 +46,10 @@ fun JvnLookupNavHost(
         modifier = modifier
     ) {
         composable(route = VulnOverview.route) {
-            val vulnOverviewViewModel: VulnOverviewViewModel =
-                viewModel(
-                    viewModelStoreOwner = LocalViewModelStoreOwner.current!!,
-                    key = "VulnOverviewViewModel",
-                    VulnOverviewViewModel.provideFactory(
-                        FetchVulnOverviewUseCase(application.jvnRepository, Dispatchers.IO),
-                        FavoriteVulnOverviewUseCase(application.jvnRepository, Dispatchers.IO)
-                    )
-                )
-            VulnOverviewScreen(vulnOverviewViewModel, navController::navigationUrlInCustomTabs)
+            VulnOverviewScreen(hiltViewModel(), navController::navigationUrlInCustomTabs)
         }
         composable(route = Search.route) {
-            val searchViewModel: SearchViewModel = viewModel(
-                viewModelStoreOwner = LocalViewModelStoreOwner.current!!,
-                key = "SearchViewModel",
-                SearchViewModel.provideFactory(
-                    SearchVulnOverviewUseCase(
-                        application.searchRepository,
-                        Dispatchers.IO
-                    ),
-                    FavoriteVulnOverviewUseCase(
-                        application.jvnRepository,
-                        Dispatchers.IO
-                    )
-                )
-            )
-            SearchScreen(searchViewModel, navController::navigationUrlInCustomTabs)
+            SearchScreen(hiltViewModel(), navController::navigationUrlInCustomTabs)
         }
         composable(route = Settings.route) {
             SettingScreen(

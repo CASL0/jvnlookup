@@ -22,13 +22,14 @@ import io.github.casl0.jvnlookup.repository.SearchRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 /**
  * 脆弱性対策情報の検索のためのUseCase層
  * @param searchRepository JVN検索用のリポジトリ層
  * @param defaultDispatcher 脆弱性対策情報を検索時のDispatcher
  */
-class SearchVulnOverviewUseCase(
+class SearchVulnOverviewUseCase @Inject constructor(
     private val searchRepository: SearchRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {

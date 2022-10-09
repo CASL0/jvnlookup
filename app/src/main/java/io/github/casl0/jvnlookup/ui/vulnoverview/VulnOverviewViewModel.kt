@@ -22,6 +22,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.FetchVulnOverviewUseCase
@@ -31,14 +32,15 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.lang.Exception
+import javax.inject.Inject
 
 /**
  * ホーム画面のビジネスロジックを扱うViewModel
  * @param fetchVulnOverviewUseCase 脆弱性対策情報を取得するUseCase
  * @param favoriteVulnOverviewUseCase 脆弱性対策情報をお気に入り登録するUseCase
  */
-class VulnOverviewViewModel(
+@HiltViewModel
+class VulnOverviewViewModel @Inject constructor(
     private val fetchVulnOverviewUseCase: FetchVulnOverviewUseCase,
     private val favoriteVulnOverviewUseCase: FavoriteVulnOverviewUseCase,
 ) : ViewModel() {

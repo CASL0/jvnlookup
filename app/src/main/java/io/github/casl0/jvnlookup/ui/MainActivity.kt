@@ -27,9 +27,11 @@ import com.google.android.play.core.common.IntentSenderForResultStarter
 import com.google.android.play.core.install.model.ActivityResult
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
+import dagger.hilt.android.AndroidEntryPoint
 import io.github.casl0.jvnlookup.JvnLookupApplication
 import timber.log.Timber
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     /**
      * アプリ内アップデート制御
@@ -67,7 +69,7 @@ class MainActivity : ComponentActivity() {
                 }
             when {
                 appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
-                        && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) -> {
+                    && appUpdateInfo.isUpdateTypeAllowed(AppUpdateType.IMMEDIATE) -> {
                     Timber.d("start app update")
                     appUpdateManager.startUpdateFlowForResult(
                         appUpdateInfo,

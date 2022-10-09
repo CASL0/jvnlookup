@@ -22,13 +22,14 @@ import io.github.casl0.jvnlookup.repository.JvnRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 /**
  * 脆弱性対策情報を取得するためのUseCase層
  * @param jvnRepository JVNデータ取得用のリポジトリ層
  * @param defaultDispatcher 脆弱性対策情報を取得時のDispatcher
  */
-class FetchVulnOverviewUseCase(
+class FetchVulnOverviewUseCase @Inject constructor(
     private val jvnRepository: JvnRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
