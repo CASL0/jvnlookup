@@ -21,12 +21,13 @@ import androidx.lifecycle.MutableLiveData
 import io.github.casl0.jvnlookup.data.JvnDataSource
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * JVN APIでキーワード検索した結果を取得するリポジトリ
  * @param jvnRemoteDataSource リモートのデータ層
  */
-class SearchRepository(
+class SearchRepository @Inject constructor(
     private val jvnRemoteDataSource: JvnDataSource
 ) {
     /**

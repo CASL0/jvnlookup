@@ -17,31 +17,11 @@
 package io.github.casl0.jvnlookup
 
 import android.app.Application
-import io.github.casl0.jvnlookup.data.local.JvnLocalDataSource
-import io.github.casl0.jvnlookup.data.remote.JvnRemoteDataSource
-import io.github.casl0.jvnlookup.database.getDatabase
-import io.github.casl0.jvnlookup.network.MyJvnApi
-import io.github.casl0.jvnlookup.repository.JvnRepository
-import io.github.casl0.jvnlookup.repository.SearchRepository
+import dagger.hilt.android.HiltAndroidApp
 import timber.log.Timber
 
+@HiltAndroidApp
 class JvnLookupApplication : Application() {
-
-    /**
-     * JVN APIから取得した情報のリポジトリ
-     */
-    val jvnRepository by lazy {
-        JvnRepository(
-            JvnLocalDataSource(getDatabase(this)),
-            JvnRemoteDataSource(MyJvnApi.retrofitService)
-        )
-    }
-
-    /**
-     * JVN API キーワード検索のリポジトリ
-     */
-    val searchRepository by lazy { SearchRepository(JvnRemoteDataSource(MyJvnApi.retrofitService)) }
-
     override fun onCreate() {
         super.onCreate()
         if (BuildConfig.DEBUG) {

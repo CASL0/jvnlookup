@@ -20,13 +20,14 @@ import androidx.lifecycle.LiveData
 import io.github.casl0.jvnlookup.data.JvnDataSource
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import timber.log.Timber
+import javax.inject.Inject
 
 /**
  * JVN APIからデータを取得し、Roomに保存するリポジトリ
  * @param jvnLocalDataSource ローカルのデータ層
  * @param jvnRemoteDataSource リモートのデータ層
  */
-class JvnRepository(
+class JvnRepository @Inject constructor(
     private val jvnLocalDataSource: JvnDataSource,
     private val jvnRemoteDataSource: JvnDataSource
 ) {

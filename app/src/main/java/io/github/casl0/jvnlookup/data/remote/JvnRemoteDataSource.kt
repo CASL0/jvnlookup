@@ -21,11 +21,13 @@ import io.github.casl0.jvnlookup.data.JvnDataSource
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import io.github.casl0.jvnlookup.network.MyJvnApiService
 import io.github.casl0.jvnlookup.network.asDomainModel
+import javax.inject.Inject
 
 /**
  * RetrofitによるData層の実装
  */
-class JvnRemoteDataSource(private val myJvnApiService: MyJvnApiService) : JvnDataSource {
+class JvnRemoteDataSource @Inject constructor(private val myJvnApiService: MyJvnApiService) :
+    JvnDataSource {
     override fun getVulnOverviewsStream(): LiveData<List<DomainVulnOverview>> {
         TODO("Not yet implemented")
     }

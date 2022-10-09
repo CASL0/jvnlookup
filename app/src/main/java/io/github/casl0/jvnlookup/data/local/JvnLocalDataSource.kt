@@ -23,11 +23,12 @@ import io.github.casl0.jvnlookup.database.JvnDatabase
 import io.github.casl0.jvnlookup.database.asDomainModel
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import io.github.casl0.jvnlookup.model.asDatabaseEntity
+import javax.inject.Inject
 
 /**
  * RoomによるData層の実装
  */
-class JvnLocalDataSource(private val database: JvnDatabase) : JvnDataSource {
+class JvnLocalDataSource @Inject constructor(private val database: JvnDatabase) : JvnDataSource {
     override fun getVulnOverviewsStream(): LiveData<List<DomainVulnOverview>> = Transformations.map(
         database.vulnOverviewDao.getVulnOverviewWithReferencesAndCVSS()
     ) {
