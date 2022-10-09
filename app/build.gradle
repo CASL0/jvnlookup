@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'org.jetbrains.dokka'
     id 'com.google.android.gms.oss-licenses-plugin'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -83,4 +84,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-oss-licenses:$play_services_oss_licenses_version"
     implementation "com.google.android.play:app-update:$in_app_update_version"
     implementation "com.google.android.play:app-update-ktx:$in_app_update_version"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 }
