@@ -16,9 +16,7 @@
 
 package io.github.casl0.jvnlookup.database
 
-import android.content.Context
 import androidx.room.Database
-import androidx.room.Room
 import androidx.room.RoomDatabase
 
 /**
@@ -32,26 +30,4 @@ abstract class JvnDatabase : RoomDatabase() {
     abstract val vulnOverviewDao: VulnOverviewDao
     abstract val referenceDao: ReferenceDao
     abstract val cvssDao: CVSSDao
-}
-
-/**
- * Roomのシングルトンインスタンス
- */
-private lateinit var INSTANCE: JvnDatabase
-
-/**
- * Roomのインスタンスを取得します
- * @param context Context
- */
-fun getDatabase(context: Context): JvnDatabase {
-    synchronized(JvnDatabase::class.java) {
-        if (!::INSTANCE.isInitialized) {
-            INSTANCE = Room.databaseBuilder(
-                context.applicationContext,
-                JvnDatabase::class.java,
-                "jvn"
-            ).build()
-        }
-    }
-    return INSTANCE
 }

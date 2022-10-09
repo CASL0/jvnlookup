@@ -16,21 +16,8 @@
 
 package io.github.casl0.jvnlookup.network
 
-import com.tickaroo.tikxml.TikXml
-import com.tickaroo.tikxml.retrofit.TikXmlConverterFactory
-import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Query
-
-private const val BASE_URL = "https://jvndb.jvn.jp/"
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(
-        TikXmlConverterFactory.create(
-            TikXml.Builder().exceptionOnUnreadXml(false).build()
-        )
-    )
-    .baseUrl(BASE_URL)
-    .build()
 
 interface MyJvnApiService {
     /**
@@ -47,11 +34,5 @@ interface MyJvnApiService {
         @Query("rangeDatePublic") rangeDatePublic: String = "n",
         @Query("rangeDatePublished") rangeDatePublished: String = "n",
         @Query("rangeDateFirstPublished") rangeDateFirstPublished: String = "n",
-        ): VulnOverviewResponse
-}
-
-object MyJvnApi {
-    val retrofitService: MyJvnApiService by lazy {
-        retrofit.create(MyJvnApiService::class.java)
-    }
+    ): VulnOverviewResponse
 }
