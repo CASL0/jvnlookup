@@ -22,8 +22,9 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -41,7 +42,7 @@ fun VulnOverviewScreen(
     onClickVulnOverviewItem: (CharSequence) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val vulnOverviews = viewModel.vulnOverviews.observeAsState(listOf())
+    val vulnOverviews = viewModel.vulnOverviews.collectAsState(listOf())
     val filteredVulnOverviews =
         viewModel.filterCategory(vulnOverviews.value, viewModel.selectedCategory)
     val snackbarHostState = remember { SnackbarHostState() }

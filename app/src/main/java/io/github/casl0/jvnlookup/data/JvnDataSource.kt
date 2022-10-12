@@ -16,18 +16,18 @@
 
 package io.github.casl0.jvnlookup.data
 
-import androidx.lifecycle.LiveData
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
+import kotlinx.coroutines.flow.Flow
 
 /**
  * JVNの情報へのエントリーポイント
  */
 interface JvnDataSource {
-    fun getVulnOverviewsStream(): LiveData<List<DomainVulnOverview>>
+    fun getVulnOverviewsStream(): Flow<List<DomainVulnOverview>>
 
     suspend fun getVulnOverviews(keyword: CharSequence? = null): List<DomainVulnOverview>
 
-    fun getFavoritesStream(): LiveData<List<DomainVulnOverview>>
+    fun getFavoritesStream(): Flow<List<DomainVulnOverview>>
 
     suspend fun saveVulnOverviews(vulnOverviews: List<DomainVulnOverview>)
 

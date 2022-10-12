@@ -16,11 +16,11 @@
 
 package io.github.casl0.jvnlookup.data.remote
 
-import androidx.lifecycle.LiveData
 import io.github.casl0.jvnlookup.data.JvnDataSource
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import io.github.casl0.jvnlookup.network.MyJvnApiService
 import io.github.casl0.jvnlookup.network.asDomainModel
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
@@ -28,7 +28,7 @@ import javax.inject.Inject
  */
 class JvnRemoteDataSource @Inject constructor(private val myJvnApiService: MyJvnApiService) :
     JvnDataSource {
-    override fun getVulnOverviewsStream(): LiveData<List<DomainVulnOverview>> {
+    override fun getVulnOverviewsStream(): Flow<List<DomainVulnOverview>> {
         TODO("Not yet implemented")
     }
 
@@ -40,7 +40,7 @@ class JvnRemoteDataSource @Inject constructor(private val myJvnApiService: MyJvn
             rangeDateFirstPublished = "m"
         ).asDomainModel()
 
-    override fun getFavoritesStream(): LiveData<List<DomainVulnOverview>> {
+    override fun getFavoritesStream(): Flow<List<DomainVulnOverview>> {
         TODO("Not yet implemented")
     }
 

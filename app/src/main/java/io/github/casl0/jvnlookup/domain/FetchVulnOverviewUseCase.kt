@@ -16,11 +16,12 @@
 
 package io.github.casl0.jvnlookup.domain
 
-import androidx.lifecycle.LiveData
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import io.github.casl0.jvnlookup.repository.JvnRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -33,7 +34,8 @@ class FetchVulnOverviewUseCase @Inject constructor(
     private val jvnRepository: JvnRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
-    val vulnOverviews: LiveData<List<DomainVulnOverview>> = jvnRepository.vulnOverviews
+    val vulnOverviews: Flow<List<DomainVulnOverview>> =
+        jvnRepository.vulnOverviews.flowOn(defaultDispatcher)
 
     suspend operator fun invoke() =
         withContext(defaultDispatcher) {

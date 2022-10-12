@@ -16,9 +16,9 @@
 
 package io.github.casl0.jvnlookup.repository
 
-import androidx.lifecycle.LiveData
 import io.github.casl0.jvnlookup.data.JvnDataSource
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
+import kotlinx.coroutines.flow.Flow
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -35,13 +35,13 @@ class JvnRepository @Inject constructor(
     /**
      * 保存済み脆弱性対策情報
      */
-    val vulnOverviews: LiveData<List<DomainVulnOverview>> =
+    val vulnOverviews: Flow<List<DomainVulnOverview>> =
         jvnLocalDataSource.getVulnOverviewsStream()
 
     /**
      * お気に入り登録済みの脆弱性対策情報
      */
-    val favorites: LiveData<List<DomainVulnOverview>> = jvnLocalDataSource.getFavoritesStream()
+    val favorites: Flow<List<DomainVulnOverview>> = jvnLocalDataSource.getFavoritesStream()
 
     /**
      * ローカルに保存しているJVNデータを更新します

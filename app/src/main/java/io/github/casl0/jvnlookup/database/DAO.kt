@@ -16,8 +16,8 @@
 
 package io.github.casl0.jvnlookup.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 
 /**
  * vuln_overviewテーブル操作用クエリ
@@ -32,11 +32,11 @@ interface VulnOverviewDao {
 
     @Transaction
     @Query("SELECT * FROM vuln_overview ORDER BY issued DESC")
-    fun getVulnOverviewWithReferencesAndCVSS(): LiveData<List<VulnOverviewWithReferencesAndCVSS>>
+    fun getVulnOverviewWithReferencesAndCVSS(): Flow<List<VulnOverviewWithReferencesAndCVSS>>
 
     @Transaction
     @Query("SELECT * FROM vuln_overview WHERE favorite = 1")
-    fun getFavorites(): LiveData<List<VulnOverviewWithReferencesAndCVSS>>
+    fun getFavorites(): Flow<List<VulnOverviewWithReferencesAndCVSS>>
 
     @Query("SELECT EXISTS(SELECT * FROM vuln_overview WHERE sec_identifier = :id)")
     fun exists(id: String): Boolean

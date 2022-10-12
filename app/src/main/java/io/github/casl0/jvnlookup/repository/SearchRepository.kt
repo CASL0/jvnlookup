@@ -16,10 +16,10 @@
 
 package io.github.casl0.jvnlookup.repository
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import io.github.casl0.jvnlookup.data.JvnDataSource
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -33,8 +33,8 @@ class SearchRepository @Inject constructor(
     /**
      * 検索結果
      */
-    private val _searchResults = MutableLiveData<List<DomainVulnOverview>>()
-    val searchResults: LiveData<List<DomainVulnOverview>> get() = _searchResults
+    private val _searchResults = MutableStateFlow<List<DomainVulnOverview>>(listOf())
+    val searchResults: StateFlow<List<DomainVulnOverview>> get() = _searchResults
 
     /**
      * JVN APIを使用し、脆弱性対策情報をキーワード検索します
@@ -43,7 +43,7 @@ class SearchRepository @Inject constructor(
     suspend fun searchOnJvn(keyword: CharSequence): Int {
         Timber.d("search on jvn")
         jvnRemoteDataSource.getVulnOverviews(keyword).run {
-            _searchResults.postValue(this)
+            _searchResults.value = this
             return this.size
         }
     }

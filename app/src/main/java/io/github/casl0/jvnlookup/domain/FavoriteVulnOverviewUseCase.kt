@@ -16,11 +16,12 @@
 
 package io.github.casl0.jvnlookup.domain
 
-import androidx.lifecycle.LiveData
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import io.github.casl0.jvnlookup.repository.JvnRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -33,7 +34,8 @@ class FavoriteVulnOverviewUseCase @Inject constructor(
     private val jvnRepository: JvnRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
-    val favorites: LiveData<List<DomainVulnOverview>> = jvnRepository.favorites
+    val favorites: Flow<List<DomainVulnOverview>> =
+        jvnRepository.favorites.flowOn(defaultDispatcher)
 
     /**
      * 既に保存済みのレコードのお気に入り状態を更新します

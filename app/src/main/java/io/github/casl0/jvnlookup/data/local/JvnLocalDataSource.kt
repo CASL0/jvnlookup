@@ -16,33 +16,30 @@
 
 package io.github.casl0.jvnlookup.data.local
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import io.github.casl0.jvnlookup.data.JvnDataSource
 import io.github.casl0.jvnlookup.database.JvnDatabase
 import io.github.casl0.jvnlookup.database.asDomainModel
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import io.github.casl0.jvnlookup.model.asDatabaseEntity
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 /**
  * RoomによるData層の実装
  */
 class JvnLocalDataSource @Inject constructor(private val database: JvnDatabase) : JvnDataSource {
-    override fun getVulnOverviewsStream(): LiveData<List<DomainVulnOverview>> = Transformations.map(
-        database.vulnOverviewDao.getVulnOverviewWithReferencesAndCVSS()
-    ) {
-        it.asDomainModel()
-    }
+    override fun getVulnOverviewsStream(): Flow<List<DomainVulnOverview>> =
+        database.vulnOverviewDao.getVulnOverviewWithReferencesAndCVSS().map {
+            it.asDomainModel()
+        }
 
     override suspend fun getVulnOverviews(keyword: CharSequence?): List<DomainVulnOverview> {
         TODO("Not yet implemented")
     }
 
-    override fun getFavoritesStream(): LiveData<List<DomainVulnOverview>> =
-        Transformations.map(database.vulnOverviewDao.getFavorites()) {
-            it.asDomainModel()
-        }
+    override fun getFavoritesStream(): Flow<List<DomainVulnOverview>> =
+        database.vulnOverviewDao.getFavorites().map { it.asDomainModel() }
 
 
     override suspend fun saveVulnOverviews(vulnOverviews: List<DomainVulnOverview>) {

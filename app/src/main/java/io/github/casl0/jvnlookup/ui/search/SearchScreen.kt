@@ -23,7 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -33,9 +33,9 @@ import io.github.casl0.jvnlookup.ui.components.VulnCard
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchScreen(viewModel: SearchViewModel, onClickVulnOverviewItem: (CharSequence) -> Unit) {
-    val searchResults = viewModel.searchResult.observeAsState(listOf())
+    val searchResults = viewModel.searchResult.collectAsState(listOf())
     val searchValue = viewModel.searchValue
-    val favorites = viewModel.favorites.observeAsState(listOf())
+    val favorites = viewModel.favorites.collectAsState(listOf())
     val snackbarHostState = remember { SnackbarHostState() }
     viewModel.hasError.SnackbarLaunchedEffect(snackbarHostState = snackbarHostState)
     Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {

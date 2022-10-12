@@ -28,6 +28,7 @@ import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -103,7 +104,7 @@ class SearchViewModel @Inject constructor(
      */
     fun onFavoriteButtonClicked(id: String, favorite: Boolean) {
         viewModelScope.launch {
-            val searchResult = searchResult.value ?: return@launch
+            val searchResult = searchResult.first() ?: return@launch
 
             searchResult.find { it.id == id }?.let {
                 favoriteVulnOverviewUseCase(it, favorite)
