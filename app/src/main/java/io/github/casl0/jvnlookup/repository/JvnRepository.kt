@@ -48,7 +48,12 @@ class JvnRepository @Inject constructor(
      */
     suspend fun refreshVulnOverviews() {
         Timber.d("refresh vuln overviews")
-        val vulnOverviews = jvnRemoteDataSource.getVulnOverviews()
+        val vulnOverviews = jvnRemoteDataSource.getVulnOverviews(
+            keyword = null,
+            rangeDatePublic = "n",
+            rangeDatePublished = "m",
+            rangeDateFirstPublished = "m"
+        )
         jvnLocalDataSource.deleteAll()
         jvnLocalDataSource.saveVulnOverviews(vulnOverviews)
     }

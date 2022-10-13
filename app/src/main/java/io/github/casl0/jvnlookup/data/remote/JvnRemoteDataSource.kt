@@ -32,12 +32,17 @@ class JvnRemoteDataSource @Inject constructor(private val myJvnApiService: MyJvn
         TODO("Not yet implemented")
     }
 
-    override suspend fun getVulnOverviews(keyword: CharSequence?): List<DomainVulnOverview> =
+    override suspend fun getVulnOverviews(
+        keyword: CharSequence?,
+        rangeDatePublic: CharSequence,
+        rangeDatePublished: CharSequence,
+        rangeDateFirstPublished: CharSequence
+    ): List<DomainVulnOverview> =
         myJvnApiService.getVulnOverviewList(
             keyword = keyword as String?,
-            rangeDatePublic = "n",
-            rangeDatePublished = "m",
-            rangeDateFirstPublished = "m"
+            rangeDatePublic = rangeDatePublic as String,
+            rangeDatePublished = rangeDatePublished as String,
+            rangeDateFirstPublished = rangeDateFirstPublished as String
         ).asDomainModel()
 
     override fun getFavoritesStream(): Flow<List<DomainVulnOverview>> {

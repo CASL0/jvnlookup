@@ -34,7 +34,12 @@ class JvnLocalDataSource @Inject constructor(private val database: JvnDatabase) 
             it.asDomainModel()
         }
 
-    override suspend fun getVulnOverviews(keyword: CharSequence?): List<DomainVulnOverview> {
+    override suspend fun getVulnOverviews(
+        keyword: CharSequence?,
+        rangeDatePublic: CharSequence,
+        rangeDatePublished: CharSequence,
+        rangeDateFirstPublished: CharSequence
+    ): List<DomainVulnOverview> {
         TODO("Not yet implemented")
     }
 

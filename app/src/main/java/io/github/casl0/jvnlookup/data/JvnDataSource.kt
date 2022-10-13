@@ -25,7 +25,12 @@ import kotlinx.coroutines.flow.Flow
 interface JvnDataSource {
     fun getVulnOverviewsStream(): Flow<List<DomainVulnOverview>>
 
-    suspend fun getVulnOverviews(keyword: CharSequence? = null): List<DomainVulnOverview>
+    suspend fun getVulnOverviews(
+        keyword: CharSequence? = null,
+        rangeDatePublic: CharSequence = "n",
+        rangeDatePublished: CharSequence = "n",
+        rangeDateFirstPublished: CharSequence = "n"
+    ): List<DomainVulnOverview>
 
     fun getFavoritesStream(): Flow<List<DomainVulnOverview>>
 
