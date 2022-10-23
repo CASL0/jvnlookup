@@ -24,11 +24,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.casl0.jvnlookup.R
-import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -40,19 +38,9 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchVulnOverviewUseCase: SearchVulnOverviewUseCase,
-    private val favoriteVulnOverviewUseCase: FavoriteVulnOverviewUseCase
+    private val searchVulnOverviewUseCase: SearchVulnOverviewUseCase
 ) :
     ViewModel() {
-    /**
-     * 検索結果
-     */
-    val searchResult = searchVulnOverviewUseCase.searchResults
-
-    /**
-     * お気に入り登録済みの脆弱性対策情報
-     */
-    val favorites = favoriteVulnOverviewUseCase.favorites
 
     /**
      * 検索ボックスの入力値
@@ -79,7 +67,7 @@ class SearchViewModel @Inject constructor(
     /**
      * キーワードで JVN を検索します
      */
-    fun searchOnJvn(keyword: CharSequence) {
+    fun searchOnJvn(keyword: CharSequence, onSearchComplete: (() -> Unit)? = null) {
         if (keyword.isEmpty() || keyword.isBlank()) return
         viewModelScope.launch {
             _searchInProgress = true
@@ -87,6 +75,8 @@ class SearchViewModel @Inject constructor(
                 val hitCount = searchVulnOverviewUseCase(keyword)
                 if (hitCount == 0) {
                     errorChannel.send(R.string.error_no_results_found)
+                } else {
+                    onSearchComplete?.let { it() }
                 }
             } catch (e: Exception) {
                 // ネットワークエラー
@@ -94,21 +84,6 @@ class SearchViewModel @Inject constructor(
                 errorChannel.send(R.string.error_network_connection)
             }
             _searchInProgress = false
-        }
-    }
-
-    /**
-     * お気に入り登録を更新します
-     * @param id 更新したいレコードのセキュリティID
-     * @param favorite 更新後のお気に入り状態
-     */
-    fun onFavoriteButtonClicked(id: String, favorite: Boolean) {
-        viewModelScope.launch {
-            val searchResult = searchResult.first() ?: return@launch
-
-            searchResult.find { it.id == id }?.let {
-                favoriteVulnOverviewUseCase(it, favorite)
-            }
         }
     }
 
@@ -124,12 +99,11 @@ class SearchViewModel @Inject constructor(
          * SearchViewModelのファクトリ
          */
         fun provideFactory(
-            searchVulnOverviewUseCase: SearchVulnOverviewUseCase,
-            favoriteVulnOverviewUseCase: FavoriteVulnOverviewUseCase
+            searchVulnOverviewUseCase: SearchVulnOverviewUseCase
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SearchViewModel(searchVulnOverviewUseCase, favoriteVulnOverviewUseCase) as T
+                return SearchViewModel(searchVulnOverviewUseCase) as T
             }
         }
     }

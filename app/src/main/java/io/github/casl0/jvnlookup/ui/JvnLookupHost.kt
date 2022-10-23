@@ -30,6 +30,7 @@ import androidx.navigation.compose.composable
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
 import io.github.casl0.jvnlookup.JvnLookupApplication
 import io.github.casl0.jvnlookup.ui.search.SearchScreen
+import io.github.casl0.jvnlookup.ui.search.results.SearchResultsScreen
 import io.github.casl0.jvnlookup.ui.settings.SettingScreen
 import io.github.casl0.jvnlookup.ui.vulnoverview.VulnOverviewScreen
 import timber.log.Timber
@@ -49,12 +50,22 @@ fun JvnLookupNavHost(
             VulnOverviewScreen(hiltViewModel(), navController::navigationUrlInCustomTabs)
         }
         composable(route = Search.route) {
-            SearchScreen(hiltViewModel(), navController::navigationUrlInCustomTabs)
+            SearchScreen(
+                hiltViewModel(),
+                navController::navigateToSearchResults,
+            )
         }
         composable(route = Settings.route) {
             SettingScreen(
                 navController::navigationOssLicensesActivity,
                 navController::navigationDeepLink
+            )
+        }
+        composable(route = SearchResults.route) {
+            SearchResultsScreen(
+                hiltViewModel(),
+                navController::navigateUp,
+                navController::navigationUrlInCustomTabs
             )
         }
     }
@@ -103,4 +114,11 @@ fun NavHostController.navigationDeepLink(url: CharSequence) {
     } catch (e: ActivityNotFoundException) {
         Timber.e(e.localizedMessage)
     }
+}
+
+/**
+ * 検索結果画面に遷移します
+ */
+fun NavHostController.navigateToSearchResults() {
+    navigate(SearchResults.route)
 }

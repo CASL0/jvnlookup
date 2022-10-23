@@ -17,61 +17,51 @@
 package io.github.casl0.jvnlookup.ui.search
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import io.github.casl0.jvnlookup.ui.components.SnackbarLaunchedEffect
-import io.github.casl0.jvnlookup.ui.components.VulnCard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchScreen(viewModel: SearchViewModel, onClickVulnOverviewItem: (CharSequence) -> Unit) {
-    val searchResults = viewModel.searchResult.collectAsState(listOf())
+fun SearchScreen(
+    viewModel: SearchViewModel,
+    navigateToSearchResults: () -> Unit,
+) {
     val searchValue = viewModel.searchValue
-    val favorites = viewModel.favorites.collectAsState(listOf())
     val snackbarHostState = remember { SnackbarHostState() }
     viewModel.hasError.SnackbarLaunchedEffect(snackbarHostState = snackbarHostState)
     Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {
-        val scrollState = rememberLazyListState()
+        val scrollState = rememberScrollState()
         if (viewModel.searchInProgress) {
             ProgressIndicator()
         } else {
-            LazyColumn(
-                state = scrollState,
-                contentPadding = it,
-                verticalArrangement = Arrangement.spacedBy(4.dp)
+            Column(
+                modifier = Modifier
+                    .verticalScroll(scrollState)
+                    .padding(it),
+                verticalArrangement = Arrangement.spacedBy(4.dp),
             ) {
-                item {
-                    SearchTextField(
-                        searchValue = searchValue,
-                        onValueChange = viewModel::onSearchValueChanged,
-                        onSearch = viewModel::searchOnJvn,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                }
-                items(items = searchResults.value, key = { item -> item.id }) { vulnOverview ->
-                    // お気に入り登録状態を反映
-                    vulnOverview.isFavorite =
-                        favorites.value.find { it.id == vulnOverview.id } != null
-                    Surface(modifier = Modifier.padding(horizontal = 4.dp)) {
-                        SearchItem(
-                            vulnOverview = vulnOverview,
-                            onItemClicked = onClickVulnOverviewItem
+                SearchTextField(
+                    searchValue = searchValue,
+                    onValueChange = viewModel::onSearchValueChanged,
+                    onSearch = { keyword ->
+                        viewModel.searchOnJvn(
+                            keyword,
+                            navigateToSearchResults
                         )
-                        VulnCard(
-                            vulnOverview = vulnOverview,
-                            onItemClicked = onClickVulnOverviewItem,
-                            onFavoriteButtonClicked = viewModel::onFavoriteButtonClicked
-                        )
-                    }
-                }
+                    },
+                    modifier = Modifier.padding(bottom = 4.dp)
+                )
             }
         }
     }

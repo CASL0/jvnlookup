@@ -47,4 +47,12 @@ object Settings : JvnLookupDestination {
     override val route = "settings"
 }
 
+object SearchResults : JvnLookupDestination {
+    override val icon: ImageVector
+        get() = TODO("Not yet implemented")
+    override val label: Int
+        get() = TODO("Not yet implemented")
+    override val route = "search/results"
+}
+
 val jvnLookupBottomNavBarScreens = listOf(VulnOverview, Search, Settings)
