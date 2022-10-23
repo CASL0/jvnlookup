@@ -36,20 +36,24 @@ fun JvnLookupApp(application: JvnLookupApplication) {
         val currentDestination = currentBackStack?.destination
         val currentScreen =
             jvnLookupBottomNavBarScreens.find { it.route == currentDestination?.route }
+        val shouldShowBottomBar =
+            currentBackStack?.destination?.route in jvnLookupBottomNavBarScreenRoutes
         Scaffold(bottomBar = {
-            NavigationBar {
-                jvnLookupBottomNavBarScreens.forEachIndexed { _, item ->
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                item.icon,
-                                contentDescription = stringResource(id = item.label)
-                            )
-                        },
-                        label = { Text(stringResource(item.label)) },
-                        selected = item.route == currentScreen?.route,
-                        onClick = { navController.navigateSingleTopTo(item.route) }
-                    )
+            if (shouldShowBottomBar) {
+                NavigationBar {
+                    jvnLookupBottomNavBarScreens.forEachIndexed { _, item ->
+                        NavigationBarItem(
+                            icon = {
+                                Icon(
+                                    item.icon,
+                                    contentDescription = stringResource(id = item.label)
+                                )
+                            },
+                            label = { Text(stringResource(item.label)) },
+                            selected = item.route == currentScreen?.route,
+                            onClick = { navController.navigateSingleTopTo(item.route) }
+                        )
+                    }
                 }
             }
         }) { innerPadding ->

@@ -56,3 +56,4 @@ object SearchResults : JvnLookupDestination {
 }
 
 val jvnLookupBottomNavBarScreens = listOf(VulnOverview, Search, Settings)
+val jvnLookupBottomNavBarScreenRoutes = jvnLookupBottomNavBarScreens.map { it.route }
