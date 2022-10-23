@@ -22,6 +22,10 @@
     <string name="cwe_399">リソース管理の問題</string>
     <string name="cwe_designerror">設計上の問題</string>
 
+    <!-- エラーメッセージ -->
+    <string name="error_network_connection">ネットワーク接続がありません</string>
+    <string name="error_no_results_found">結果がありません</string>
+
     <string name="app_name">JVNlookup</string>
     <string name="vuln_overview_label">ホーム</string>
     <string name="favorite_label">お気に入り</string>
@@ -39,7 +43,4 @@
     <string name="open_source_licenses">オープンソースライセンス</string>
     <string name="source_code">ソースコード</string>
     <string name="search_results">検索結果</string>
-    <!-- エラーメッセージ -->
-    <string name="error_network_connection">ネットワーク接続がありません</string>
-    <string name="error_no_results_found">結果がありません</string>
 </resources>
