@@ -1,4 +1,26 @@
 <resources>
+    <!-- CWE一覧 -->
+    <string name="cwe_16">Configuration</string>
+    <string name="cwe_20">Improper Input Validation</string>
+    <string name="cwe_22">Path Traversal</string>
+    <string name="cwe_59">Link Following</string>
+    <string name="cwe_78">OS Command Injection</string>
+    <string name="cwe_79">Cross-site Scripting</string>
+    <string name="cwe_89">SQL Injection</string>
+    <string name="cwe_94">Code Injection</string>
+    <string name="cwe_119">Memory Corruption</string>
+    <string name="cwe_134">Uncontrolled Format String</string>
+    <string name="cwe_189">Numeric Errors</string>
+    <string name="cwe_200">Information Exposure</string>
+    <string name="cwe_255">Credentials Management</string>
+    <string name="cwe_264">Permissions, Privileges, and Access Controls</string>
+    <string name="cwe_287">Improper Authentication</string>
+    <string name="cwe_310">Cryptographic Issues</string>
+    <string name="cwe_352">Cross-Site Request Forgery (CSRF)</string>
+    <string name="cwe_362">Race Condition</string>
+    <string name="cwe_399">Resource Management Errors</string>
+    <string name="cwe_designerror">Design Errors</string>
+
     <string name="app_name">JVNlookup</string>
     <string name="vuln_overview_label">Home</string>
     <string name="favorite_label">Favorites</string>

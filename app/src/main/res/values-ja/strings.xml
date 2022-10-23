@@ -1,5 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- CWE一覧 -->
+    <string name="cwe_16">環境設定</string>
+    <string name="cwe_20">不適切な入力確認</string>
+    <string name="cwe_22">パス・トラバーサル</string>
+    <string name="cwe_59">リンク解釈の問題</string>
+    <string name="cwe_78">OSコマンドインジェクション</string>
+    <string name="cwe_79">クロスサイトスクリプティング</string>
+    <string name="cwe_89">SQLインジェクション</string>
+    <string name="cwe_94">コード・インジェクション</string>
+    <string name="cwe_119">バッファエラー</string>
+    <string name="cwe_134">書式文字列の問題</string>
+    <string name="cwe_189">数値処理の問題</string>
+    <string name="cwe_200">情報漏えい</string>
+    <string name="cwe_255">証明書・パスワードの管理</string>
+    <string name="cwe_264">認可・権限・アクセス制御</string>
+    <string name="cwe_287">不適切な認証</string>
+    <string name="cwe_310">暗号の問題</string>
+    <string name="cwe_352">クロスサイトリクエストフォージェリ</string>
+    <string name="cwe_362">競合状態</string>
+    <string name="cwe_399">リソース管理の問題</string>
+    <string name="cwe_designerror">設計上の問題</string>
+
     <string name="app_name">JVNlookup</string>
     <string name="vuln_overview_label">ホーム</string>
     <string name="favorite_label">お気に入り</string>
