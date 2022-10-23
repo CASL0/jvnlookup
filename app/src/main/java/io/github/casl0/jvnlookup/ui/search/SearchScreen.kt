@@ -16,20 +16,23 @@
 
 package io.github.casl0.jvnlookup.ui.search
 
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
+import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.ui.components.SnackbarLaunchedEffect
+import io.github.casl0.jvnlookup.utils.CWE_IDS
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -59,10 +62,60 @@ fun SearchScreen(
                             keyword,
                             navigateToSearchResults
                         )
-                    },
-                    modifier = Modifier.padding(bottom = 4.dp)
+                    }
                 )
+                SearchSection(title = R.string.search_cwe_section) {
+                    CweCollectionsGrid(Modifier.height(232.dp))
+                }
             }
+        }
+    }
+}
+
+@Composable
+private fun SearchSection(
+    @StringRes title: Int,
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Column(modifier) {
+        Text(
+            text = stringResource(title),
+            style = MaterialTheme.typography.titleLarge,
+            modifier = Modifier
+                .paddingFromBaseline(top = 40.dp, bottom = 8.dp)
+                .padding(horizontal = 16.dp)
+        )
+        content()
+    }
+}
+
+@Composable
+private fun CweCollectionsGrid(modifier: Modifier = Modifier) {
+    LazyHorizontalGrid(
+        rows = GridCells.Fixed(3),
+        contentPadding = PaddingValues(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = modifier
+    ) {
+        items(CWE_IDS.values()) { item ->
+            CweCard(item, Modifier.width(192.dp))
+        }
+    }
+}
+
+@Composable
+private fun CweCard(cwe: CWE_IDS, modifier: Modifier = Modifier) {
+    Card(modifier = modifier) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.height(72.dp)
+        ) {
+            Text(
+                stringResource(cwe.description),
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
         }
     }
 }

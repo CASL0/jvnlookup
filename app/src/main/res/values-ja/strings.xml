@@ -43,4 +43,5 @@
     <string name="open_source_licenses">オープンソースライセンス</string>
     <string name="source_code">ソースコード</string>
     <string name="search_results">検索結果</string>
+    <string name="search_cwe_section">CWE</string>
 </resources>
