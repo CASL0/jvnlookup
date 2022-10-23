@@ -86,7 +86,7 @@ fun NavHostController.navigateSingleTopTo(route: String) =
  * Chrome Custom Tabs によるナビゲーションをします
  * @param url URL文字列
  */
-fun NavHostController.navigationUrlInCustomTabs(url: CharSequence) {
+private fun NavHostController.navigationUrlInCustomTabs(url: CharSequence) {
     CustomTabsIntent.Builder().build().run {
         launchUrl(context, Uri.parse(url as String?))
     }
@@ -95,7 +95,7 @@ fun NavHostController.navigationUrlInCustomTabs(url: CharSequence) {
 /**
  * OSS Licenses Activity に遷移します
  */
-fun NavHostController.navigationOssLicensesActivity() {
+private fun NavHostController.navigationOssLicensesActivity() {
     context.startActivity(Intent(context, OssLicensesMenuActivity::class.java))
 }
 
@@ -103,7 +103,7 @@ fun NavHostController.navigationOssLicensesActivity() {
  * 外部のアプリコンテンツにアクセスします
  * @param url アクセス先のカスタムURL
  */
-fun NavHostController.navigationDeepLink(url: CharSequence) {
+private fun NavHostController.navigationDeepLink(url: CharSequence) {
     try {
         Intent().apply {
             action = Intent.ACTION_VIEW
@@ -119,6 +119,6 @@ fun NavHostController.navigationDeepLink(url: CharSequence) {
 /**
  * 検索結果画面に遷移します
  */
-fun NavHostController.navigateToSearchResults() {
+private fun NavHostController.navigateToSearchResults() {
     navigate(SearchResults.route)
 }
