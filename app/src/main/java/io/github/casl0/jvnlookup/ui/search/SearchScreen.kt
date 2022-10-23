@@ -65,7 +65,12 @@ fun SearchScreen(
                     }
                 )
                 SearchSection(title = R.string.search_cwe_section) {
-                    CweCollectionsGrid(Modifier.height(232.dp))
+                    CweCollectionsGrid(onClickCard = { keyword ->
+                        viewModel.searchOnJvn(
+                            keyword,
+                            navigateToSearchResults
+                        )
+                    }, Modifier.height(232.dp))
                 }
             }
         }
@@ -91,7 +96,7 @@ private fun SearchSection(
 }
 
 @Composable
-private fun CweCollectionsGrid(modifier: Modifier = Modifier) {
+private fun CweCollectionsGrid(onClickCard: (CharSequence) -> Unit, modifier: Modifier = Modifier) {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(3),
         contentPadding = PaddingValues(horizontal = 16.dp),
@@ -100,14 +105,19 @@ private fun CweCollectionsGrid(modifier: Modifier = Modifier) {
         modifier = modifier
     ) {
         items(CWE_IDS.values()) { item ->
-            CweCard(item, Modifier.width(192.dp))
+            CweCard(item, onClickCard, Modifier.width(192.dp))
         }
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun CweCard(cwe: CWE_IDS, modifier: Modifier = Modifier) {
-    Card(modifier = modifier) {
+private fun CweCard(
+    cwe: CWE_IDS,
+    onClickCard: (CharSequence) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(modifier = modifier, onClick = { onClickCard(cwe.id) }) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.height(72.dp)
