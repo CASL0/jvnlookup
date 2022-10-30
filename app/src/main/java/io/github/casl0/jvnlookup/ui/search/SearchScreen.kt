@@ -25,7 +25,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -38,10 +37,10 @@ import io.github.casl0.jvnlookup.utils.CWE_IDS
 @Composable
 fun SearchScreen(
     viewModel: SearchViewModel,
+    snackbarHostState: SnackbarHostState,
     navigateToSearchResults: () -> Unit,
 ) {
     val searchValue = viewModel.searchValue
-    val snackbarHostState = remember { SnackbarHostState() }
     viewModel.hasError.SnackbarLaunchedEffect(snackbarHostState = snackbarHostState)
     Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {
         val scrollState = rememberScrollState()

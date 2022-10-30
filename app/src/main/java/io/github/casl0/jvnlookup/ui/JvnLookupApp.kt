@@ -19,27 +19,16 @@ package io.github.casl0.jvnlookup.ui
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import io.github.casl0.jvnlookup.JvnLookupApplication
 import io.github.casl0.jvnlookup.ui.theme.JVNlookupTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun JvnLookupApp(application: JvnLookupApplication) {
+fun JvnLookupApp(appState: JvnLookupAppState = rememberJvnLookupAppState()) {
     JVNlookupTheme {
-        val navController = rememberNavController()
-        val currentBackStack by navController.currentBackStackEntryAsState()
-        val currentDestination = currentBackStack?.destination
-        val currentScreen =
-            jvnLookupBottomNavBarScreens.find { it.route == currentDestination?.route }
-        val shouldShowBottomBar =
-            currentBackStack?.destination?.route in jvnLookupBottomNavBarScreenRoutes
         Scaffold(bottomBar = {
-            if (shouldShowBottomBar) {
+            if (appState.shouldShowBottomBar) {
                 NavigationBar {
                     jvnLookupBottomNavBarScreens.forEachIndexed { _, item ->
                         NavigationBarItem(
@@ -50,16 +39,16 @@ fun JvnLookupApp(application: JvnLookupApplication) {
                                 )
                             },
                             label = { Text(stringResource(item.label)) },
-                            selected = item.route == currentScreen?.route,
-                            onClick = { navController.navigateSingleTopTo(item.route) }
+                            selected = item.route == appState.currentScreen?.route,
+                            onClick = { appState.navController.navigateSingleTopTo(item.route) }
                         )
                     }
                 }
             }
         }) { innerPadding ->
             JvnLookupNavHost(
-                application = application,
-                navController = navController,
+                navController = appState.navController,
+                snackbarHostState = appState.snackbarHostState,
                 modifier = Modifier.padding(innerPadding)
             )
         }

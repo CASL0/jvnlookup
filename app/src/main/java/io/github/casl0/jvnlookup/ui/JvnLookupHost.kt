@@ -20,6 +20,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,7 +29,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.android.gms.oss.licenses.OssLicensesMenuActivity
-import io.github.casl0.jvnlookup.JvnLookupApplication
 import io.github.casl0.jvnlookup.ui.search.SearchScreen
 import io.github.casl0.jvnlookup.ui.search.results.SearchResultsScreen
 import io.github.casl0.jvnlookup.ui.settings.SettingScreen
@@ -37,8 +37,8 @@ import timber.log.Timber
 
 @Composable
 fun JvnLookupNavHost(
-    application: JvnLookupApplication,
     navController: NavHostController,
+    snackbarHostState: SnackbarHostState,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -47,11 +47,16 @@ fun JvnLookupNavHost(
         modifier = modifier
     ) {
         composable(route = VulnOverview.route) {
-            VulnOverviewScreen(hiltViewModel(), navController::navigationUrlInCustomTabs)
+            VulnOverviewScreen(
+                hiltViewModel(),
+                snackbarHostState,
+                navController::navigationUrlInCustomTabs
+            )
         }
         composable(route = Search.route) {
             SearchScreen(
                 hiltViewModel(),
+                snackbarHostState,
                 navController::navigateToSearchResults,
             )
         }

@@ -28,7 +28,6 @@ import com.google.android.play.core.install.model.ActivityResult
 import com.google.android.play.core.install.model.AppUpdateType
 import com.google.android.play.core.install.model.UpdateAvailability
 import dagger.hilt.android.AndroidEntryPoint
-import io.github.casl0.jvnlookup.JvnLookupApplication
 import timber.log.Timber
 
 @AndroidEntryPoint
@@ -96,9 +95,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         appUpdateManager = AppUpdateManagerFactory.create(this)
-        val jvnLookupApplication = application as JvnLookupApplication
         setContent {
-            JvnLookupApp(jvnLookupApplication)
+            JvnLookupApp()
         }
     }
 

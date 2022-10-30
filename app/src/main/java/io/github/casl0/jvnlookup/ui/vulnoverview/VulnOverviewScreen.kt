@@ -24,7 +24,6 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -39,13 +38,13 @@ import io.github.casl0.jvnlookup.ui.components.VulnCard
 @Composable
 fun VulnOverviewScreen(
     viewModel: VulnOverviewViewModel,
+    snackbarHostState: SnackbarHostState,
     onClickVulnOverviewItem: (CharSequence) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val vulnOverviews = viewModel.vulnOverviews.collectAsState(listOf())
     val filteredVulnOverviews =
         viewModel.filterCategory(vulnOverviews.value, viewModel.selectedCategory)
-    val snackbarHostState = remember { SnackbarHostState() }
     viewModel.hasError.SnackbarLaunchedEffect(
         snackbarHostState = snackbarHostState,
         R.string.refresh_overview_action_label
