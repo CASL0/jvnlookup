@@ -20,7 +20,6 @@ import androidx.annotation.StringRes
 import io.github.casl0.jvnlookup.R
 
 internal const val SOURCE_CODE_URL = "https://github.com/CASL0/jvnlookup"
-internal const val MYJVN_API_BASE_URL = "https://jvndb.jvn.jp/"
 
 internal enum class CWE_IDS(
     val id: CharSequence, @StringRes val description: Int

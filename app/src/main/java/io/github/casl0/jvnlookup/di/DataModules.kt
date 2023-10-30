@@ -25,6 +25,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import io.github.casl0.jvnlookup.BuildConfig
 import io.github.casl0.jvnlookup.data.JvnDataSource
 import io.github.casl0.jvnlookup.data.local.JvnLocalDataSource
 import io.github.casl0.jvnlookup.data.remote.JvnRemoteDataSource
@@ -32,7 +33,6 @@ import io.github.casl0.jvnlookup.database.JvnDatabase
 import io.github.casl0.jvnlookup.network.MyJvnApiService
 import io.github.casl0.jvnlookup.repository.JvnRepository
 import io.github.casl0.jvnlookup.repository.SearchRepository
-import io.github.casl0.jvnlookup.utils.MYJVN_API_BASE_URL
 import retrofit2.Retrofit
 import javax.inject.Qualifier
 import javax.inject.Singleton
@@ -59,7 +59,9 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideSearchRepository(@RemoteJvnDataSource jvnRemoteDataSource: JvnDataSource): SearchRepository {
+    fun provideSearchRepository(
+        @RemoteJvnDataSource jvnRemoteDataSource: JvnDataSource
+    ): SearchRepository {
         return SearchRepository(jvnRemoteDataSource)
     }
 }
@@ -77,7 +79,9 @@ object DataSourceModule {
     @Singleton
     @RemoteJvnDataSource
     @Provides
-    fun provideJvnRemoteDataSource(myJvnApiService: MyJvnApiService): JvnDataSource {
+    fun provideJvnRemoteDataSource(
+        myJvnApiService: MyJvnApiService
+    ): JvnDataSource {
         return JvnRemoteDataSource(myJvnApiService)
     }
 }
@@ -108,7 +112,8 @@ object NetworkModule {
                     TikXml.Builder().exceptionOnUnreadXml(false).build()
                 )
             )
-            .baseUrl(MYJVN_API_BASE_URL)
-            .build().create(MyJvnApiService::class.java)
+            .baseUrl(BuildConfig.MYJVN_URL)
+            .build()
+            .create(MyJvnApiService::class.java)
     }
 }
