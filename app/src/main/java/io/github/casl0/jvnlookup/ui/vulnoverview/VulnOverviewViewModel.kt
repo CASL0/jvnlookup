@@ -31,11 +31,11 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 /**
  * ホーム画面のビジネスロジックを扱うViewModel
+ *
  * @param fetchVulnOverviewUseCase 脆弱性対策情報を取得するUseCase
  * @param favoriteVulnOverviewUseCase 脆弱性対策情報をお気に入り登録するUseCase
  */
@@ -47,93 +47,76 @@ class VulnOverviewViewModel @Inject constructor(
 
     val vulnOverviews = fetchVulnOverviewUseCase.vulnOverviews
 
-    /**
-     * リフレッシュ中
-     */
+    /** リフレッシュ中 */
     private var _isRefreshing by mutableStateOf(false)
     val isRefreshing get() = _isRefreshing
 
-    /**
-     * 選択されているフィルターカテゴリ
-     */
+    /** 選択されているフィルターカテゴリ */
     private var _selectedCategory by mutableStateOf(categoryAll)
     val selectedCategory get() = _selectedCategory
 
-    /**
-     * リフレッシュ失敗時のチャネル
-     */
+    /** リフレッシュ失敗時のチャネル */
     private val errorChannel = Channel<Int>()
 
-    /**
-     * リフレッシュ失敗時のエラーイベント
-     */
+    /** リフレッシュ失敗時のエラーイベント */
     val hasError: Flow<Int> = errorChannel.receiveAsFlow()
 
     init {
         refreshVulnOverviews()
     }
 
-    /**
-     * ホーム画面に表示する脆弱性対策情報を更新します
-     */
+    /** ホーム画面に表示する脆弱性対策情報を更新します */
     fun refreshVulnOverviews() {
         viewModelScope.launch {
             _isRefreshing = true
-            try {
-                fetchVulnOverviewUseCase()
-            } catch (e: Exception) {
+            val result = fetchVulnOverviewUseCase()
+            if (result.isFailure) {
                 // ネットワークエラー
-                e.localizedMessage?.let { Timber.d(it) }
                 errorChannel.send(R.string.error_network_connection)
             }
             _isRefreshing = false
         }
     }
 
-    /**
-     * お気に入り登録を更新します
-     */
+    /** お気に入り登録を更新します */
     fun onFavoriteButtonClicked(id: String, favorite: Boolean) {
         viewModelScope.launch {
             favoriteVulnOverviewUseCase(id, favorite)
         }
     }
 
-    /**
-     * フィルターカテゴリを変更します
-     */
+    /** フィルターカテゴリを変更します */
     fun onCategorySelected(category: Category) {
         _selectedCategory = category
     }
 
-    /**
-     * カテゴリでフィルタリングします
-     */
+    /** カテゴリでフィルタリングします */
     fun filterCategory(originalList: List<DomainVulnOverview>, category: Category) =
         when (category) {
-            categoryAll -> originalList
-            categoryFavorite -> originalList.filter { it.isFavorite }
+            categoryAll              -> originalList
+            categoryFavorite         -> originalList.filter { it.isFavorite }
             categorySeverityCritical -> {
                 originalList.filter {
                     checkSeverity(it.cvssList, "critical")
                 }
             }
-            categorySeverityHigh -> {
+
+            categorySeverityHigh     -> {
                 originalList.filter {
                     checkSeverity(it.cvssList, "high")
                 }
             }
-            categorySeverityMiddle -> {
+
+            categorySeverityMiddle   -> {
                 originalList.filter {
                     checkSeverity(it.cvssList, "middle")
                 }
             }
-            else -> originalList
+
+            else                     -> originalList
         }
 
-    /**
-     * 指定の深刻度であるかをチェックします
-     */
+    /** 指定の深刻度であるかをチェックします */
     private fun checkSeverity(cvssList: List<DomainCVSS>, severity: CharSequence): Boolean {
         cvssList.forEach {
             if (it.severity.equals(severity.toString(), ignoreCase = true)) return true
@@ -141,9 +124,7 @@ class VulnOverviewViewModel @Inject constructor(
         return false
     }
 
-    /**
-     * VulnOverviewViewModelのファクトリ
-     */
+    /** VulnOverviewViewModelのファクトリ */
     companion object {
         fun provideFactory(
             fetchVulnOverviewUseCase: FetchVulnOverviewUseCase,

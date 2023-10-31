@@ -27,6 +27,7 @@ import javax.inject.Inject
 
 /**
  * 脆弱性対策情報を取得するためのUseCase層
+ *
  * @param jvnRepository JVNデータ取得用のリポジトリ層
  * @param defaultDispatcher 脆弱性対策情報を取得時のDispatcher
  */
@@ -34,11 +35,17 @@ class FetchVulnOverviewUseCase @Inject constructor(
     private val jvnRepository: JvnRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
+    /** ディスク保存済み脆弱性対策情報 */
     val vulnOverviews: Flow<List<DomainVulnOverview>> =
         jvnRepository.vulnOverviews.flowOn(defaultDispatcher)
 
-    suspend operator fun invoke() =
+    /**
+     * ローカルに保存しているJVNデータを更新します
+     *
+     * @return 保存に成功した場合はResult.success、失敗した場合はResult.failure
+     */
+    suspend operator fun invoke(): Result<Unit> =
         withContext(defaultDispatcher) {
-            jvnRepository.refreshVulnOverviews()
+            return@withContext jvnRepository.refreshVulnOverviews()
         }
 }

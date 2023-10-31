@@ -24,6 +24,7 @@ import javax.inject.Inject
 
 /**
  * JVN APIからデータを取得し、Roomに保存するリポジトリ
+ *
  * @param jvnLocalDataSource ローカルのデータ層
  * @param jvnRemoteDataSource リモートのデータ層
  */
@@ -32,35 +33,34 @@ class JvnRepository @Inject constructor(
     private val jvnRemoteDataSource: JvnDataSource
 ) {
 
-    /**
-     * 保存済み脆弱性対策情報
-     */
+    /** 保存済み脆弱性対策情報 */
     val vulnOverviews: Flow<List<DomainVulnOverview>> =
         jvnLocalDataSource.getVulnOverviewsStream()
 
-    /**
-     * お気に入り登録済みの脆弱性対策情報
-     */
+    /** お気に入り登録済みの脆弱性対策情報 */
     val favorites: Flow<List<DomainVulnOverview>> = jvnLocalDataSource.getFavoritesStream()
 
     /**
      * ローカルに保存しているJVNデータを更新します
+     *
+     * @return 保存に成功した場合はResult.success、失敗した場合はResult.failure
      */
-    suspend fun refreshVulnOverviews() {
+    suspend fun refreshVulnOverviews(): Result<Unit> {
         Timber.d("refresh vuln overviews")
         val vulnOverviews = jvnRemoteDataSource.getVulnOverviews(
             keyword = null,
             rangeDatePublic = "n",
             rangeDatePublished = "m",
             rangeDateFirstPublished = "m"
-        )
+        ).getOrElse {
+            return Result.failure(it)
+        }
         jvnLocalDataSource.deleteAll()
         jvnLocalDataSource.saveVulnOverviews(vulnOverviews)
+        return Result.success(Unit)
     }
 
-    /**
-     * お気に入り登録を更新します
-     */
+    /** お気に入り登録を更新します */
     suspend fun updateFavorite(id: String, favorite: Boolean) {
         Timber.d("update favorite")
         jvnLocalDataSource.updateFavorite(id, favorite)
@@ -68,6 +68,7 @@ class JvnRepository @Inject constructor(
 
     /**
      * ローカルに保存済みかをチェックします
+     *
      * @param secIdentifier ベンダ固有のセキュリティID
      */
     suspend fun exists(secIdentifier: CharSequence): Boolean {
@@ -76,6 +77,7 @@ class JvnRepository @Inject constructor(
 
     /**
      * 脆弱性対策情報をローカルに保存します
+     *
      * @param vulnOverview 脆弱性対策情報
      */
     suspend fun insertVulnOverview(

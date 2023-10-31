@@ -25,26 +25,28 @@ import javax.inject.Inject
 
 /**
  * JVN APIでキーワード検索した結果を取得するリポジトリ
+ *
  * @param jvnRemoteDataSource リモートのデータ層
  */
 class SearchRepository @Inject constructor(
     private val jvnRemoteDataSource: JvnDataSource
 ) {
-    /**
-     * 検索結果
-     */
+    /** 検索結果 */
     private val _searchResults = MutableStateFlow<List<DomainVulnOverview>>(listOf())
     val searchResults: StateFlow<List<DomainVulnOverview>> get() = _searchResults
 
     /**
      * JVN APIを使用し、脆弱性対策情報をキーワード検索します
+     *
      * @return 検索のHIT件数
      */
     suspend fun searchOnJvn(keyword: CharSequence): Int {
         Timber.d("search on jvn")
-        jvnRemoteDataSource.getVulnOverviews(keyword).run {
-            _searchResults.value = this
-            return this.size
+        val result = jvnRemoteDataSource.getVulnOverviews(keyword).getOrElse {
+            // TODO: エラーハンドリング
+            return 0
         }
+        _searchResults.value = result
+        return result.size
     }
 }
