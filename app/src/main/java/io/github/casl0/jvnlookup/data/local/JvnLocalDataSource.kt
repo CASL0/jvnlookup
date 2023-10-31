@@ -25,9 +25,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-/**
- * RoomによるData層の実装
- */
+/** RoomによるData層の実装 */
 class JvnLocalDataSource @Inject constructor(private val database: JvnDatabase) : JvnDataSource {
     override fun getVulnOverviewsStream(): Flow<List<DomainVulnOverview>> =
         database.vulnOverviewDao.getVulnOverviewWithReferencesAndCVSS().map {
@@ -39,7 +37,7 @@ class JvnLocalDataSource @Inject constructor(private val database: JvnDatabase) 
         rangeDatePublic: CharSequence,
         rangeDatePublished: CharSequence,
         rangeDateFirstPublished: CharSequence
-    ): List<DomainVulnOverview> {
+    ): Result<List<DomainVulnOverview>> {
         TODO("Not yet implemented")
     }
 

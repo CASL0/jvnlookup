@@ -19,9 +19,7 @@ package io.github.casl0.jvnlookup.data
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import kotlinx.coroutines.flow.Flow
 
-/**
- * JVNの情報へのエントリーポイント
- */
+/** JVNの情報へのエントリーポイント */
 interface JvnDataSource {
     fun getVulnOverviewsStream(): Flow<List<DomainVulnOverview>>
 
@@ -30,7 +28,7 @@ interface JvnDataSource {
         rangeDatePublic: CharSequence = "n",
         rangeDatePublished: CharSequence = "n",
         rangeDateFirstPublished: CharSequence = "n"
-    ): List<DomainVulnOverview>
+    ): Result<List<DomainVulnOverview>>
 
     fun getFavoritesStream(): Flow<List<DomainVulnOverview>>
 
