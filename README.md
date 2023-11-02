@@ -1,11 +1,15 @@
 # JVNlookup
 
+[![API](https://img.shields.io/badge/API-23%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=23)
+[![codecov](https://codecov.io/github/CASL0/jvnlookup/graph/badge.svg?token=FHGIH87WJ2)](https://codecov.io/github/CASL0/jvnlookup)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 [MyJVN API](https://jvndb.jvn.jp/apis/index.html) を使用した脆弱性対策情報確認アプリです。
 
-Japan Vulnerability Notes (JVN) は脆弱性関連情報とその対策情報をWeb
-APIを介して提供しています。本アプリは当該APIを使用し脆弱性対策情報をブラウズ・検索できるアプリです。
+Japan Vulnerability Notes (JVN) は脆弱性関連情報とその対策情報を Web
+API を介して提供しています。本アプリは当該 API を使用し脆弱性対策情報をブラウズ・検索できるアプリです。
 
-対象OS：Android 6+
+対象 OS：Android 6+
 
 <a href='https://play.google.com/store/apps/details?id=io.github.casl0.jvnlookup'>
     <img alt='Get it on Google Play' height="80" src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
@@ -14,20 +18,20 @@ APIを介して提供しています。本アプリは当該APIを使用し脆�
 
 ### 開発環境
 
-* Kotlin 1.7.10
-* Android Gradle Plugin 7.2.2
-* Gradle 7.5.1
-* JDK 11
+-   Kotlin 1.8.10
+-   Android Gradle Plugin 8.1.2
+-   Gradle 8.4
+-   JDK 17
 
 ### アプリアーキテクチャ
 
-MVVM + Repositoryパターンで実装しています。
+MVVM + Repository パターンで実装しています。
 
 ![アプリアーキテクチャ](https://user-images.githubusercontent.com/28913760/194712660-3664ecef-f183-41cc-8afd-2a4080690f2e.svg)
 
 ## ドキュメント
 
-* [KDoc](https://casl0.github.io/jvnlookup/)
+-   [KDoc](https://casl0.github.io/jvnlookup/)
 
 ## ライセンス
 
