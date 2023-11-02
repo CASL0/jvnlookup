@@ -177,4 +177,31 @@ class DefaultJvnRepositoryTest {
         assertTrue(repository.exists(existingId))
         assertFalse(repository.exists(nonExistingId))
     }
+
+    @Test
+    fun insertVulnOverview_LocalDataUpdated() = runTest {
+        val repository = DefaultJvnRepository(dataSource, dataSource)
+
+        var resultLocalData: List<DomainVulnOverview> = listOf()
+        val job = launch(UnconfinedTestDispatcher()) {
+            repository.vulnOverviews.collect {
+                resultLocalData = it
+            }
+        }
+
+        val newData = DomainVulnOverview(
+            title = "脆弱性タイトル",
+            link = "https://jvndb.jvn.jp",
+            description = "脆弱性説明",
+            id = "ID",
+            issued = "2023-10-30T17:23:20+09:00",
+            modified = "2023-10-30T17:23:20+09:00",
+            isFavorite = false
+        )
+        repository.insertVulnOverview(newData)
+
+        assertTrue(resultLocalData.contains(newData))
+
+        job.cancel()
+    }
 }
