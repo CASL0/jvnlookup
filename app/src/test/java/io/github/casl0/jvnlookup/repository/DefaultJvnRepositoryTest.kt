@@ -25,6 +25,7 @@ import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -140,6 +141,28 @@ class DefaultJvnRepositoryTest {
         val res = repository.refreshVulnOverviews()
         assertTrue(res.isSuccess)
         assertThat(resultLocalData, `is`(stubRemoteVulnOverviews))
+
+        job.cancel()
+    }
+
+    @Test
+    fun updateFavorite() = runTest {
+        val repository = DefaultJvnRepository(dataSource, dataSource)
+
+        var resultLocalData: List<DomainVulnOverview> = listOf()
+        val job = launch(UnconfinedTestDispatcher()) {
+            repository.vulnOverviews.collect {
+                resultLocalData = it
+            }
+        }
+
+        val targetId = initialSavedLocalVulnOverviews[1].id
+
+        repository.updateFavorite(targetId, true)
+        assertTrue(resultLocalData.first { it.id == targetId }.isFavorite)
+
+        repository.updateFavorite(targetId, false)
+        assertFalse(resultLocalData.first { it.id == targetId }.isFavorite)
 
         job.cancel()
     }
