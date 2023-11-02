@@ -66,6 +66,6 @@ class FakeJvnDataSource(
     }
 
     override suspend fun exists(secIdentifier: CharSequence): Boolean {
-        TODO("Not yet implemented")
+        return _vulnOverviews.value.any { it.id == secIdentifier }
     }
 }
