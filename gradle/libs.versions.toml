@@ -1,7 +1,7 @@
 [versions]
 accompanist-swiperefresh = "0.27.0"
 activity-compose = "1.8.0"
-agp = "7.2.2"
+agp = "8.1.2"
 androidx-junit = "1.1.5"
 app-update = "2.1.0"
 browser = "1.6.0"
