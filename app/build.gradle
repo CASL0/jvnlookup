@@ -5,6 +5,7 @@ plugins {
     id 'org.jetbrains.dokka'
     id 'com.google.android.gms.oss-licenses-plugin'
     id 'dagger.hilt.android.plugin'
+    id 'org.jetbrains.kotlinx.kover'
 }
 
 android {
