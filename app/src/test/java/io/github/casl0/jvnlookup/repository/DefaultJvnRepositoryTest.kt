@@ -166,4 +166,15 @@ class DefaultJvnRepositoryTest {
 
         job.cancel()
     }
+
+    @Test
+    fun exists() = runTest {
+        val repository = DefaultJvnRepository(dataSource, dataSource)
+
+        val existingId = initialSavedLocalVulnOverviews[0].id
+        val nonExistingId = "NON EXISTING"
+
+        assertTrue(repository.exists(existingId))
+        assertFalse(repository.exists(nonExistingId))
+    }
 }
