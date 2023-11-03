@@ -19,6 +19,12 @@ android {
         versionCode libs.versions.versionCode.get().toInteger()
         versionName libs.versions.versionName.get()
 
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
+
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
@@ -67,6 +73,7 @@ dependencies {
     kapt libs.com.tickaroo.tikxml.processor
 
     implementation libs.bundles.room
+    annotationProcessor libs.androidx.room.compiler
     kapt libs.androidx.room.compiler
 
     implementation libs.androidx.lifecycle.viewmodel.ktx
