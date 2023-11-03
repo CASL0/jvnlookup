@@ -52,7 +52,7 @@ class VulnOverviewViewModel @Inject constructor(
     val isRefreshing get() = _isRefreshing
 
     /** 選択されているフィルターカテゴリ */
-    private var _selectedCategory by mutableStateOf(categoryAll)
+    private var _selectedCategory: Category by mutableStateOf(Category.All)
     val selectedCategory get() = _selectedCategory
 
     /** リフレッシュ失敗時のチャネル */
@@ -93,27 +93,25 @@ class VulnOverviewViewModel @Inject constructor(
     /** カテゴリでフィルタリングします */
     fun filterCategory(originalList: List<DomainVulnOverview>, category: Category) =
         when (category) {
-            categoryAll              -> originalList
-            categoryFavorite         -> originalList.filter { it.isFavorite }
-            categorySeverityCritical -> {
+            Category.All              -> originalList
+            Category.Favorite         -> originalList.filter { it.isFavorite }
+            Category.SeverityCritical -> {
                 originalList.filter {
                     checkSeverity(it.cvssList, "critical")
                 }
             }
 
-            categorySeverityHigh     -> {
+            Category.SeverityHigh     -> {
                 originalList.filter {
                     checkSeverity(it.cvssList, "high")
                 }
             }
 
-            categorySeverityMiddle   -> {
+            Category.SeverityMiddle   -> {
                 originalList.filter {
                     checkSeverity(it.cvssList, "middle")
                 }
             }
-
-            else                     -> originalList
         }
 
     /** 指定の深刻度であるかをチェックします */

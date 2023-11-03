@@ -19,24 +19,38 @@ package io.github.casl0.jvnlookup.model
 import androidx.annotation.StringRes
 import io.github.casl0.jvnlookup.R
 
-data class Category(
-    var id: String,
-    @StringRes var name: Int,
-)
+/** JVNカテゴリ */
+sealed class Category(
+    /** カテゴリ識別子 */
+    val id: String,
 
-val categoryAll = Category(id = "All", name = R.string.category_all)
-val categoryFavorite = Category(id = "Favorite", name = R.string.category_favorite)
-val categorySeverityCritical =
-    Category(id = "SeverityCritical", name = R.string.category_severity_critical)
-val categorySeverityHigh = Category(id = "SeverityHigh", name = R.string.category_severity_high)
-val categorySeverityMiddle =
-    Category(id = "SeverityMiddle", name = R.string.category_severity_middle)
+    /** 表示文言 */
+    @StringRes val name: Int,
+) {
+    /** すべて */
+    object All : Category(id = "All", name = R.string.category_all)
 
+    /** お気に入り */
+    object Favorite : Category(id = "Favorite", name = R.string.category_favorite)
+
+    /** 深刻度：緊急 */
+    object SeverityCritical :
+        Category(id = "SeverityCritical", name = R.string.category_severity_critical)
+
+    /** 深刻度：重要 */
+    object SeverityHigh : Category(id = "SeverityHigh", name = R.string.category_severity_high)
+
+    /** 深刻度：警告 */
+    object SeverityMiddle :
+        Category(id = "SeverityMiddle", name = R.string.category_severity_middle)
+}
+
+/** カテゴリリスト */
 val filterCategories =
     listOf(
-        categoryAll,
-        categoryFavorite,
-        categorySeverityCritical,
-        categorySeverityHigh,
-        categorySeverityMiddle
+        Category.All,
+        Category.Favorite,
+        Category.SeverityCritical,
+        Category.SeverityHigh,
+        Category.SeverityMiddle
     )
