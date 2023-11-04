@@ -32,6 +32,7 @@ import io.github.casl0.jvnlookup.data.remote.JvnRemoteDataSource
 import io.github.casl0.jvnlookup.database.JvnDatabase
 import io.github.casl0.jvnlookup.network.MyJvnApiService
 import io.github.casl0.jvnlookup.repository.DefaultJvnRepository
+import io.github.casl0.jvnlookup.repository.DefaultSearchRepository
 import io.github.casl0.jvnlookup.repository.JvnRepository
 import io.github.casl0.jvnlookup.repository.SearchRepository
 import retrofit2.Retrofit
@@ -63,7 +64,7 @@ object RepositoryModule {
     fun provideSearchRepository(
         @RemoteJvnDataSource jvnRemoteDataSource: JvnDataSource
     ): SearchRepository {
-        return SearchRepository(jvnRemoteDataSource)
+        return DefaultSearchRepository(jvnRemoteDataSource)
     }
 }
 
