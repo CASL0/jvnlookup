@@ -26,6 +26,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ import javax.inject.Inject
 
 /**
  * 検索画面のビジネスロジックを扱うViewModel
+ *
  * @param searchVulnOverviewUseCase 検索用のUseCase
  */
 @HiltViewModel
@@ -42,62 +44,48 @@ class SearchViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-    /**
-     * 検索ボックスの入力値
-     */
+    /** 検索ボックスの入力値 */
     private var _searchValue by mutableStateOf("")
     val searchValue get() = _searchValue
 
-    /**
-     * 検索中の状態
-     */
+    /** 検索中の状態 */
     private var _searchInProgress by mutableStateOf(false)
     val searchInProgress get() = _searchInProgress
 
-    /**
-     * 検索失敗時のチャネル
-     */
+    /** 検索失敗時のチャネル */
     private val errorChannel = Channel<Int>()
 
-    /**
-     * 検索失敗時のエラーイベント
-     */
+    /** 検索失敗時のエラーイベント */
     val hasError: Flow<Int> = errorChannel.receiveAsFlow()
 
-    /**
-     * キーワードで JVN を検索します
-     */
+    /** キーワードで JVN を検索します */
     fun searchOnJvn(keyword: CharSequence, onSearchComplete: (() -> Unit)? = null) {
         if (keyword.isEmpty() || keyword.isBlank()) return
         viewModelScope.launch {
             _searchInProgress = true
-            try {
-                val hitCount = searchVulnOverviewUseCase(keyword)
+            coroutineScope {
+                val hitCount = searchVulnOverviewUseCase(keyword).getOrElse {
+                    Timber.d(it)
+                    errorChannel.send(R.string.error_network_connection)
+                    return@coroutineScope
+                }
                 if (hitCount == 0) {
                     errorChannel.send(R.string.error_no_results_found)
                 } else {
                     onSearchComplete?.let { it() }
                 }
-            } catch (e: Exception) {
-                // ネットワークエラー
-                e.localizedMessage?.let { Timber.d(it) }
-                errorChannel.send(R.string.error_network_connection)
             }
             _searchInProgress = false
         }
     }
 
-    /**
-     * 検索ボックスの入力値変更時のイベントハンドラ
-     */
+    /** 検索ボックスの入力値変更時のイベントハンドラ */
     fun onSearchValueChanged(newValue: String) {
         _searchValue = newValue
     }
 
     companion object {
-        /**
-         * SearchViewModelのファクトリ
-         */
+        /** SearchViewModelのファクトリ */
         fun provideFactory(
             searchVulnOverviewUseCase: SearchVulnOverviewUseCase
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {

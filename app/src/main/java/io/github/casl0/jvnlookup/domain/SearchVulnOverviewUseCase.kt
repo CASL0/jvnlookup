@@ -26,6 +26,7 @@ import javax.inject.Inject
 
 /**
  * 脆弱性対策情報の検索のためのUseCase層
+ *
  * @param searchRepository JVN検索用のリポジトリ層
  * @param defaultDispatcher 脆弱性対策情報を検索時のDispatcher
  */
@@ -33,10 +34,16 @@ class SearchVulnOverviewUseCase @Inject constructor(
     private val searchRepository: SearchRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
 ) {
+    /** 検索結果 */
     val searchResults: Flow<List<DomainVulnOverview>> = searchRepository.searchResults
 
-    suspend operator fun invoke(keyword: CharSequence) =
+    /**
+     * JVN APIを使用し、脆弱性対策情報をキーワード検索します
+     *
+     * @return 検索のHIT件数
+     */
+    suspend operator fun invoke(keyword: CharSequence): Result<Int> =
         withContext(defaultDispatcher) {
-            searchRepository.searchOnJvn(keyword)
+            return@withContext searchRepository.searchOnJvn(keyword)
         }
 }
