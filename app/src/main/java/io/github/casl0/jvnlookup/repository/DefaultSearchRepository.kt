@@ -40,13 +40,12 @@ class DefaultSearchRepository @Inject constructor(
      *
      * @return 検索のHIT件数
      */
-    override suspend fun searchOnJvn(keyword: CharSequence): Int {
+    override suspend fun searchOnJvn(keyword: CharSequence): Result<Int> {
         Timber.d("search on jvn")
         val result = jvnRemoteDataSource.getVulnOverviews(keyword).getOrElse {
-            // TODO: エラーハンドリング
-            return 0
+            return Result.failure(it)
         }
         _searchResults.value = result
-        return result.size
+        return Result.success(result.size)
     }
 }

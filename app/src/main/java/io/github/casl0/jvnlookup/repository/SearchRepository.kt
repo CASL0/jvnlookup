@@ -29,5 +29,5 @@ interface SearchRepository {
      *
      * @return 検索のHIT件数
      */
-    suspend fun searchOnJvn(keyword: CharSequence): Int
+    suspend fun searchOnJvn(keyword: CharSequence): Result<Int>
 }
