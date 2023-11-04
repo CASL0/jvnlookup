@@ -25,7 +25,7 @@
     <string name="error_network_connection">No network connection</string>
     <string name="error_no_results_found">No results found</string>
 
-    <string name="app_name">JVNlookup</string>
+    <string name="app_name">jvnlookup</string>
     <string name="vuln_overview_label">Home</string>
     <string name="favorite_label">Favorites</string>
     <string name="overview_issued_label">issued: %s</string>
