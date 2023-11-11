@@ -13,6 +13,7 @@ hilt-android = "2.44.2"
 hilt-navigation-compose = "1.0.0"
 kotlin = "1.8.10"
 kotlinx-coroutines = "1.7.1"
+kotlinx-datetime = "0.4.1"
 kover = "0.7.3"
 mockitoKotlin = "5.1.0"
 play-services-oss-licenses = "17.0.1"
@@ -62,6 +63,7 @@ hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt-
 hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hilt-android" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hilt-android" }
 junit = { module = "junit:junit", version.ref = "junit" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 org-hamcrest-all = { module = "org.hamcrest:hamcrest-all", version.ref = "hamcrest" }
 org-jetbrains-kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
@@ -78,26 +80,26 @@ org-jetbrains-kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref 
 
 [bundles]
 com-tickaroo-tikxml = [
-    "com-tickaroo-tikxml-annotation",
-    "com-tickaroo-tikxml-core",
-    "com-tickaroo-tikxml-retrofit-converter"
+  "com-tickaroo-tikxml-annotation",
+  "com-tickaroo-tikxml-core",
+  "com-tickaroo-tikxml-retrofit-converter"
 ]
 
 app-update = [
-    "app-update",
-    "app-update-ktx"
+  "app-update",
+  "app-update-ktx"
 ]
 
 room = [
-    "androidx-room-ktx",
-    "androidx-room-runtime"
+  "androidx-room-ktx",
+  "androidx-room-runtime"
 ]
 
 compose = [
-    "androidx-material3",
-    "androidx-ui",
-    "androidx-material-icons-extended",
-    "androidx-ui-tooling-preview",
-    "androidx-activity-compose",
-    "androidx-navigation-compose"
+  "androidx-material3",
+  "androidx-ui",
+  "androidx-material-icons-extended",
+  "androidx-ui-tooling-preview",
+  "androidx-activity-compose",
+  "androidx-navigation-compose"
 ]
