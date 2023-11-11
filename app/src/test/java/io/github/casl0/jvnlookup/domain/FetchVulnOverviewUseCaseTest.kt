@@ -23,6 +23,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.toInstant
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert.assertTrue
@@ -42,8 +43,8 @@ class FetchVulnOverviewUseCaseTest {
                 link = "https://jvndb.jvn.jp/ja/contents/2022/JVNDB-2022-020610.html",
                 description = "シトリックス・システムズの Citrix Gateway および Citrix Application Delivery Controller ファームウェアには、過度な認証試行の不適切な制限に関する脆弱性が存在します。",
                 id = "JVNDB-2022-020610",
-                issued = "2023-11-02T17:06:01+09:00",
-                modified = "2023-11-02T17:06:01+09:00",
+                issued = "2023-11-02T17:06:01+09:00".toInstant(),
+                modified = "2023-11-02T17:06:01+09:00".toInstant(),
                 isFavorite = false
             ),
             DomainVulnOverview(
@@ -51,8 +52,8 @@ class FetchVulnOverviewUseCaseTest {
                 link = "https://jvndb.jvn.jp/ja/contents/2022/JVNDB-2022-020609.html",
                 description = "Fatcat Apps の WordPress 用 analytics cat には、クロスサイトリクエストフォージェリの脆弱性が存在します。",
                 id = "JVNDB-2022-020609",
-                issued = "2023-11-02T17:05:59+09:00",
-                modified = "2023-11-02T17:05:59+09:00",
+                issued = "2023-11-02T17:05:59+09:00".toInstant(),
+                modified = "2023-11-02T17:05:59+09:00".toInstant(),
                 isFavorite = false
             ),
             DomainVulnOverview(
@@ -60,8 +61,8 @@ class FetchVulnOverviewUseCaseTest {
                 link = "https://jvndb.jvn.jp/ja/contents/2022/JVNDB-2022-020608.html",
                 description = "Pojo Me Digital LTD. の WordPress 用 Activity Log には、CSV ファイル内の数式要素の中和に関する脆弱性が存在します。",
                 id = "JVNDB-2022-020608",
-                issued = "2023-11-02T17:05:58+09:00",
-                modified = "2023-11-02T17:05:58+09:00",
+                issued = "2023-11-02T17:05:58+09:00".toInstant(),
+                modified = "2023-11-02T17:05:58+09:00".toInstant(),
                 isFavorite = false
             )
         )

@@ -20,6 +20,7 @@ import io.github.casl0.jvnlookup.data.JvnDataSource
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
+import kotlinx.datetime.toInstant
 import org.hamcrest.CoreMatchers
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
@@ -59,8 +60,8 @@ class DefaultSearchRepositoryTest {
                 link = "https://jvndb.jvn.jp/ja/contents/2022/JVNDB-2022-020636.html",
                 description = "Google の Android には、境界外書き込みに関する脆弱性が存在します。",
                 id = "JVNDB-2022-020636",
-                issued = "2023-11-02T17:07:02+09:00",
-                modified = "2023-11-02T17:07:02+09:00",
+                issued = "2023-11-02T17:07:02+09:00".toInstant(),
+                modified = "2023-11-02T17:07:02+09:00".toInstant(),
                 isFavorite = false
             )
         )
