@@ -19,116 +19,76 @@ package io.github.casl0.jvnlookup.model
 import io.github.casl0.jvnlookup.database.DatabaseCVSS
 import io.github.casl0.jvnlookup.database.DatabaseReference
 import io.github.casl0.jvnlookup.database.DatabaseVulnOverview
+import kotlinx.datetime.Instant
 
-/**
- * 脆弱性対策情報のドメインモデル
- */
+/** 脆弱性対策情報のドメインモデル */
 data class DomainVulnOverview(
-    /**
-     * セキュリティ情報のタイトル
-     */
+    /** セキュリティ情報のタイトル */
     var title: String?,
 
-    /**
-     * セキュリティ情報のURI
-     */
+    /** セキュリティ情報のURI */
     var link: String?,
 
-    /**
-     * セキュリティ情報の概要
-     */
+    /** セキュリティ情報の概要 */
     var description: String?,
 
-    /**
-     * ベンダ固有のセキュリティ情報ID
-     */
+    /** ベンダ固有のセキュリティ情報ID */
     var id: String,
 
-    /**
-     * 参考情報
-     */
+    /** 参考情報 */
     val references: List<DomainReference> = emptyList(),
 
-    /**
-     * CVSS評価情報
-     */
+    /** CVSS評価情報 */
     var cvssList: List<DomainCVSS> = emptyList(),
 
-    /**
-     * 発行日
-     */
-    var issued: String?,
+    /** 発行日 */
+    var issued: Instant,
 
-    /**
-     * 更新日
-     */
-    var modified: String?,
+    /** 更新日 */
+    var modified: Instant,
 
-    /**
-     * お気に入り登録済み
-     */
+    /** お気に入り登録済み */
     var isFavorite: Boolean = false,
 )
 
-/**
- * 脆弱性対策情の参考情報のドメインモデル
- */
+/** 脆弱性対策情の参考情報のドメインモデル */
 data class DomainReference(
-    /**
-     * 発行元省略名
-     */
+    /** 発行元省略名 */
     val source: String?,
 
-    /**
-     * 識別番号
-     */
+    /** 識別番号 */
     val id: String,
 
-    /**
-     * タイトル
-     */
+    /** タイトル */
     val title: String?,
 
-    /**
-     * 関連情報
-     */
+    /** 関連情報 */
     val url: String = "",
 )
 
-/**
- * CVSS情報のドメインモデル
- */
+/** CVSS情報のドメインモデル */
 data class DomainCVSS(
-    /**
-     * CVSSバージョン
-     */
+    /** CVSSバージョン */
     var version: String?,
 
-    /**
-     * CVSS基準(基本|現状|環境評価基準)
-     */
+    /** CVSS基準(基本|現状|環境評価基準) */
     var type: String?,
 
     /**
      * typeで指定された評価基準の深刻度
+     *
      * n:なし、l:注意、m:警告、h:重要、c:緊急
      */
     var severity: String?,
 
-    /**
-     * typeで指定された評価基準の評価値
-     */
+    /** typeで指定された評価基準の評価値 */
     var score: String?,
 
-    /**
-     * 短縮表記
-     */
+    /** 短縮表記 */
     var vector: String?,
 )
 
-/**
- * 脆弱性対策情報のドメインモデルをデータベースエンティティへ変換します
- */
+/** 脆弱性対策情報のドメインモデルをデータベースエンティティへ変換します */
 fun DomainVulnOverview.asDatabaseEntity(): DatabaseVulnOverview {
     return DatabaseVulnOverview(
         title = this.title,
@@ -143,6 +103,7 @@ fun DomainVulnOverview.asDatabaseEntity(): DatabaseVulnOverview {
 
 /**
  * 脆弱性対策情報の参考情報のドメインモデルをデータベースエンティティへ変換します
+ *
  * @param ownerId 参考情報が紐づくベンダ固有のセキュリティID
  */
 @JvmName("asDatabaseEntityDomainReference")
@@ -160,6 +121,7 @@ fun List<DomainReference>.asDatabaseEntity(ownerId: String): List<DatabaseRefere
 
 /**
  * CVSS情報のドメインモデルをデータベースエンティティへ変換します
+ *
  * @param ownerId CVSS情報が紐づくベンダ固有のセキュリティID
  */
 @JvmName("asDatabaseEntityDomainCVSS")

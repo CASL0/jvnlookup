@@ -18,13 +18,16 @@ package io.github.casl0.jvnlookup.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import io.github.casl0.jvnlookup.database.utils.InstantConverter
 
 /** JVN APIで取得した情報を保持するRoom */
 @Database(
     entities = [DatabaseVulnOverview::class, DatabaseReference::class, DatabaseCVSS::class],
-    version = 1,
+    version = 2,
     exportSchema = true
 )
+@TypeConverters(InstantConverter::class)
 abstract class JvnDatabase : RoomDatabase() {
     abstract val vulnOverviewDao: VulnOverviewDao
     abstract val referenceDao: ReferenceDao

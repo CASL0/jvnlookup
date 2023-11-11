@@ -30,6 +30,7 @@ import io.github.casl0.jvnlookup.data.JvnDataSource
 import io.github.casl0.jvnlookup.data.local.JvnLocalDataSource
 import io.github.casl0.jvnlookup.data.remote.JvnRemoteDataSource
 import io.github.casl0.jvnlookup.database.JvnDatabase
+import io.github.casl0.jvnlookup.database.MIGRATION_1_2
 import io.github.casl0.jvnlookup.network.MyJvnApiService
 import io.github.casl0.jvnlookup.repository.DefaultJvnRepository
 import io.github.casl0.jvnlookup.repository.DefaultSearchRepository
@@ -98,7 +99,9 @@ object DatabaseModule {
             context.applicationContext,
             JvnDatabase::class.java,
             "jvn"
-        ).build()
+        )
+            .addMigrations(MIGRATION_1_2)
+            .build()
     }
 }
 

@@ -16,14 +16,17 @@
 
 package io.github.casl0.jvnlookup.database
 
-import androidx.room.*
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.Relation
 import io.github.casl0.jvnlookup.model.DomainCVSS
 import io.github.casl0.jvnlookup.model.DomainReference
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
+import kotlinx.datetime.Instant
 
-/**
- * 脆弱性情報のエンティティと参考資料、CVSS情報とのリレーション
- */
+/** 脆弱性情報のエンティティと参考資料、CVSS情報とのリレーション */
 data class VulnOverviewWithReferencesAndCVSS(
     @Embedded val vulnOverview: DatabaseVulnOverview,
 
@@ -40,129 +43,91 @@ data class VulnOverviewWithReferencesAndCVSS(
     val cvssList: List<DatabaseCVSS>,
 )
 
-/**
- * 脆弱性情報のエンティティ
- */
+/** 脆弱性情報のエンティティ */
 @Entity(tableName = "vuln_overview")
 data class DatabaseVulnOverview(
-    /**
-     * セキュリティ情報のタイトル
-     */
+    /** セキュリティ情報のタイトル */
     @ColumnInfo(name = "title")
     val title: String?,
 
-    /**
-     * セキュリティ情報のURI
-     */
+    /** セキュリティ情報のURI */
     @ColumnInfo(name = "link")
     val link: String?,
 
-    /**
-     * セキュリティ情報の概要
-     */
+    /** セキュリティ情報の概要 */
     @ColumnInfo(name = "description")
     val description: String?,
 
-    /**
-     * ベンダ固有のセキュリティ情報ID
-     */
-    @PrimaryKey @ColumnInfo(name = "sec_identifier")
+    /** ベンダ固有のセキュリティ情報ID */
+    @PrimaryKey
+    @ColumnInfo(name = "sec_identifier")
     val id: String,
 
-    /**
-     * 発行日
-     */
+    /** 発行日 */
     @ColumnInfo(name = "issued")
-    val issued: String?,
+    val issued: Instant,
 
-    /**
-     * 更新日
-     */
+    /** 更新日 */
     @ColumnInfo(name = "modified")
-    val modified: String?,
+    val modified: Instant,
 
-    /**
-     * お気に入り登録済み
-     */
+    /** お気に入り登録済み */
     @ColumnInfo(name = "favorite")
     val isFavorite: Boolean,
 )
 
-/**
- * 脆弱性情報の参考情報のエンティティ
- */
+/** 脆弱性情報の参考情報のエンティティ */
 @Entity(tableName = "sec_references")
 data class DatabaseReference(
-    /**
-     * 参照情報に対応するセキュリティ情報ID
-     */
+    /** 参照情報に対応するセキュリティ情報ID */
     @ColumnInfo(name = "sec_owner_identifier")
     val ownerId: String?,
 
-    /**
-     * 発行元省略名
-     */
+    /** 発行元省略名 */
     @ColumnInfo(name = "source")
     val source: String?,
 
-    /**
-     * 識別番号
-     */
+    /** 識別番号 */
     @PrimaryKey @ColumnInfo(name = "id")
     val id: String,
 
-    /**
-     * タイトル
-     */
+    /** タイトル */
     @ColumnInfo(name = "title")
     val title: String?,
 
-    /**
-     * 関連情報
-     */
+    /** 関連情報 */
     @ColumnInfo(name = "url")
     val url: String = "",
 )
 
-/**
- * CVSS情報のエンティティ
- */
+/** CVSS情報のエンティティ */
 @Entity(tableName = "sec_cvss")
 data class DatabaseCVSS(
-    /**
-     * CVSS評価値に対応するセキュリティ情報ID
-     */
+    /** CVSS評価値に対応するセキュリティ情報ID */
     @ColumnInfo(name = "sec_owner_identifier")
     val ownerId: String?,
 
-    /**
-     * CVSSバージョン
-     */
+    /** CVSSバージョン */
     @ColumnInfo(name = "version")
     val version: String?,
 
-    /**
-     * CVSS基準(基本|現状|環境評価基準)
-     */
+    /** CVSS基準(基本|現状|環境評価基準) */
     @ColumnInfo(name = "type")
     val type: String?,
 
     /**
      * typeで指定された評価基準の深刻度
+     *
      * n:なし、l:注意、m:警告、h:重要、c:緊急
      */
     @ColumnInfo(name = "severity")
     val severity: String?,
 
-    /**
-     * typeで指定された評価基準の評価値
-     */
+    /** typeで指定された評価基準の評価値 */
     @ColumnInfo(name = "score")
     val score: String?,
 
-    /**
-     * 短縮表記
-     */
+    /** 短縮表記 */
     @ColumnInfo(name = "vector")
     val vector: String?,
 
@@ -170,9 +135,7 @@ data class DatabaseCVSS(
     val id: Int = 0,
 )
 
-/**
- * 脆弱性情報とその周辺情報をドメインモデルに変換します
- */
+/** 脆弱性情報とその周辺情報をドメインモデルに変換します */
 fun List<VulnOverviewWithReferencesAndCVSS>.asDomainModel(): List<DomainVulnOverview> {
     return map {
         DomainVulnOverview(
@@ -189,9 +152,7 @@ fun List<VulnOverviewWithReferencesAndCVSS>.asDomainModel(): List<DomainVulnOver
     }
 }
 
-/**
- * 脆弱性参照情報データベースエンティティをドメインモデルに変換します
- */
+/** 脆弱性参照情報データベースエンティティをドメインモデルに変換します */
 @JvmName("asDomainModelDomainReference")
 fun List<DatabaseReference>.asDomainModel(): List<DomainReference> {
     return map {
@@ -204,9 +165,7 @@ fun List<DatabaseReference>.asDomainModel(): List<DomainReference> {
     }
 }
 
-/**
- * CVSSデータベースエンティティをドメインモデルに変換します
- */
+/** CVSSデータベースエンティティをドメインモデルに変換します */
 @JvmName("asDomainModelDatabaseCVSS")
 fun List<DatabaseCVSS>.asDomainModel(): List<DomainCVSS> {
     return map {
@@ -219,4 +178,3 @@ fun List<DatabaseCVSS>.asDomainModel(): List<DomainCVSS> {
         )
     }
 }
-
