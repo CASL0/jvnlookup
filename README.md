@@ -1,4 +1,4 @@
-# JVNlookup
+# jvnlookup
 
 [![API](https://img.shields.io/badge/API-23%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=23)
 [![codecov](https://codecov.io/github/CASL0/jvnlookup/graph/badge.svg?token=FHGIH87WJ2)](https://codecov.io/github/CASL0/jvnlookup)
@@ -18,20 +18,20 @@ API を介して提供しています。本アプリは当該 API を使用し�
 
 ### 開発環境
 
--   Kotlin 1.8.10
--   Android Gradle Plugin 8.1.2
--   Gradle 8.4
--   JDK 17
+- Kotlin 1.8.10
+- Android Gradle Plugin 8.1.2
+- Gradle 8.4
+- JDK 17
 
 ### アプリアーキテクチャ
 
 MVVM + Repository パターンで実装しています。
 
-![アプリアーキテクチャ](https://user-images.githubusercontent.com/28913760/194712660-3664ecef-f183-41cc-8afd-2a4080690f2e.svg)
+![アプリアーキテクチャ](https://github.com/CASL0/jvnlookup/assets/28913760/7d02aaac-8afe-4251-8446-cd0d97f1544e)
 
 ## ドキュメント
 
--   [KDoc](https://casl0.github.io/jvnlookup/)
+- [KDoc](https://casl0.github.io/jvnlookup/)
 
 ## ライセンス
 
