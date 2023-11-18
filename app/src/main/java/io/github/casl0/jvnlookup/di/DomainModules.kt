@@ -22,6 +22,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import io.github.casl0.jvnlookup.domain.DefaultFavoriteVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.DefaultFetchVulnOverviewUseCase
+import io.github.casl0.jvnlookup.domain.DefaultSearchVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.FetchVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
@@ -54,6 +55,6 @@ object UseCaseModule {
         searchRepository: SearchRepository,
         @IoDispatcher defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
     ): SearchVulnOverviewUseCase {
-        return SearchVulnOverviewUseCase(searchRepository, defaultDispatcher)
+        return DefaultSearchVulnOverviewUseCase(searchRepository, defaultDispatcher)
     }
 }

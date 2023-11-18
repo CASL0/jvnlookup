@@ -24,25 +24,38 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-/**
- * 脆弱性対策情報の検索のためのUseCase層
- *
- * @param searchRepository JVN検索用のリポジトリ層
- * @param defaultDispatcher 脆弱性対策情報を検索時のDispatcher
- */
-class SearchVulnOverviewUseCase @Inject constructor(
-    private val searchRepository: SearchRepository,
-    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
-) {
+/** 脆弱性対策情報の検索のためのUseCase層のインターフェース */
+interface SearchVulnOverviewUseCase {
     /** 検索結果 */
-    val searchResults: Flow<List<DomainVulnOverview>> = searchRepository.searchResults
+    val searchResults: Flow<List<DomainVulnOverview>>
 
     /**
      * JVN APIを使用し、脆弱性対策情報をキーワード検索します
      *
      * @return 検索のHIT件数
      */
-    suspend operator fun invoke(keyword: CharSequence): Result<Int> =
+    suspend operator fun invoke(keyword: CharSequence): Result<Int>
+}
+
+/**
+ * 脆弱性対策情報の検索のためのUseCase層
+ *
+ * @param searchRepository JVN検索用のリポジトリ層
+ * @param defaultDispatcher 脆弱性対策情報を検索時のDispatcher
+ */
+class DefaultSearchVulnOverviewUseCase @Inject constructor(
+    private val searchRepository: SearchRepository,
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
+) : SearchVulnOverviewUseCase {
+    /** 検索結果 */
+    override val searchResults: Flow<List<DomainVulnOverview>> = searchRepository.searchResults
+
+    /**
+     * JVN APIを使用し、脆弱性対策情報をキーワード検索します
+     *
+     * @return 検索のHIT件数
+     */
+    override suspend operator fun invoke(keyword: CharSequence): Result<Int> =
         withContext(defaultDispatcher) {
             return@withContext searchRepository.searchOnJvn(keyword)
         }
