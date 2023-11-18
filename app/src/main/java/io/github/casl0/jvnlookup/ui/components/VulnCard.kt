@@ -16,8 +16,19 @@
 
 package io.github.casl0.jvnlookup.ui.components
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Card
+import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -38,7 +49,6 @@ fun VulnCard(
         Column(
             modifier = modifier
                 .fillMaxWidth()
-                .height(IntrinsicSize.Max)
                 .padding(top = 8.dp, start = 8.dp, end = 8.dp)
         ) {
             val (title, description) = listOf(vulnOverview.title, vulnOverview.description)
@@ -55,15 +65,13 @@ fun VulnCard(
                 Text(text = vulnOverview.id, style = typography.bodyMedium)
 
                 // 発行日
-                vulnOverview.issued?.let {
-                    Text(
-                        text =
-                        stringResource(
-                            R.string.overview_issued_label,
-                            it
-                        ), style = typography.bodyMedium
-                    )
-                }
+                Text(
+                    text = stringResource(
+                        R.string.overview_issued_label,
+                        vulnOverview.issued
+                    ),
+                    style = typography.bodyMedium
+                )
 
                 // CVSS
                 vulnOverview.cvssList.forEach { cvss ->
@@ -93,7 +101,8 @@ fun VulnCard(
                                 vulnOverview.id,
                                 !vulnOverview.isFavorite
                             )
-                        }
+                        },
+                        modifier = Modifier.height(48.dp)
                     )
                 }
             }
