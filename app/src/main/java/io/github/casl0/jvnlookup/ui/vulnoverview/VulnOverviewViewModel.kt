@@ -140,7 +140,7 @@ class VulnOverviewViewModel @Inject constructor(
 
             Category.SeverityMiddle   -> {
                 this.filter {
-                    it.cvssList.checkSeverity("middle")
+                    it.cvssList.checkSeverity("medium")
                 }
             }
         }
