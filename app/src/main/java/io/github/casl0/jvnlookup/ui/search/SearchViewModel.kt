@@ -16,9 +16,6 @@
 
 package io.github.casl0.jvnlookup.ui.search
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -28,10 +25,25 @@ import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
+
+/** UI状態 */
+sealed interface SearchUiState {
+    /** 検索完了時のUI状態 */
+    data class Loaded(
+        /** 検索ボックスの入力値 */
+        val searchValue: String = ""
+    ) : SearchUiState
+
+    /** 検索中のUI状態 */
+    object Loading : SearchUiState
+}
 
 /**
  * 検索画面のビジネスロジックを扱うViewModel
@@ -41,16 +53,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SearchViewModel @Inject constructor(
     private val searchVulnOverviewUseCase: SearchVulnOverviewUseCase
-) :
-    ViewModel() {
-
-    /** 検索ボックスの入力値 */
-    private var _searchValue by mutableStateOf("")
-    val searchValue get() = _searchValue
-
-    /** 検索中の状態 */
-    private var _searchInProgress by mutableStateOf(false)
-    val searchInProgress get() = _searchInProgress
+) : ViewModel() {
 
     /** 検索失敗時のチャネル */
     private val errorChannel = Channel<Int>()
@@ -58,30 +61,53 @@ class SearchViewModel @Inject constructor(
     /** 検索失敗時のエラーイベント */
     val hasError: Flow<Int> = errorChannel.receiveAsFlow()
 
-    /** キーワードで JVN を検索します */
+    /** UI状態 */
+    val uiState: StateFlow<SearchUiState> get() = _uiState
+
+    private val _uiState = MutableStateFlow<SearchUiState>(SearchUiState.Loaded())
+
+    /**
+     * キーワードで JVN を検索します
+     *
+     * @param keyword キーワード
+     * @param onSearchComplete 検索完了後のコールバック
+     */
     fun searchOnJvn(keyword: CharSequence, onSearchComplete: (() -> Unit)? = null) {
         if (keyword.isEmpty() || keyword.isBlank()) return
-        viewModelScope.launch {
-            _searchInProgress = true
-            coroutineScope {
-                val hitCount = searchVulnOverviewUseCase(keyword).getOrElse {
-                    Timber.d(it)
-                    errorChannel.send(R.string.error_network_connection)
-                    return@coroutineScope
+        val currentUiState = _uiState.value
+        if (currentUiState is SearchUiState.Loaded) {
+            viewModelScope.launch {
+                _uiState.value = SearchUiState.Loading
+                coroutineScope {
+                    val hitCount = searchVulnOverviewUseCase(keyword).getOrElse {
+                        Timber.d(it)
+                        errorChannel.send(R.string.error_network_connection)
+                        return@coroutineScope
+                    }
+                    if (hitCount == 0) {
+                        errorChannel.send(R.string.error_no_results_found)
+                    } else {
+                        onSearchComplete?.let { it() }
+                    }
                 }
-                if (hitCount == 0) {
-                    errorChannel.send(R.string.error_no_results_found)
-                } else {
-                    onSearchComplete?.let { it() }
-                }
+                _uiState.value = currentUiState
             }
-            _searchInProgress = false
         }
     }
 
-    /** 検索ボックスの入力値変更時のイベントハンドラ */
+    /**
+     * 検索ボックスの入力値変更時のイベントハンドラ
+     *
+     * @param newValue 変更後の入力値
+     */
     fun onSearchValueChanged(newValue: String) {
-        _searchValue = newValue
+        _uiState.update {
+            if (it is SearchUiState.Loaded) {
+                it.copy(searchValue = newValue)
+            } else {
+                it
+            }
+        }
     }
 
     companion object {
