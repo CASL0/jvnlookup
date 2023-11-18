@@ -17,7 +17,6 @@
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.casl0.jvnlookup.R
@@ -92,14 +91,23 @@ class VulnOverviewViewModel @Inject constructor(
         }
     }
 
-    /** お気に入り登録を更新します */
+    /**
+     * お気に入り登録を更新します
+     *
+     * @param id 対象のID
+     * @param favorite お気に入りに変更する場合はtrue、それ以外はfalse
+     */
     fun onFavoriteButtonClicked(id: String, favorite: Boolean) {
         viewModelScope.launch {
             favoriteVulnOverviewUseCase(id, favorite)
         }
     }
 
-    /** フィルターカテゴリを変更します */
+    /**
+     * フィルターカテゴリを変更します
+     *
+     * @param category 対象のカテゴリ
+     */
     fun onCategorySelected(category: Category) {
         _uiState.update { it.copy(selectedCategory = category) }
     }
@@ -142,21 +150,5 @@ class VulnOverviewViewModel @Inject constructor(
             if (it.severity.equals(severity.toString(), ignoreCase = true)) return true
         }
         return false
-    }
-
-    /** VulnOverviewViewModelのファクトリ */
-    companion object {
-        fun provideFactory(
-            fetchVulnOverviewUseCase: FetchVulnOverviewUseCase,
-            favoriteVulnOverviewUseCase: FavoriteVulnOverviewUseCase,
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return VulnOverviewViewModel(
-                    fetchVulnOverviewUseCase,
-                    favoriteVulnOverviewUseCase
-                ) as T
-            }
-        }
     }
 }
