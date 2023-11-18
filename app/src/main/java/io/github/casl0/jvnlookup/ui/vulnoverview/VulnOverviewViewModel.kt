@@ -126,29 +126,33 @@ class VulnOverviewViewModel @Inject constructor(
             Category.Favorite         -> this.filter { it.isFavorite }
             Category.SeverityCritical -> {
                 this.filter {
-                    checkSeverity(it.cvssList, "critical")
+                    it.cvssList.checkSeverity("critical")
                 }
             }
 
             Category.SeverityHigh     -> {
                 this.filter {
-                    checkSeverity(it.cvssList, "high")
+                    it.cvssList.checkSeverity("high")
                 }
             }
 
             Category.SeverityMiddle   -> {
                 this.filter {
-                    checkSeverity(it.cvssList, "middle")
+                    it.cvssList.checkSeverity("middle")
                 }
             }
         }
     }
 
-    /** 指定の深刻度であるかをチェックします */
-    private fun checkSeverity(cvssList: List<DomainCVSS>, severity: CharSequence): Boolean {
-        cvssList.forEach {
-            if (it.severity.equals(severity.toString(), ignoreCase = true)) return true
+    /**
+     * 指定の深刻度であるかをチェックします
+     *
+     * @param severity 深刻度
+     * @return 指定の深刻度に合致する場合はtrue、それ以外はfalse
+     */
+    private fun List<DomainCVSS>.checkSeverity(severity: CharSequence): Boolean {
+        return this.any {
+            it.severity.equals(severity.toString(), ignoreCase = true)
         }
-        return false
     }
 }
