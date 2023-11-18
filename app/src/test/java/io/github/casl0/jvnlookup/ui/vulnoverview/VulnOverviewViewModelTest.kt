@@ -22,6 +22,8 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class VulnOverviewViewModelTest {
@@ -89,5 +91,19 @@ class VulnOverviewViewModelTest {
 
         // イニシャライザで実行した分とrefreshVulnOverviews()呼び出しとの計2回
         assertThat(spyFetchVulnOverviewUseCase.invokeCallCount, `is`(2))
+    }
+
+    @Test
+    fun onFavoriteButtonClicked_invokeFavoriteVulnOverviewUseCase() = runTest {
+        val viewModel = VulnOverviewViewModel(
+            spyFetchVulnOverviewUseCase,
+            mockFavoriteVulnOverviewUseCase
+        )
+        // イニシャライザでスケジュールされたタスクを実行しておく
+        advanceUntilIdle()
+
+        viewModel.onFavoriteButtonClicked("id", true)
+
+        verify(mockFavoriteVulnOverviewUseCase, times(1)).invoke("id", true)
     }
 }
