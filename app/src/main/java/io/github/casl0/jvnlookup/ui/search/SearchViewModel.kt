@@ -72,7 +72,7 @@ class SearchViewModel @Inject constructor(
      * @param onSearchComplete 検索完了後のコールバック
      */
     fun searchOnJvn(keyword: CharSequence, onSearchComplete: (() -> Unit)? = null) {
-        if (keyword.isEmpty() || keyword.isBlank()) return
+        if (keyword.isBlank()) return
         val currentUiState = _uiState.value
         if (currentUiState is SearchUiState.Loaded) {
             viewModelScope.launch {
