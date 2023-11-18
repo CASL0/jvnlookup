@@ -17,7 +17,6 @@
 package io.github.casl0.jvnlookup.ui.search
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.casl0.jvnlookup.R
@@ -106,18 +105,6 @@ class SearchViewModel @Inject constructor(
                 it.copy(searchValue = newValue)
             } else {
                 it
-            }
-        }
-    }
-
-    companion object {
-        /** SearchViewModelのファクトリ */
-        fun provideFactory(
-            searchVulnOverviewUseCase: SearchVulnOverviewUseCase
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            @Suppress("UNCHECKED_CAST")
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return SearchViewModel(searchVulnOverviewUseCase) as T
             }
         }
     }
