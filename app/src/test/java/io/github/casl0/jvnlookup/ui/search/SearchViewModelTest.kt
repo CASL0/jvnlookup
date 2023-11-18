@@ -2,10 +2,12 @@ package io.github.casl0.jvnlookup.ui.search
 
 import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
+import io.github.casl0.jvnlookup.domain.SpySearchVulnOverviewUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -21,10 +23,14 @@ import org.mockito.kotlin.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
+    private lateinit var spySearchVulnOverviewUseCase: SpySearchVulnOverviewUseCase
+
     @Before
     fun setup() {
         // viewModelScope向けにmainディスパッチャを変更
         Dispatchers.setMain(UnconfinedTestDispatcher())
+
+        spySearchVulnOverviewUseCase = SpySearchVulnOverviewUseCase()
     }
 
     @After
@@ -101,6 +107,18 @@ class SearchViewModelTest {
         viewModel.searchOnJvn("keyword1") { callCount++ }
 
         assertThat(callCount, `is`(1))
+    }
+
+    @Test
+    fun searchOnJvn_ExclusivelySearchInvoke() = runTest {
+        val viewModel = SearchViewModel(spySearchVulnOverviewUseCase)
+
+        viewModel.searchOnJvn("keyword1")
+        viewModel.searchOnJvn("keyword1")
+
+        advanceTimeBy(1_001)
+
+        assertThat(spySearchVulnOverviewUseCase.invokeCount, `is`(1))
     }
 
     @Test
