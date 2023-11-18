@@ -21,6 +21,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
 import io.github.casl0.jvnlookup.domain.DefaultFavoriteVulnOverviewUseCase
+import io.github.casl0.jvnlookup.domain.DefaultFetchVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.FetchVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
@@ -37,7 +38,7 @@ object UseCaseModule {
         jvnRepository: JvnRepository,
         @IoDispatcher defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
     ): FetchVulnOverviewUseCase {
-        return FetchVulnOverviewUseCase(jvnRepository, defaultDispatcher)
+        return DefaultFetchVulnOverviewUseCase(jvnRepository, defaultDispatcher)
     }
 
     @Provides

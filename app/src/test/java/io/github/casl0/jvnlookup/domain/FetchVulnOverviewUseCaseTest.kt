@@ -73,7 +73,7 @@ class FetchVulnOverviewUseCaseTest {
     @Test
     fun invoke_LocalDataUpdated() = runTest {
         val useCase =
-            FetchVulnOverviewUseCase(fakeRepository, UnconfinedTestDispatcher(testScheduler))
+            DefaultFetchVulnOverviewUseCase(fakeRepository, UnconfinedTestDispatcher(testScheduler))
 
         assertThat(useCase.vulnOverviews.first(), `is`(listOf()))
 
