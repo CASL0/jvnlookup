@@ -1,6 +1,8 @@
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
+import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
+import io.github.casl0.jvnlookup.domain.FetchVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.SpyFetchVulnOverviewUseCase
 import io.github.casl0.jvnlookup.model.Category
 import io.github.casl0.jvnlookup.model.DomainCVSS
@@ -23,6 +25,7 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -165,4 +168,31 @@ class VulnOverviewViewModelTest {
 
         job.cancel()
     }
+
+    @Test
+    fun refreshVulnOverviews_WhenInvokeFetchVulnOverviewUseCaseFailed_hasErrorReceived() =
+        runTest {
+            val mock = mock<FetchVulnOverviewUseCase> {
+                onBlocking {
+                    invoke()
+                } doReturn Result.failure(Exception("error"))
+            }
+            val viewModel = VulnOverviewViewModel(
+                mock,
+                mockFavoriteVulnOverviewUseCase
+            )
+
+            var result = 0
+            val job = launch(UnconfinedTestDispatcher()) {
+                viewModel.hasError.collect {
+                    result = it
+                }
+            }
+
+            // イニシャライザでスケジュールされたタスクを実行
+            advanceTimeBy(1_001)
+
+            assertThat(result, `is`(R.string.error_network_connection))
+            job.cancel()
+        }
 }
