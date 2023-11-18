@@ -131,4 +131,38 @@ class VulnOverviewViewModelTest {
 
         job.cancel()
     }
+
+    @Test
+    fun onCategorySelected_filteredVulnOverviewsInUiStateIsUpdated() = runTest {
+        val viewModel = VulnOverviewViewModel(
+            spyFetchVulnOverviewUseCase,
+            mockFavoriteVulnOverviewUseCase
+        )
+        // イニシャライザでスケジュールされたタスクを実行しておく
+        advanceUntilIdle()
+
+        var resultUiState = VulnOverviewUiState()
+        val job = launch(UnconfinedTestDispatcher()) {
+            viewModel.uiState.collect {
+                resultUiState = it
+            }
+        }
+
+        viewModel.onCategorySelected(Category.All)
+        assertThat(resultUiState.filteredVulnOverviews, `is`(stubData))
+
+        viewModel.onCategorySelected(Category.Favorite)
+        assertThat(resultUiState.filteredVulnOverviews, `is`(listOf()))
+
+        viewModel.onCategorySelected(Category.SeverityCritical)
+        assertThat(resultUiState.filteredVulnOverviews, `is`(listOf()))
+
+        viewModel.onCategorySelected(Category.SeverityMiddle)
+        assertThat(resultUiState.filteredVulnOverviews, `is`(stubData))
+
+        viewModel.onCategorySelected(Category.SeverityHigh)
+        assertThat(resultUiState.filteredVulnOverviews, `is`(listOf()))
+
+        job.cancel()
+    }
 }
