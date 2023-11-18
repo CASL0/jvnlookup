@@ -89,6 +89,21 @@ class SearchViewModelTest {
     }
 
     @Test
+    fun searchOnJvn_SuccessfullySearch_CallbackInvoked() = runTest {
+        val mock = mock<SearchVulnOverviewUseCase> {
+            onBlocking {
+                invoke("keyword1")
+            } doReturn Result.success(1)
+        }
+        val viewModel = SearchViewModel(mock)
+
+        var callCount = 0
+        viewModel.searchOnJvn("keyword1") { callCount++ }
+
+        assertThat(callCount, `is`(1))
+    }
+
+    @Test
     fun onSearchValueChanged_searchValueInUiStateIsUpdated() = runTest {
         val viewModel = SearchViewModel(mock<SearchVulnOverviewUseCase>())
 
