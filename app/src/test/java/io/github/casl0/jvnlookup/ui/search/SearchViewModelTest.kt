@@ -1,5 +1,6 @@
 package io.github.casl0.jvnlookup.ui.search
 
+import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -13,6 +14,7 @@ import org.hamcrest.Matchers.`is`
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.mockito.kotlin.doReturn
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
@@ -40,6 +42,28 @@ class SearchViewModelTest {
 
         viewModel.searchOnJvn("　")
         verify(mock, times(0)).invoke("　")
+    }
+
+    @Test
+    fun searchOnJvn_SearchFailedNetworkError_hasErrorReceived() = runTest {
+        val mock = mock<SearchVulnOverviewUseCase> {
+            onBlocking {
+                invoke("keyword1")
+            } doReturn Result.failure(Exception("error"))
+        }
+        val viewModel = SearchViewModel(mock)
+
+        var result = 0
+        val job = launch(UnconfinedTestDispatcher()) {
+            viewModel.hasError.collect {
+                result = it
+            }
+        }
+
+        viewModel.searchOnJvn("keyword1")
+        assertThat(result, `is`(R.string.error_network_connection))
+
+        job.cancel()
     }
 
     @Test
