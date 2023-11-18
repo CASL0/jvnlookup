@@ -16,9 +16,6 @@
 
 package io.github.casl0.jvnlookup.ui.vulnoverview
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -26,12 +23,27 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.FetchVulnOverviewUseCase
-import io.github.casl0.jvnlookup.model.*
+import io.github.casl0.jvnlookup.model.Category
+import io.github.casl0.jvnlookup.model.DomainCVSS
+import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
+/** ホーム画面のUI状態 */
+data class VulnOverviewUiState(
+    /** 選択されているフィルターカテゴリ */
+    val selectedCategory: Category = Category.All,
+    /** リフレッシュ中 */
+    val isRefreshing: Boolean = false,
+    /** フィルターした脆弱性概要情報一覧 */
+    val filteredVulnOverviews: List<DomainVulnOverview> = listOf()
+)
 
 /**
  * ホーム画面のビジネスロジックを扱うViewModel
@@ -44,22 +56,24 @@ class VulnOverviewViewModel @Inject constructor(
     private val fetchVulnOverviewUseCase: FetchVulnOverviewUseCase,
     private val favoriteVulnOverviewUseCase: FavoriteVulnOverviewUseCase,
 ) : ViewModel() {
-
-    val vulnOverviews = fetchVulnOverviewUseCase.vulnOverviews
-
-    /** リフレッシュ中 */
-    private var _isRefreshing by mutableStateOf(false)
-    val isRefreshing get() = _isRefreshing
-
-    /** 選択されているフィルターカテゴリ */
-    private var _selectedCategory: Category by mutableStateOf(Category.All)
-    val selectedCategory get() = _selectedCategory
-
     /** リフレッシュ失敗時のチャネル */
     private val errorChannel = Channel<Int>()
 
     /** リフレッシュ失敗時のエラーイベント */
     val hasError: Flow<Int> = errorChannel.receiveAsFlow()
+
+    private val _uiState = MutableStateFlow(VulnOverviewUiState())
+
+    /** UI状態 */
+    val uiState: Flow<VulnOverviewUiState>
+        get() = combine(
+            fetchVulnOverviewUseCase.vulnOverviews,
+            _uiState
+        ) { vulnOverviews, uiState ->
+            uiState.copy(
+                filteredVulnOverviews = vulnOverviews.filterCategory(uiState.selectedCategory)
+            )
+        }
 
     init {
         refreshVulnOverviews()
@@ -68,13 +82,13 @@ class VulnOverviewViewModel @Inject constructor(
     /** ホーム画面に表示する脆弱性対策情報を更新します */
     fun refreshVulnOverviews() {
         viewModelScope.launch {
-            _isRefreshing = true
+            _uiState.update { it.copy(isRefreshing = true) }
             val result = fetchVulnOverviewUseCase()
             if (result.isFailure) {
                 // ネットワークエラー
                 errorChannel.send(R.string.error_network_connection)
             }
-            _isRefreshing = false
+            _uiState.update { it.copy(isRefreshing = false) }
         }
     }
 
@@ -87,32 +101,40 @@ class VulnOverviewViewModel @Inject constructor(
 
     /** フィルターカテゴリを変更します */
     fun onCategorySelected(category: Category) {
-        _selectedCategory = category
+        _uiState.update { it.copy(selectedCategory = category) }
     }
 
-    /** カテゴリでフィルタリングします */
-    fun filterCategory(originalList: List<DomainVulnOverview>, category: Category) =
-        when (category) {
-            Category.All              -> originalList
-            Category.Favorite         -> originalList.filter { it.isFavorite }
+    /**
+     * カテゴリでフィルタリングします
+     *
+     * @param category フィルタリングするカテゴリ
+     * @return フィルタリングした脆弱性概要情報の一覧
+     */
+    private fun List<DomainVulnOverview>.filterCategory(
+        category: Category
+    ): List<DomainVulnOverview> {
+        return when (category) {
+            Category.All              -> this
+            Category.Favorite         -> this.filter { it.isFavorite }
             Category.SeverityCritical -> {
-                originalList.filter {
+                this.filter {
                     checkSeverity(it.cvssList, "critical")
                 }
             }
 
             Category.SeverityHigh     -> {
-                originalList.filter {
+                this.filter {
                     checkSeverity(it.cvssList, "high")
                 }
             }
 
             Category.SeverityMiddle   -> {
-                originalList.filter {
+                this.filter {
                     checkSeverity(it.cvssList, "middle")
                 }
             }
         }
+    }
 
     /** 指定の深刻度であるかをチェックします */
     private fun checkSeverity(cvssList: List<DomainCVSS>, severity: CharSequence): Boolean {

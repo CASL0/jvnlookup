@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -42,9 +43,7 @@ fun VulnOverviewScreen(
     onClickVulnOverviewItem: (CharSequence) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val vulnOverviews = viewModel.vulnOverviews.collectAsState(listOf())
-    val filteredVulnOverviews =
-        viewModel.filterCategory(vulnOverviews.value, viewModel.selectedCategory)
+    val uiState by viewModel.uiState.collectAsState(VulnOverviewUiState())
     viewModel.hasError.SnackbarLaunchedEffect(
         snackbarHostState = snackbarHostState,
         R.string.refresh_overview_action_label
@@ -53,13 +52,17 @@ fun VulnOverviewScreen(
             SnackbarResult.ActionPerformed -> {
                 viewModel.refreshVulnOverviews()
             }
-            SnackbarResult.Dismissed -> {
+
+            SnackbarResult.Dismissed       -> {
             }
         }
     }
-    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        modifier = modifier
+    ) {
         SwipeRefresh(
-            state = rememberSwipeRefreshState(isRefreshing = viewModel.isRefreshing),
+            state = rememberSwipeRefreshState(isRefreshing = uiState.isRefreshing),
             onRefresh = { viewModel.refreshVulnOverviews() }) {
             Column {
                 val scrollState = rememberLazyListState()
@@ -71,20 +74,20 @@ fun VulnOverviewScreen(
                     item {
                         CategoryChips(
                             filterCategories,
-                            viewModel.selectedCategory,
+                            uiState.selectedCategory,
                             viewModel::onCategorySelected,
                             Modifier.fillMaxWidth()
                         )
                     }
-                    items(items = filteredVulnOverviews,
+                    items(
+                        items = uiState.filteredVulnOverviews,
                         key = { vulnOverview -> vulnOverview.id }
                     ) { vulnOverview ->
-                        Surface(modifier.padding(horizontal = 4.dp)) {
+                        Surface(Modifier.padding(horizontal = 4.dp)) {
                             VulnCard(
                                 vulnOverview,
                                 onClickVulnOverviewItem,
                                 viewModel::onFavoriteButtonClicked,
-                                modifier
                             )
                         }
                     }
