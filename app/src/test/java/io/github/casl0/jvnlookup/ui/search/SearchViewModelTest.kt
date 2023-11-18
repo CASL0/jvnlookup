@@ -67,6 +67,28 @@ class SearchViewModelTest {
     }
 
     @Test
+    fun searchOnJvn_SearchNoResults_hasErrorReceived() = runTest {
+        val mock = mock<SearchVulnOverviewUseCase> {
+            onBlocking {
+                invoke("keyword1")
+            } doReturn Result.success(0)
+        }
+        val viewModel = SearchViewModel(mock)
+
+        var result = 0
+        val job = launch(UnconfinedTestDispatcher()) {
+            viewModel.hasError.collect {
+                result = it
+            }
+        }
+
+        viewModel.searchOnJvn("keyword1")
+        assertThat(result, `is`(R.string.error_no_results_found))
+
+        job.cancel()
+    }
+
+    @Test
     fun onSearchValueChanged_searchValueInUiStateIsUpdated() = runTest {
         val viewModel = SearchViewModel(mock<SearchVulnOverviewUseCase>())
 
