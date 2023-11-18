@@ -73,7 +73,10 @@ class FavoriteVulnOverviewUseCaseTest {
     @Test
     fun invoke_FavoriteTrue_LocalDataUpdated() = runTest {
         val useCase =
-            FavoriteVulnOverviewUseCase(fakeRepository, UnconfinedTestDispatcher(testScheduler))
+            DefaultFavoriteVulnOverviewUseCase(
+                fakeRepository,
+                UnconfinedTestDispatcher(testScheduler)
+            )
         fakeRepository.refreshVulnOverviews()
 
         val targetId = "JVNDB-2022-020608"
@@ -87,7 +90,10 @@ class FavoriteVulnOverviewUseCaseTest {
     @Test
     fun invoke_LocalDataUpdated() = runTest {
         val useCase =
-            FavoriteVulnOverviewUseCase(fakeRepository, UnconfinedTestDispatcher(testScheduler))
+            DefaultFavoriteVulnOverviewUseCase(
+                fakeRepository,
+                UnconfinedTestDispatcher(testScheduler)
+            )
         fakeRepository.refreshVulnOverviews()
 
         val newData = DomainVulnOverview(

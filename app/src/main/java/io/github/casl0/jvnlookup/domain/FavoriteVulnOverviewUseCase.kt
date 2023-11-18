@@ -25,34 +25,60 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
+/** 脆弱性対策情報をお気に入り登録するためのUseCase層のインターフェース */
+interface FavoriteVulnOverviewUseCase {
+    /** お気に入りした脆弱性概要情報一覧 */
+    val favorites: Flow<List<DomainVulnOverview>>
+
+    /**
+     * 既に保存済みのレコードのお気に入り状態を更新します
+     *
+     * @param id ベンダ固有のセキュリティID
+     * @param favorite 更新後の状態
+     */
+    suspend operator fun invoke(id: CharSequence, favorite: Boolean)
+
+    /**
+     * お気に入り状態を更新したレコードを登録します
+     *
+     * @param vulnOverview 更新したいレコード
+     * @param favorite 更新後のお気に入り状態
+     */
+    suspend operator fun invoke(vulnOverview: DomainVulnOverview, favorite: Boolean)
+}
+
 /**
  * 脆弱性対策情報をお気に入り登録するためのUseCase層
+ *
  * @param jvnRepository JVNデータ取得用のリポジトリ層
  * @param defaultDispatcher お気に入り登録実行時のDispatcher
  */
-class FavoriteVulnOverviewUseCase @Inject constructor(
+class DefaultFavoriteVulnOverviewUseCase @Inject constructor(
     private val jvnRepository: JvnRepository,
     private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
-) {
-    val favorites: Flow<List<DomainVulnOverview>> =
+) : FavoriteVulnOverviewUseCase {
+    /** お気に入りした脆弱性概要情報一覧 */
+    override val favorites: Flow<List<DomainVulnOverview>> =
         jvnRepository.favorites.flowOn(defaultDispatcher)
 
     /**
      * 既に保存済みのレコードのお気に入り状態を更新します
+     *
      * @param id ベンダ固有のセキュリティID
      * @param favorite 更新後の状態
      */
-    suspend operator fun invoke(id: CharSequence, favorite: Boolean) =
+    override suspend operator fun invoke(id: CharSequence, favorite: Boolean) =
         withContext(defaultDispatcher) {
             jvnRepository.updateFavorite(id as String, favorite)
         }
 
     /**
      * お気に入り状態を更新したレコードを登録します
+     *
      * @param vulnOverview 更新したいレコード
      * @param favorite 更新後のお気に入り状態
      */
-    suspend operator fun invoke(vulnOverview: DomainVulnOverview, favorite: Boolean) =
+    override suspend operator fun invoke(vulnOverview: DomainVulnOverview, favorite: Boolean) =
         withContext(defaultDispatcher) {
             vulnOverview.isFavorite = favorite
             if (jvnRepository.exists(vulnOverview.id)) {
