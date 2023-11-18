@@ -14,6 +14,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.times
+import org.mockito.kotlin.verify
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SearchViewModelTest {
@@ -26,6 +28,18 @@ class SearchViewModelTest {
     @After
     fun teardown() {
         Dispatchers.resetMain()
+    }
+
+    @Test
+    fun searchOnJvn_BlankKeyword_EarlyReturn() = runTest {
+        val mock = mock<SearchVulnOverviewUseCase>()
+        val viewModel = SearchViewModel(mock)
+
+        viewModel.searchOnJvn("")
+        verify(mock, times(0)).invoke("")
+
+        viewModel.searchOnJvn("　")
+        verify(mock, times(0)).invoke("　")
     }
 
     @Test
