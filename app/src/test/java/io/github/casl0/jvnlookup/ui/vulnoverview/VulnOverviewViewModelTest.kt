@@ -2,12 +2,14 @@ package io.github.casl0.jvnlookup.ui.vulnoverview
 
 import io.github.casl0.jvnlookup.domain.FavoriteVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.SpyFetchVulnOverviewUseCase
+import io.github.casl0.jvnlookup.model.Category
 import io.github.casl0.jvnlookup.model.DomainCVSS
 import io.github.casl0.jvnlookup.model.DomainReference
 import io.github.casl0.jvnlookup.model.DomainVulnOverview
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceTimeBy
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -105,5 +107,28 @@ class VulnOverviewViewModelTest {
         viewModel.onFavoriteButtonClicked("id", true)
 
         verify(mockFavoriteVulnOverviewUseCase, times(1)).invoke("id", true)
+    }
+
+    @Test
+    fun onCategorySelected_selectedCategoryInUiStateIsUpdated() = runTest {
+        val viewModel = VulnOverviewViewModel(
+            spyFetchVulnOverviewUseCase,
+            mockFavoriteVulnOverviewUseCase
+        )
+        // イニシャライザでスケジュールされたタスクを実行しておく
+        advanceUntilIdle()
+
+        var resultUiState = VulnOverviewUiState()
+        val job = launch(UnconfinedTestDispatcher()) {
+            viewModel.uiState.collect {
+                resultUiState = it
+            }
+        }
+
+        assertThat(resultUiState.selectedCategory, `is`(Category.All))
+        viewModel.onCategorySelected(Category.Favorite)
+        assertThat(resultUiState.selectedCategory, `is`(Category.Favorite))
+
+        job.cancel()
     }
 }
