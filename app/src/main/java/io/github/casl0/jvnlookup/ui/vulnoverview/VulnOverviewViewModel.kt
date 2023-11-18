@@ -80,14 +80,16 @@ class VulnOverviewViewModel @Inject constructor(
 
     /** ホーム画面に表示する脆弱性対策情報を更新します */
     fun refreshVulnOverviews() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isRefreshing = true) }
-            val result = fetchVulnOverviewUseCase()
-            if (result.isFailure) {
-                // ネットワークエラー
-                errorChannel.send(R.string.error_network_connection)
+        if (!_uiState.value.isRefreshing) {
+            viewModelScope.launch {
+                _uiState.update { it.copy(isRefreshing = true) }
+                val result = fetchVulnOverviewUseCase()
+                if (result.isFailure) {
+                    // ネットワークエラー
+                    errorChannel.send(R.string.error_network_connection)
+                }
+                _uiState.update { it.copy(isRefreshing = false) }
             }
-            _uiState.update { it.copy(isRefreshing = false) }
         }
     }
 
