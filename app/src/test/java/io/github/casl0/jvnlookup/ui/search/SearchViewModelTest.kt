@@ -3,6 +3,7 @@ package io.github.casl0.jvnlookup.ui.search
 import io.github.casl0.jvnlookup.R
 import io.github.casl0.jvnlookup.domain.SearchVulnOverviewUseCase
 import io.github.casl0.jvnlookup.domain.SpySearchVulnOverviewUseCase
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -119,6 +120,27 @@ class SearchViewModelTest {
         advanceTimeBy(1_001)
 
         assertThat(spySearchVulnOverviewUseCase.invokeCount, `is`(1))
+    }
+
+    @Test
+    fun onSearchValueChanged_UiStateIsNotLoaded_searchValueNotChanged() = runTest {
+        val viewModel = SearchViewModel(spySearchVulnOverviewUseCase)
+        var result: SearchUiState = SearchUiState.Loaded()
+        val job = launch(UnconfinedTestDispatcher()) {
+            viewModel.uiState.collect {
+                result = it
+            }
+        }
+
+        viewModel.onSearchValueChanged("searchValue1")
+        assertThat((result as SearchUiState.Loaded).searchValue, `is`("searchValue1"))
+
+        viewModel.searchOnJvn("keyword1")
+        viewModel.onSearchValueChanged("searchValue2")
+
+        assertTrue(result is SearchUiState.Loading)
+
+        job.cancel()
     }
 
     @Test
