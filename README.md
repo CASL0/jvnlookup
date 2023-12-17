@@ -1,7 +1,7 @@
 # jvnlookup
 
 [![API](https://img.shields.io/badge/API-23%2B-brightgreen.svg?style=flat)](https://android-arsenal.com/api?level=23)
-[![codecov](https://codecov.io/github/CASL0/jvnlookup/graph/badge.svg?token=FHGIH87WJ2)](https://codecov.io/github/CASL0/jvnlookup)
+[![codecov](https://codecov.io/github/CASL0/jvnlookup/graph/badge.svg?token=FHGIH87WJ2)](https://app.codecov.io/github/CASL0/jvnlookup)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 [MyJVN API](https://jvndb.jvn.jp/apis/index.html) を使用した脆弱性対策情報確認アプリです。
