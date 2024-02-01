@@ -1,0 +1,42 @@
+@startuml Roomのエンティティ
+
+hide circle
+
+entity vuln_overview {
+  sec_identifier: text
+  --
+  title: text
+  link: text
+  description: text
+  issued: integer
+  modified: integer
+  favorite: integer
+}
+note right: 脆弱性対策情報
+
+entity sec_references {
+  id: text
+  --
+  sec_owner_identifier: text <<FK>>
+  source: text
+  title: text
+  url: text
+}
+note right: 脆弱性の参考情報
+
+entity sec_cvss {
+  id: integer <<generated>>
+  --
+  ownerId: text <<FK>>
+  version: text
+  type: text
+  severity: text
+  score: text
+  vector: text
+}
+note right: 脆弱性のCVSS
+
+vuln_overview ||--o{ sec_references
+vuln_overview ||--o{ sec_cvss
+
+@enduml
