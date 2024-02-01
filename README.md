@@ -29,6 +29,10 @@ MVVM + Repository パターンで実装しています。
 
 ![アプリアーキテクチャ](https://github.com/CASL0/jvnlookup/assets/28913760/7d02aaac-8afe-4251-8446-cd0d97f1544e)
 
+### Roomのエンティティ
+
+![Room](https://github.com/CASL0/jvnlookup/assets/28913760/648a956e-2528-4092-96ae-96e0ae67e539)
+
 ## ドキュメント
 
 - [KDoc](https://casl0.github.io/jvnlookup/)
